@@ -11,9 +11,9 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 
-include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
-
+include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -26,10 +26,20 @@ include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 params.fasta = getGenomeAttribute('fasta')
 params.gtf = getGenomeAttribute('gtf')
 
+// Check if an AWS iGenome has been provided to use the appropriate version of STAR
+def is_aws_igenome = false
+if (params.fasta && params.gtf) {
+    if ((file(params.fasta).getName() - '.gz' == 'genome.fa') && (file(params.gtf).getName() - '.gz' == 'genes.gtf')) {
+        is_aws_igenome = true
+    }
+}
+
 workflow RIMA {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+    ch_fastq // channel: fastq samples in from --input
+
 
     main:
 
@@ -96,18 +106,14 @@ workflow RIMA {
     )
 
 
-    //
-    // MODULE: Prepare_Genome
-    //
-
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
-    )
+        )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
-    /*ALIGN_STAR (
-        ch_strand_inferred_filtered_fastq,
+    PREPROCESS_STAR (
+        ch_fastq,
         PREPARE_GENOME.out.star_index.map { [ [:], it ] },
         PREPARE_GENOME.out.gtf.map { [ [:], it ] },
         params.star_ignore_sjdbgtf,
@@ -115,12 +121,14 @@ workflow RIMA {
         params.seq_center ?: '',
         is_aws_igenome,
         PREPARE_GENOME.out.fasta.map { [ [:], it ] }
-    )*/
+    )
+
+    ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
+
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-	 gene = PREPARE_GENOME.out.star_index.map { [ [:], it ] } // channel: /path/to/indexed files
+    samtools_stats = PREPROCESS_STAR.out.stats  // channel: /path/to/stats
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
-  
 }
 
 /*
