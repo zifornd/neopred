@@ -11,7 +11,7 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rima_pipeline'
+include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 /*
@@ -38,7 +38,6 @@ workflow RIMA {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
-    ch_fastq // channel: fastq samples in from --input
 
 
     main:
@@ -113,7 +112,7 @@ workflow RIMA {
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
     PREPROCESS_STAR (
-        ch_fastq,
+        ch_samplesheet,
         PREPARE_GENOME.out.star_index.map { [ [:], it ] },
         PREPARE_GENOME.out.gtf.map { [ [:], it ] },
         params.star_ignore_sjdbgtf,

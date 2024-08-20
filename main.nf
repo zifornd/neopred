@@ -45,7 +45,6 @@ workflow NF_RIMA {
 
     take:
     samplesheet // channel: samplesheet read in from --input
-	 input //channel: samplesheet read to get the fastq files
 
     main:
 
@@ -53,7 +52,7 @@ workflow NF_RIMA {
     // WORKFLOW: Run pipeline
     //
     RIMA (
-        samplesheet, input
+        samplesheet
     )
 
     emit:

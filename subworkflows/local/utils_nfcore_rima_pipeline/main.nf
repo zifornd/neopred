@@ -99,6 +99,7 @@ workflow PIPELINE_INITIALISATION {
                 return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
+/*
     Channel
         .fromSamplesheet("input")
         .map {
@@ -121,11 +122,12 @@ workflow PIPELINE_INITIALISATION {
                     return [ meta, fastqs.flatten() ]
         }
         .set { ch_fastq }
+*/
 
     emit:
     samplesheet = ch_samplesheet
     versions    = ch_versions
-	 input = ch_fastq
+	 //input = ch_fastq
 }
 
 /*
