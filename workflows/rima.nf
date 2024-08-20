@@ -11,11 +11,20 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 
+include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+// TODO nf-core: Remove this line if you don't need a FASTA file
+//   This is an example of how to use getGenomeAttribute() to fetch parameters
+//   from igenomes.config using `--genome`
+params.fasta = getGenomeAttribute('fasta')
+params.gtf = getGenomeAttribute('gtf')
 
 workflow RIMA {
 
@@ -86,9 +95,32 @@ workflow RIMA {
         ch_multiqc_logo.toList()
     )
 
+
+    //
+    // MODULE: Prepare_Genome
+    //
+
+    PREPARE_GENOME (
+        params.fasta,
+        params.gtf,
+    )
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
+
+    /*ALIGN_STAR (
+        ch_strand_inferred_filtered_fastq,
+        PREPARE_GENOME.out.star_index.map { [ [:], it ] },
+        PREPARE_GENOME.out.gtf.map { [ [:], it ] },
+        params.star_ignore_sjdbgtf,
+        '',
+        params.seq_center ?: '',
+        is_aws_igenome,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+    )*/
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+	 gene = PREPARE_GENOME.out.star_index.map { [ [:], it ] } // channel: /path/to/indexed files
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+  
 }
 
 /*
