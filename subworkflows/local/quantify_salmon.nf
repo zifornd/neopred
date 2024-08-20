@@ -1,12 +1,12 @@
 //
-// Pseudoalignment and quantification with Salmon or Kallisto
+// Quantification with Salmon
 //
 
 include { SALMON_QUANT   } from '../../../modules/nf-core/salmon/quant'
 include { TX2GENE        } from '../../../modules/local/tx2gene'
 include { TXIMPORT       } from '../../../modules/local/tximport'
 
-workflow QUANTIFY_TXIMPORT {
+workflow QUANTIFY_SALMON {
     take:
     reads                     // channel: [ val(meta), [ reads ] ]
     index                     // channel: /path/to//index/
