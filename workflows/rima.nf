@@ -23,8 +23,8 @@ include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 // TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-//params.fasta = getGenomeAttribute('fasta')
-//params.gtf = getGenomeAttribute('gtf')
+params.fasta = getGenomeAttribute('fasta')
+params.gtf = getGenomeAttribute('gtf')
 
 // Check if an AWS iGenome has been provided to use the appropriate version of STAR
 def is_aws_igenome = false

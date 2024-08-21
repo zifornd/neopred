@@ -1,3 +1,5 @@
 sample,fastq_1,fastq_2
-control_REP1,/path/to/fastq/files/AEG588A1_S1_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A1_S1_L002_R2_001.fastq.gz
-treatment_REP1,/path/to/fastq/files/AEG588A4_S4_L003_R1_001.fastq.gz,
+WT_REP1,/home/sai/SRR6357070_1.fq.gz,/home/sai/SRR6357070_2.fq.gz
+WT_REP1,/home/sai/SRR6357071_1.fq.gz,/home/sai/SRR6357071_2.fq.gz
+RAP1_UNINDUCED_REP1,/home/sai/SRR6357073_1.fq.gz,
+RAP1_UNINDUCED_REP2,/home/sai/SRR6357074_1.fq.gz,

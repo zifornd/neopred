@@ -2,10 +2,10 @@ process STAR_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    conda "${moduleDir}/environment.yml"
+    conda "bioconda::star=2.7.10a bioconda::samtools=1.16.1 conda-forge::gawk=5.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' :
-        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:ded3841da0194af2701c780e9b3d653a85d27489-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:1df389393721fc66f3fd8778ad938ac711951107-0' :
+        'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:1df389393721fc66f3fd8778ad938ac711951107-0' }"
 
     input:
     tuple val(meta), path(reads, stageAs: "input*/*")
@@ -45,38 +45,19 @@ process STAR_ALIGN {
     def ignore_gtf      = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     def seq_platform    = seq_platform ? "'PL:$seq_platform'" : ""
     def seq_center      = seq_center ? "'CN:$seq_center'" : ""
-    //def attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' $seq_center 'SM:$prefix' $seq_platform"
+    def attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' $seq_center 'SM:$prefix' $seq_platform"
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
     def mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
     """
     STAR \\
         --genomeDir $index \\
-        --readFilesIn ${reads1.join(",")} ${reads2.join(",")} \\
+        --readFilesIn <(zcat ${reads1.join(",")} ${reads2.join(",")}) \\
         --runThreadN $task.cpus \\
         --outFileNamePrefix $prefix. \\
         $out_sam_type \\
         $ignore_gtf \\
-    //    $attrRG \\
-        $args \\
-        --outReadsUnmapped None \\
-        --chimSegmentMin 12 \\
-        --chimJunctionOverhangMin 12 \\
-        --chimOutJunctionFormat 1 \\
-        --alignSJDBoverhangMin 10 \\
-        --alignMatesGapMax 1000000 \\
-        --alignIntronMax 1000000 \\
-        --alignSJstitchMismatchNmax 5 -1 5 5 \\
-        --outSAMstrandField intronMotif \\
-        --outSAMunmapped Within \\
-        --chimMultimapScoreRange 10 \\
-        --chimMultimapNmax 10 \\
-        --chimNonchimScoreDropMin 10 \\
-        --peOverlapNbasesMin 12 \\
-        --peOverlapMMp 0.1 \\
-        --genomeLoad NoSharedMemory \\
-        --outSAMheaderHD @HD VN:1.4 \\
-        --twopassMode Basic \\
-        --quantMode TranscriptomeSAM
+        $attrRG \\
+        $args
 
     $mv_unsorted_bam
 
@@ -100,8 +81,6 @@ process STAR_ALIGN {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
-    echo "" | gzip > ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}Xd.out.bam
     touch ${prefix}.Log.final.out
     touch ${prefix}.Log.out
@@ -110,6 +89,8 @@ process STAR_ALIGN {
     touch ${prefix}.toTranscriptome.out.bam
     touch ${prefix}.Aligned.unsort.out.bam
     touch ${prefix}.Aligned.sortedByCoord.out.bam
+    touch ${prefix}.unmapped_1.fastq.gz
+    touch ${prefix}.unmapped_2.fastq.gz
     touch ${prefix}.tab
     touch ${prefix}.SJ.out.tab
     touch ${prefix}.ReadsPerGene.out.tab
