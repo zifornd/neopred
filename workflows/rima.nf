@@ -23,8 +23,8 @@ include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 // TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
-params.gtf = getGenomeAttribute('gtf')
+//params.fasta = getGenomeAttribute('fasta')
+//params.gtf = getGenomeAttribute('gtf')
 
 // Check if an AWS iGenome has been provided to use the appropriate version of STAR
 def is_aws_igenome = false
@@ -64,6 +64,33 @@ workflow RIMA {
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
+    //
+    // SUBWORKFLOW: Prepare Genome
+    //
+
+ 	PREPARE_GENOME (
+        params.fasta,
+        params.gtf,
+        )
+    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
+
+    //
+    // SUBWORKFLOW: Preprocess STAR
+    //
+
+
+    PREPROCESS_STAR (
+        ch_samplesheet,
+        PREPARE_GENOME.out.star_index.map { [ [:], it ] },
+        PREPARE_GENOME.out.gtf.map { [ [:], it ] },
+        params.star_ignore_sjdbgtf,
+        '',
+        params.seq_center ?: '',
+        is_aws_igenome,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+    )
+
+    ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
 
     //
     // MODULE: MultiQC
@@ -105,30 +132,16 @@ workflow RIMA {
     )
 
 
-    PREPARE_GENOME (
-        params.fasta,
-        params.gtf,
-        )
-    ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
-
-    PREPROCESS_STAR (
-        ch_samplesheet,
-        PREPARE_GENOME.out.star_index.map { [ [:], it ] },
-        PREPARE_GENOME.out.gtf.map { [ [:], it ] },
-        params.star_ignore_sjdbgtf,
-        '',
-        params.seq_center ?: '',
-        is_aws_igenome,
-        PREPARE_GENOME.out.fasta.map { [ [:], it ] }
-    )
-
-    ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
-
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     samtools_stats = PREPROCESS_STAR.out.stats  // channel: /path/to/stats
+    sorted_bam = PREPROCESS_STAR.out.bam_sort
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
+
+
+
+   
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
