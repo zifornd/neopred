@@ -8,8 +8,8 @@ include { TXIMPORT       } from '../../../modules/local/tximport'
 
 workflow QUANTIFY_SALMON {
     take:
-    reads                     // channel: [ val(meta), [ reads ] ]
-    index                     // channel: /path/to//index/
+    bam_files                 // channel: [ val(meta), [ bam_files ] ]
+    index                     // channel: /path/to/salmon/index/
     transcript_fasta          // channel: /path/to/transcript.fasta
     gtf                       // channel: /path/to/genome.gtf
     lib_type                  //     val: String to override Salmon library type
@@ -22,7 +22,7 @@ workflow QUANTIFY_SALMON {
     // Quantify and merge counts across samples
     //
     // NOTE: MultiQC needs Salmon outputs
-    SALMON_QUANT ( reads, index, gtf, transcript_fasta, alignment_mode, lib_type )
+    SALMON_QUANT ( bam_files, index, gtf, transcript_fasta, alignment_mode, lib_type )
     ch_results = SALMON_QUANT.out.results
     ch_multiqc = ch_results
     ch_versions = ch_versions.mix(SALMON_QUANT.out.versions.first())
