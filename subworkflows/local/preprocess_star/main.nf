@@ -6,7 +6,7 @@ include { STAR_ALIGN              } from '../../../modules/nf-core/star/align'
 include { SAMTOOLS_SORT           } from '../../../modules/nf-core/samtools/sort'
 include { SAMTOOLS_INDEX          } from '../../../modules/nf-core/samtools/index'
 include { SAMTOOLS_STATS          } from '../../../modules/nf-core/samtools/stats'
-
+include { STAR_METRICS            } from '../../../modules/local/star/metrics'
 
 workflow PREPROCESS_STAR {
     take:
@@ -77,7 +77,13 @@ workflow PREPROCESS_STAR {
     }
     .set { ch_bam_bai }
     SAMTOOLS_STATS ( ch_bam_bai, fasta )
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)  
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions)
+
+    //
+    // Module: STAR metrics
+    //  
+    STAR_METRICS (ch_log_final)
+    ch_versions = ch_versions.mix(STAR_METRICS.out.versions)  
 
     emit:
     orig_bam       = ch_orig_bam                    // channel: [ val(meta), bam            ]
@@ -91,6 +97,7 @@ workflow PREPROCESS_STAR {
 
     bam_sort    = SAMTOOLS_SORT.out.bam          // channel: [ val(meta), [ bam ] ]
 	 stats          = SAMTOOLS_STATS.out.stats       // channel: [ val(meta), [ stats ] ]
+    metrics        = STAR_METRICS.out.csv        // channel: [ val(meta), [ star_metrics ] ]
 
     versions       = ch_versions                    // channel: [ versions.yml ]
 }

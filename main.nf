@@ -57,7 +57,6 @@ workflow NF_RIMA {
 
     emit:
     multiqc_report = RIMA.out.multiqc_report // channel: /path/to/multiqc_report.html
-	 bam_stats = RIMA.out.samtools_stats // channel: /path/to/bam.stats
 
 }
 /*

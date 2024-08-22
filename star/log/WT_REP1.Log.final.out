@@ -1,0 +1,37 @@
+                                 Started job on |	Aug 22 11:42:35
+                             Started mapping on |	Aug 22 11:46:51
+                                    Finished on |	Aug 22 11:51:56
+       Mapping speed, Million of reads per hour |	1.18
+
+                          Number of input reads |	100000
+                      Average input read length |	202
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |	84125
+                        Uniquely mapped reads % |	84.12%
+                          Average mapped length |	199.71
+                       Number of splices: Total |	2440
+            Number of splices: Annotated (sjdb) |	1100
+                       Number of splices: GT/AG |	1764
+                       Number of splices: GC/AG |	81
+                       Number of splices: AT/AC |	7
+               Number of splices: Non-canonical |	588
+                      Mismatch rate per base, % |	0.82%
+                         Deletion rate per base |	0.01%
+                        Deletion average length |	1.06
+                        Insertion rate per base |	0.00%
+                       Insertion average length |	1.10
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |	2772
+             % of reads mapped to multiple loci |	2.77%
+        Number of reads mapped to too many loci |	71
+             % of reads mapped to too many loci |	0.07%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |	4758
+       % of reads unmapped: too many mismatches |	4.76%
+            Number of reads unmapped: too short |	4584
+                 % of reads unmapped: too short |	4.58%
+                Number of reads unmapped: other |	3690
+                     % of reads unmapped: other |	3.69%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |	229
+                            % of chimeric reads |	0.23%

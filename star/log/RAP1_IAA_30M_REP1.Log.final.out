@@ -1,0 +1,37 @@
+                                 Started job on |	Aug 22 11:42:35
+                             Started mapping on |	Aug 22 11:45:34
+                                    Finished on |	Aug 22 11:48:44
+       Mapping speed, Million of reads per hour |	0.95
+
+                          Number of input reads |	50000
+                      Average input read length |	202
+                                    UNIQUE READS:
+                   Uniquely mapped reads number |	42845
+                        Uniquely mapped reads % |	85.69%
+                          Average mapped length |	199.97
+                       Number of splices: Total |	1147
+            Number of splices: Annotated (sjdb) |	515
+                       Number of splices: GT/AG |	846
+                       Number of splices: GC/AG |	45
+                       Number of splices: AT/AC |	2
+               Number of splices: Non-canonical |	254
+                      Mismatch rate per base, % |	0.75%
+                         Deletion rate per base |	0.01%
+                        Deletion average length |	1.06
+                        Insertion rate per base |	0.00%
+                       Insertion average length |	1.12
+                             MULTI-MAPPING READS:
+        Number of reads mapped to multiple loci |	1233
+             % of reads mapped to multiple loci |	2.47%
+        Number of reads mapped to too many loci |	42
+             % of reads mapped to too many loci |	0.08%
+                                  UNMAPPED READS:
+  Number of reads unmapped: too many mismatches |	2230
+       % of reads unmapped: too many mismatches |	4.46%
+            Number of reads unmapped: too short |	1877
+                 % of reads unmapped: too short |	3.75%
+                Number of reads unmapped: other |	1773
+                     % of reads unmapped: other |	3.55%
+                                  CHIMERIC READS:
+                       Number of chimeric reads |	112
+                            % of chimeric reads |	0.22%

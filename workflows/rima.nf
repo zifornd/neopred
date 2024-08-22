@@ -1,12 +1,20 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
+    IMPORT MODULES / FUNCTIONS : Consists of validation based plugins and modules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT SUBWORKFLOWS : Consists of a mix of local and nf-core subworkflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
@@ -23,8 +31,8 @@ include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 // TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
-params.fasta = getGenomeAttribute('fasta')
-params.gtf = getGenomeAttribute('gtf')
+//params.fasta = getGenomeAttribute('fasta')
+//params.gtf = getGenomeAttribute('gtf')
 
 // Check if an AWS iGenome has been provided to use the appropriate version of STAR
 def is_aws_igenome = false
@@ -91,6 +99,8 @@ workflow RIMA {
     )
 
     ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]}) 
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
     //
     // MODULE: MultiQC
@@ -136,6 +146,7 @@ workflow RIMA {
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     samtools_stats = PREPROCESS_STAR.out.stats  // channel: /path/to/stats
     sorted_bam = PREPROCESS_STAR.out.bam_sort
+	 star_metrics = PREPROCESS_STAR.out.metrics  // channel: /path/to/star_metrics
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
