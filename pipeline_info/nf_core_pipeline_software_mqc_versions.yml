@@ -1,5 +1,0 @@
-FASTQC:
-  fastqc: 0.12.1
-Workflow:
-    nf/rima: v1.0dev
-    Nextflow: 24.04.4
