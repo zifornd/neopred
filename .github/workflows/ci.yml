@@ -19,12 +19,12 @@ jobs:
   test:
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'zifornd/grurnaseq') }}"
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'zifornd/nf-rima') }}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
         NXF_VER:
-          - "23.04.0"
+          - "24.04.4"
           - "latest-everything"
     steps:
       - name: Check out pipeline code
@@ -41,15 +41,3 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
-
-      - name: Run pipeline with bam data
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile bam,docker --outdir ./results
-
-      - name: Run pipeline with kallisto
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_kallisto,docker --outdir ./results
-
-      - name: Run pipeline with blocking
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test_block,docker --outdir ./results

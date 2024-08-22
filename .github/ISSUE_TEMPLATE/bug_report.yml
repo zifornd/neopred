@@ -13,7 +13,8 @@ body:
     id: command_used
     attributes:
       label: Command used and terminal output
-      description: Steps to reproduce the behaviour. Please paste the command you used
+      description:
+        Steps to reproduce the behaviour. Please paste the command you used
         to launch the pipeline and the output from your terminal.
       render: console
       placeholder: "$ nextflow run ...
@@ -26,7 +27,8 @@ body:
     id: files
     attributes:
       label: Relevant files
-      description: "Please drag and drop the relevant files here. Create a `.zip` archive
+      description:
+        "Please drag and drop the relevant files here. Create a `.zip` archive
         if the extension is not allowed.
 
         Your verbose log file `.nextflow.log` is often useful _(this is a hidden file
@@ -49,6 +51,6 @@ body:
 
         * OS _(eg. CentOS Linux, macOS, Linux Mint)_
 
-        * Version of zifornd/grurnaseq _(eg. 1.1, 1.5, 1.8.2)_
+        * Version of zifornd/nf-rima _(eg. 1.1, 1.5, 1.8.2)_
 
         "

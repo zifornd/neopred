@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the zifornd/grurnaseq pipeline
+description: Suggest an idea for the zifornd/nf-rima pipeline
 labels: enhancement
 body:
   - type: textarea
