@@ -7,33 +7,72 @@
 include { RSEQC_TIN                 } from '../modules/nf-core/rseqc/tin/main'
 include { RSEQC_READDISTRIBUTION    } from '../modules/nf-core/rseqc/readdistribution/main'
 include { RSEQC_JUNCTIONSATURATION  } from '../modules/nf-core/rseqc/junctionsaturation/main'
-
+include { RSEQC_GENEBODYCOVERAGE    } from '../modules/local/rseqc_genebodycoverage'
 
 workflow RSEQC {
 
     take:
-    // TODO nf-core: edit input (take) channels
-    ch_bam // channel: [ val(meta), [ bam ] ]
+    bam_bai       // channel: [ val(meta), [ bam, bai ] ]
+    bed           // channel: [ genome.bed ]
 
     main:
 
+    bam = bam_bai.map{ [ it[0], it[1] ] }
+
     ch_versions = Channel.empty()
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
+    //
+    // Run RSeQC tin.py
+    //
+    tin_txt = Channel.empty()
 
-    RSEQC_TIN ( ch_bam,
-                ch_bed )
-    ch_versions = ch_versions.mix(RSEQC_TIN.out.versions.first())
+    RSEQC_TIN(bam_bai, bed)
+    tin_txt      = RSEQC_TIN.out.txt
+    versions    = versions.mix(RSEQC_TIN.out.versions.first())
 
-    RSEQC_READDISTRIBUTION ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
+    //
+    // Run RSeQC read_distribution.py
+    //
+    readdistribution_txt = Channel.empty()
+
+    RSEQC_READDISTRIBUTION(bam, bed)
+    readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
+    versions             = versions.mix(RSEQC_READDISTRIBUTION.out.versions.first())
+
+    //
+    // Run RSeQC geneBody_coverage.py
+    //
+    genebodycoverage_rscript   = Channel.empty()
+
+    RSEQC_GENEBODYCOVERAGE(bam, bed)
+    genebodycoverage_rscript   = RSEQC_GENEBODYCOVERAGE.out.rscript
+    versions                   = versions.mix(RSEQC_GENEBODYCOVERAGE.out.versions.first())
+
+    //
+    // Run RSeQC junction_saturation.py
+    //
+    junctionsaturation_all     = Channel.empty()
+    junctionsaturation_pdf     = Channel.empty()
+    junctionsaturation_rscript = Channel.empty()
+
+    RSEQC_JUNCTIONSATURATION(bam, bed)
+    junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
+    junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
+    junctionsaturation_all     = junctionsaturation_pdf.mix(junctionsaturation_rscript)
+    versions                   = versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
 
     emit:
-    // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
 
-    versions = ch_versions                     // channel: [ versions.yml ]
+    tin_txt                         // channel: [ val(meta), txt ]
+    
+    readdistribution_txt            // channel: [ val(meta), txt ]
+
+    genebodycoverage_rscript
+
+    junctionsaturation_all          // channel: [ val(meta), {pdf, r} ]
+    junctionsaturation_pdf          // channel: [ val(meta), pdf ]
+    junctionsaturation_rscript      // channel: [ val(meta), r   ]
+
+    versions = ch_versions          // channel: [ versions.yml ]
 }
 
