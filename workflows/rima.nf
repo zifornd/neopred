@@ -34,6 +34,9 @@ workflow RIMA {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // Stage dummy file to be used as an optional input where required
+    ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+
     //
     // MODULE: Run FastQC
     //
