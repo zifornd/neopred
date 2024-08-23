@@ -13,7 +13,7 @@ workflow PREPROCESS_STAR {
     reads               // channel: [ val(meta), [ reads ] ]
     index               // channel: [ val(meta), [ index ] ]
     gtf                 // channel: [ val(meta), [ gtf ] ]
-    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file 
+    star_ignore_sjdbgtf // boolean: when using pre-built STAR indices do not re-extract and use splice junctions from the GTF file
     seq_platform        // string : sequencing platform
     seq_center          // string : sequencing center
     is_aws_igenome      // boolean: whether the genome files are from AWS iGenomes
@@ -81,9 +81,9 @@ workflow PREPROCESS_STAR {
 
     //
     // Module: STAR metrics
-    //  
+    //
     STAR_METRICS (ch_log_final)
-    ch_versions = ch_versions.mix(STAR_METRICS.out.versions)  
+    ch_versions = ch_versions.mix(STAR_METRICS.out.versions)
 
     emit:
     orig_bam       = ch_orig_bam                    // channel: [ val(meta), bam            ]
@@ -95,10 +95,9 @@ workflow PREPROCESS_STAR {
     fastq          = ch_fastq                       // channel: [ val(meta), fastq          ]
     tab            = ch_tab                         // channel: [ val(meta), tab            ]
 
-    bam_sort    = SAMTOOLS_SORT.out.bam          // channel: [ val(meta), [ bam ] ]
-	 stats          = SAMTOOLS_STATS.out.stats       // channel: [ val(meta), [ stats ] ]
-    metrics        = STAR_METRICS.out.csv        // channel: [ val(meta), [ star_metrics ] ]
+    bam_sort    = SAMTOOLS_SORT.out.bam             // channel: [ val(meta), [ bam ]        ]
+    stats          = SAMTOOLS_STATS.out.stats       // channel: [ val(meta), [ stats ]      ]
+    metrics        = STAR_METRICS.out.csv           // channel: [ val(meta), [ star_metric] ]
 
     versions       = ch_versions                    // channel: [ versions.yml ]
 }
-
