@@ -72,7 +72,8 @@
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
                 }
-            }
+            },
+            "required": ["fasta"]
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -292,5 +293,25 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "seq_center": {
+            "type": "string"
+        },
+        "bam_csi_index": {
+            "type": "boolean"
+        },
+        "star_ignore_sjdbgtf": {
+            "type": "boolean"
+        },
+        "save_merged_fastq": {
+            "type": "boolean"
+        },
+        "save_unaligned": {
+            "type": "boolean"
+        },
+        "save_align_intermeds": {
+            "type": "boolean"
+        }
+    }
 }
