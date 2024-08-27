@@ -4,10 +4,13 @@
 //               https://nf-co.re/join
 // TODO nf-core: A subworkflow SHOULD import at least two modules
 
-include { RSEQC_TIN                 } from '../modules/nf-core/rseqc/tin/main'
-include { RSEQC_READDISTRIBUTION    } from '../modules/nf-core/rseqc/readdistribution/main'
-include { RSEQC_JUNCTIONSATURATION  } from '../modules/nf-core/rseqc/junctionsaturation/main'
-include { RSEQC_GENEBODYCOVERAGE    } from '../modules/local/rseqc_genebodycoverage'
+include { RSEQC_TIN                       } from '../../modules/nf-core/rseqc/tin/main'
+include { RSEQC_READDISTRIBUTION          } from '../../modules/nf-core/rseqc/readdistribution/main'
+include { RSEQC_JUNCTIONSATURATION        } from '../../modules/nf-core/rseqc/junctionsaturation/main'
+include { RSEQC_GENEBODYCOVERAGE          } from '../../modules/local/rseqc/genebodycoverage'
+include { RSEQC_TINSUMMARY                } from '../../modules/local/rseqc/tinsummary'
+include { RSEQC_GENEBODYCOVERAGEPLOT      } from '../../modules/local/rseqc/genebodycoverageplot'
+include { RSEQC_READDISTRIBUTIONMATRIX    } from '../../modules/local/rseqc/readdistributionmatrix'
 
 workflow RSEQC {
 
@@ -28,7 +31,7 @@ workflow RSEQC {
 
     RSEQC_TIN(bam_bai, bed)
     tin_txt      = RSEQC_TIN.out.txt
-    versions    = versions.mix(RSEQC_TIN.out.versions.first())
+    ch_versions  = ch_versions.mix(RSEQC_TIN.out.versions.first())
 
     //
     // Run RSeQC read_distribution.py
@@ -37,7 +40,7 @@ workflow RSEQC {
 
     RSEQC_READDISTRIBUTION(bam, bed)
     readdistribution_txt = RSEQC_READDISTRIBUTION.out.txt
-    versions             = versions.mix(RSEQC_READDISTRIBUTION.out.versions.first())
+    ch_versions          = ch_versions.mix(RSEQC_READDISTRIBUTION.out.versions.first())
 
     //
     // Run RSeQC geneBody_coverage.py
@@ -46,7 +49,7 @@ workflow RSEQC {
 
     RSEQC_GENEBODYCOVERAGE(bam, bed)
     genebodycoverage_rscript   = RSEQC_GENEBODYCOVERAGE.out.rscript
-    versions                   = versions.mix(RSEQC_GENEBODYCOVERAGE.out.versions.first())
+    ch_versions                = ch_versions.mix(RSEQC_GENEBODYCOVERAGE.out.versions.first())
 
     //
     // Run RSeQC junction_saturation.py
@@ -59,12 +62,38 @@ workflow RSEQC {
     junctionsaturation_pdf     = RSEQC_JUNCTIONSATURATION.out.pdf
     junctionsaturation_rscript = RSEQC_JUNCTIONSATURATION.out.rscript
     junctionsaturation_all     = junctionsaturation_pdf.mix(junctionsaturation_rscript)
-    versions                   = versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
+    ch_versions                = ch_versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
+
+    //
+    // Run RSeQC Tin Summary
+    //
+    tin_summary = Channel.empty()
+
+    RSEQC_TINSUMMARY(tin_txt)
+    tin_summary                = RSEQC_TINSUMMARY.out.summary_txt
+    ch_versions                = ch_versions.mix(RSEQC_TINSUMMARY.out.versions.first())
+
+    //
+    // Run RSeQC Gene Body Coverage Plot
+    //
+    genebodycoverage_plot    = Channel.empty()
+
+    RSEQC_GENEBODYCOVERAGEPLOT(genebodycoverage_rscript)
+    genebodycoverage_plot      = RSEQC_GENEBODYCOVERAGEPLOT.out.png_curves
+    ch_versions                = ch_versions.mix(RSEQC_GENEBODYCOVERAGEPLOT.out.versions.first())
+
+    //
+    // Run RSeQC Read Distribution Matrix
+    //
+    readdistribution_matrix = Channel.empty()
+readdistribution_txt.map{ it[1] }.collect().view()
+    RSEQC_READDISTRIBUTIONMATRIX(readdistribution_txt.map{ it[1] }.collect())
+    ch_versions                = ch_versions.mix(RSEQC_READDISTRIBUTIONMATRIX.out.versions.first())
 
     emit:
 
     tin_txt                         // channel: [ val(meta), txt ]
-    
+
     readdistribution_txt            // channel: [ val(meta), txt ]
 
     genebodycoverage_rscript
