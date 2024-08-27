@@ -14,17 +14,19 @@ include { paramsSummaryMap       } from 'plugin/nf-validation'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { QUANTIFY_SALMON } from '../subworkflows/local/quantify_salmon'
+include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
+include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
+include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,6 +78,7 @@ workflow RIMA {
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
+        params.transcript_fasta
         )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -95,11 +98,24 @@ workflow RIMA {
         PREPARE_GENOME.out.fasta.map { [ [:], it ] }
     )
 
+    ch_transcriptome_bam = PREPROCESS_STAR.out.bam_transcript
+
     ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-        //
+    QUANTIFY_SALMON (
+        ch_transcriptome_bam,
+        ch_dummy_file,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
+        true,
+        params.salmon_quant_libtype ?: ''
+    )
+
+    ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+
+    //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)

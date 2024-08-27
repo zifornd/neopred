@@ -10,7 +10,7 @@ process SALMON_QUANT {
     input:
     tuple val(meta), path(reads)
     path  index
-    path  gtf
+    //path  gtf
     path  transcript_fasta
     val   alignment_mode
     val   lib_type
@@ -60,7 +60,6 @@ process SALMON_QUANT {
     }
     """
     salmon quant \\
-        --geneMap $gtf \\
         --threads $task.cpus \\
         --libType=$strandedness \\
         $reference \\
