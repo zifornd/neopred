@@ -95,7 +95,9 @@ workflow PREPROCESS_STAR {
     fastq          = ch_fastq                       // channel: [ val(meta), fastq          ]
     tab            = ch_tab                         // channel: [ val(meta), tab            ]
 
-    bam_sort    = SAMTOOLS_SORT.out.bam             // channel: [ val(meta), [ bam ]        ]
+    bam_sort       = SAMTOOLS_SORT.out.bam          // channel: [ val(meta), [ bam ]        ]
+    bam_bai        = ch_bam_bai                     // channel: [ val(meta), [ bam ]        ]
+    
     stats          = SAMTOOLS_STATS.out.stats       // channel: [ val(meta), [ stats ]      ]
     metrics        = STAR_METRICS.out.csv           // channel: [ val(meta), [ star_metric] ]
 

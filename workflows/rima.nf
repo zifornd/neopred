@@ -99,8 +99,12 @@ workflow RIMA {
     )
 
     ch_transcriptome_bam = PREPROCESS_STAR.out.bam_transcript
+    ch_sorted_bam    = PREPROCESS_STAR.out.bam_sort
+    ch_bam_bai       = PREPROCESS_STAR.out.bam_bai
+    samtools_stats   = PREPROCESS_STAR.out.stats
+    star_metrics     = PREPROCESS_STAR.out.metrics
+    ch_versions      = ch_versions.mix(PREPROCESS_STAR.out.versions)
 
-    ch_versions = ch_versions.mix(PREPROCESS_STAR.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
@@ -170,9 +174,6 @@ workflow RIMA {
 
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    samtools_stats = PREPROCESS_STAR.out.stats  // channel: /path/to/stats
-    sorted_bam = PREPROCESS_STAR.out.bam_sort
-    star_metrics = PREPROCESS_STAR.out.metrics  // channel: /path/to/star_metrics
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
