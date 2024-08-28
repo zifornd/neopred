@@ -1,6 +1,6 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / FUNCTIONS : Consists of validation based plugins and modules
+    IMPORT NF-CORE MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -8,20 +8,14 @@ include { FASTQC                 } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT SUBWORKFLOWS : Consists of a mix of local and nf-core subworkflows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
-
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
+include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -53,6 +47,9 @@ workflow RIMA {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // Stage dummy file to be used as an optional input where required
+    ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+
     //
     // MODULE: Run FastQC
     //
@@ -69,6 +66,7 @@ workflow RIMA {
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
+        params.transcript_fasta
         )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -88,15 +86,28 @@ workflow RIMA {
         PREPARE_GENOME.out.fasta.map { [ [:], it ] }
     )
 
+    ch_transcriptome_bam = PREPROCESS_STAR.out.bam_transcript
     ch_sorted_bam    = PREPROCESS_STAR.out.bam_sort
     ch_bam_bai       = PREPROCESS_STAR.out.bam_bai
     samtools_stats   = PREPROCESS_STAR.out.stats
     star_metrics     = PREPROCESS_STAR.out.metrics
     ch_versions      = ch_versions.mix(PREPROCESS_STAR.out.versions)
+
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-        //
+    QUANTIFY_SALMON (
+        ch_transcriptome_bam,
+        ch_dummy_file,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
+        true,
+        params.salmon_quant_libtype ?: ''
+    )
+
+    ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+
+    //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)
