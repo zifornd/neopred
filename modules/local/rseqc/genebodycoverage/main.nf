@@ -8,12 +8,14 @@ process RSEQC_GENEBODYCOVERAGE {
         'biocontainers/rseqc:5.0.3--py39hf95cd2a_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     path  bed
 
     output:
-    tuple val(meta), path("*.gene_body_coverage.r"), emit: rscript
-    path  "versions.yml"                           , emit: versions
+    tuple val(meta), path("*.geneBodyCoverage.r"), emit: rscript
+    path("*.geneBodyCoverage.txt")               , emit: gbc_txt
+    path("*.geneBodyCoverage.curves.pdf")        , emit: pdf_curves
+    path  "versions.yml"                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,8 +28,7 @@ process RSEQC_GENEBODYCOVERAGE {
     geneBody_coverage.py \\
         -i $bam \\
         -r $bed \\
-        -f png \\
-        > ${prefix}.gene_body_coverage.r
+        -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

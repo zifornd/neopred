@@ -103,10 +103,16 @@ workflow RIMA {
 
     RSEQC (
         ch_bam_bai,
-        params.genome_bed
+        params.gtf
     )
 
-    ch_versions      = ch_versions.mix(RSEQC.out.versions)
+    ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
+    ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
+    ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
+    ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
+    //ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
+    ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
+    ch_versions                   = ch_versions.mix(RSEQC.out.versions)
 
     //
     // Collate and save software versions

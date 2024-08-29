@@ -3,7 +3,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     nf/rima
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf/rima
+    Github : https://github.com/zifornd/nf-rima
 ----------------------------------------------------------------------------------------
 */
 
@@ -15,7 +15,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { RIMA  } from './workflows/rima'
+include { RIMA                    } from './workflows/rima'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rima_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rima_pipeline'
 

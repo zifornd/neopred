@@ -22,7 +22,7 @@ process RSEQC_TINSUMMARY {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    cat ${txt} | sed '1 !{{/Bam_file/d;}}' > ${prefix}.tin_score_summary.txt
+    cat ${txt} | sed '/Bam_file/d' > ${prefix}.tin_score_summary.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

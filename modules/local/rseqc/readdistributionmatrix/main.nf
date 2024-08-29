@@ -10,7 +10,7 @@ process RSEQC_READDISTRIBUTIONMATRIX {
     path(txt)
 
     output:
-    path("read_distrib.matrix.tab"), emit: matrix_txt
+    path("read_distrib.matrix.tab"), emit: matrix_tab
     path  "versions.yml"           , emit: versions
 
     when:
