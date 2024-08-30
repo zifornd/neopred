@@ -1,0 +1,3 @@
+sample,fastq_1,fastq_2,strandedness,,design,batch
+SRR8281226,/home/sinrasu/samples/SRR8281226_pass_1.fq.gz,/home/sinrasu/samples/SRR8281226_pass_2.fq.gz,auto,control,b1
+SRR8281243,/home/sinrasu/samples/SRR8281243_pass_1.fq.gz,/home/sinrasu/samples/SRR8281243_pass_2.fq.gz,reverse,treatment,b2

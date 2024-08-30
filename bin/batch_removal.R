@@ -75,8 +75,7 @@ if(opts$covariates == "False"){
     expr.limma = rbind(expr.limma,exprZero)
     writeDF(ssgsvaFormat(expr.limma),opts$output_after)
 
-}
-else {
+}else {
     samples$Batch <- samples[,opts$covariates]
     #print(samples)
 
