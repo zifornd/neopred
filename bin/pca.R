@@ -1,5 +1,4 @@
 #!/usr/bin/env Rscript
-
 suppressMessages(library(ggplot2))
 suppressMessages(library(ggfortify))
 suppressMessages(library(RColorBrewer))
