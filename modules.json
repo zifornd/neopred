@@ -43,12 +43,16 @@
                     "gffread": {
                         "branch": "master",
                         "git_sha": "6c996d7fbe0816dcbb68ce587ad5f873313682a1",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "4e5f4687318f24ba944a13609d3ea6ebd890737d",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ]
                     },
                     "multiqc": {
                         "branch": "master",
@@ -85,6 +89,21 @@
                             "modules"
                         ]
                     },
+                    "rsem/preparereference": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "salmon/quant": {
+                        "branch": "master",
+                        "git_sha": "727232afb8294b53dd9d05bfe469b70cce1675bb",
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/salmon/quant/salmon-quant.diff"
+                    },
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
@@ -98,12 +117,6 @@
                         "installed_by": [
                             "modules"
                         ]
-                    },
-                    "salmon/quant": {
-                        "branch": "master",
-                        "git_sha": "727232afb8294b53dd9d05bfe469b70cce1675bb",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/salmon/quant/salmon-quant.diff"
                     },
                     "samtools/index": {
                         "branch": "master",

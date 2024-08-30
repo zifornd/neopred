@@ -15,6 +15,7 @@ include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rim
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,6 +107,12 @@ workflow RIMA {
     )
 
     ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+
+    PRE_VARIANTCALLING(
+        ch_transcriptome_bam,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
+    )
 
     //
     // Collate and save software versions

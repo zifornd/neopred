@@ -2,42 +2,48 @@
 // Pre-processing Base Quality Recalibration with GATK4
 //
 
-include { SAMTOOLS_FAIDX } from '../modules/nf-core/samtools/faidx/main'
-include { PICARD_COLLECTMULTIPLEMETRICS } from '../modules/nf-core/picard/collectmultiplemetrics/main'
-include { PICARD_ADDORREPLACEREADGROUPS } from '../modules/nf-core/picard/addorreplacereadgroups/main'
-include { PICARD_MARKDUPLICATES } from '../modules/nf-core/picard/markduplicates/main'
-include { SAMTOOLS_FLAGSTAT } from '../modules/nf-core/samtools/flagstat/main'
-include { PICARD_CREATESEQUENCEDICTIONARY               } from '../../modules/nf-core/picard/createsequencedictionary/main'
-include { GATK4_SPLITNCIGARREADS                        } from '../../modules/nf-core/gatk4/splitncigarreads/main'
-include { GATK4_BASERECALIBRATOR } from '../modules/nf-core/gatk4/baserecalibrator/main'
-include { GATK4_APPLYBQSR              } from '../../modules/nf-core/gatk4/applybqsr/main'
-include { GATK4_INDEXFEATUREFILE } from '../modules/nf-core/gatk4/indexfeaturefile/main'
-
+include { PICARD_COLLECTALIGNMENTSUMMARYMETRICS } from '../../../modules/local/picard/collectmetrics/main'
+include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/picard/collectmultiplemetrics/main'
+include { PICARD_ADDORREPLACEREADGROUPS } from '../../../modules/nf-core/picard/addorreplacereadgroups/main'
+include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
+include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
+include { PICARD_CREATESEQUENCEDICTIONARY               } from '../../../modules/nf-core/picard/createsequencedictionary/main'
+include { GATK4_SPLITNCIGARREADS                        } from '../../../modules/nf-core/gatk4/splitncigarreads/main'
+include { GATK4_BASERECALIBRATOR } from '../../../modules/nf-core/gatk4/baserecalibrator/main'
+include { GATK4_APPLYBQSR              } from '../../../modules/nf-core/gatk4/applybqsr/main'
+include { GATK4_INDEXFEATUREFILE } from '../../../modules/nf-core/gatk4/indexfeaturefile/main'
+/*
 include { PICARD_CREATESEQUENCEDICTIONARY               } from '../../modules/nf-core/picard/createsequencedictionary/main'
 include { GATK4_SPLITNCIGARREADS                        } from '../../modules/nf-core/gatk4/splitncigarreads/main'
 include { GATK4_INDEXFEATUREFILE                     } from '../../modules/nf-core/gatk4/indexfeaturefile/main'
 include { GATK4_BASERECALIBRATOR } from '../../modules/nf-core/gatk4/baserecalibrator/main'
 include { GATK4_APPLYBQSR              } from '../../modules/nf-core/gatk4/applybqsr/main'
-
-workflow PREPROCESS{
+*/
+workflow PRE_VARIANTCALLING{
 
     take:
 
     bam
     fasta
+    fai
 
     //bam               // channel: [ val(meta), [ bamfiles ] ]
-    fasta             // channel: /path/to/genome.fa
-    fai               // channel: /path/to/genome.fai
+    //fasta             // channel: /path/to/genome.fa
+    //fai               // channel: /path/to/genome.fai
     //dict              // channel: /path/to/genome.dict
-    markdup_bam       // channel: []
-    markdup_bai
-    known_indels      // channel: /path/to/reference.vcf.gz
-    known_indels_tbi  // channel: /path/to/reference.vcf.gz.tbi
+    //markdup_bam       // channel: []
+    //markdup_bai
+    //known_indels      // channel: /path/to/reference.vcf.gz
+    //known_indels_tbi  // channel: /path/to/reference.vcf.gz.tbi
 
     main:
 
     ch_versions = Channel.empty()
+
+    //
+    //PICARD_COLLECTMULTIPLEMETRICS
+    //
+    PICARD_COLLECTALIGNMENTSUMMARYMETRICS(bam,fasta,fai)
 
     //
     // Creates index for given vcf file. - Can be used when .tbi file of known indels are not provided
@@ -46,6 +52,7 @@ workflow PREPROCESS{
     //
     // Create sequence dictionary file for reference fasta
     //
+    /*
     PICARD_CREATESEQUENCEDICTIONARY (
         fasta
     )
@@ -105,8 +112,10 @@ workflow PREPROCESS{
     ch_bqsr_bai   = GATK4_APPLYBQSR.out.bai
     ch_bqsr_cram  = GATK4_APPLYBQSR.out.cram
     ch_versions   = ch_versions.mix(GATK4_SPLITNCIGARREADS.out.versions,GATK4_BASERECALIBRATOR.out.versions,GATK4_APPLYBQSR.out.versions)
+    */
 
     emit:
+    /*
     bqsr_table     = ch_bqsr_table              // channel: [ val(meta), bqsr_table      ]
     bqsr_bam       = ch_bqsr_bam                // channel: [ val(meta), bqsr_bam        ]
     bqsr_bai       = ch_bqsr_bai                // channel: [ val(meta), bqsr_bai        ]
@@ -114,5 +123,6 @@ workflow PREPROCESS{
     splitreads_bam = ch_splitreads_bam         // channel: [ val(meta), splitreads      ]
     splitreads_bai = ch_splitreads_bai         // channel: [ val(meta), splitreads      ]
     dict	   = ch_dict		       // channel: [ val(meta), dict		]
+    */
     versions       = ch_versions                // channel: [ versions.yml		]
 }
