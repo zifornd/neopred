@@ -12,7 +12,7 @@ include { BCFTOOLS_VIEW                     } from '../../modules/nf-core/bcftoo
 include { BCFTOOLS_INDEX                    } from '../../modules/nf-core/bcftools/index/main'
 include { GATK4_COUNTVARIANTS as GATK4_SNP_COUNTS              } from '../../modules/local/gatk4_countvariants'
 
-workflow VARIANT_CALLINGFILTERING {    
+workflow VARIANT_CALLINGFILTERING {
 
     take:
     bam
@@ -26,7 +26,6 @@ workflow VARIANT_CALLINGFILTERING {
     fasta
     fai
     dict
-    
 
     main:
 
@@ -58,7 +57,7 @@ workflow VARIANT_CALLINGFILTERING {
         bam,
         bai,
         pileup_vcf,
-        pileup_vcftbi 
+        pileup_vcftbi
     )
     ch_table    = GATK4_GETPILEUPSUMMARIES.out.table
     ch_versions = ch_versions.mix(GATK4_GETPILEUPSUMMARIES.out.versions.first())
@@ -113,7 +112,7 @@ workflow VARIANT_CALLINGFILTERING {
     ch_versions     = ch_versions.mix(GATK4_SELECTVARIANTS.out.versions.first())
 
     GATK4_SNP_COUNTS ( ch_selected_vcf, ch_selected_tbi )
-     
+
     emit:
     table                       =   ch_table
     artifactprior               =   ch_artifactprior
