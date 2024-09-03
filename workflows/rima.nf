@@ -75,7 +75,6 @@ workflow RIMA {
     // SUBWORKFLOW: Preprocess STAR
     //
 
-
     PREPROCESS_STAR (
         ch_samplesheet,
         PREPARE_GENOME.out.star_index.map { [ [:], it ] },
@@ -109,11 +108,15 @@ workflow RIMA {
     ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
 
     PRE_VARIANTCALLING(
+        ch_sorted_bam,
         ch_bam_bai,
         PREPARE_GENOME.out.fasta.map { [ [:], it ] },
         PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
-        [ [], 0 ]
+        params.dbsnp,
+        params.dbsnp_tbi
     )
+
+    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
 
     //
     // Collate and save software versions
