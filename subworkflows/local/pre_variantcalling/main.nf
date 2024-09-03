@@ -6,7 +6,8 @@ include { PICARD_COLLECTALIGNMENTSUMMARYMETRICS } from '../../../modules/local/p
 include { PICARD_COLLECTMULTIPLEMETRICS } from '../../../modules/nf-core/picard/collectmultiplemetrics/main'
 include { PICARD_ADDORREPLACEREADGROUPS } from '../../../modules/nf-core/picard/addorreplacereadgroups/main'
 include { PICARD_MARKDUPLICATES } from '../../../modules/nf-core/picard/markduplicates/main'
-include { SAMTOOLS_FLAGSTAT } from '../../../modules/nf-core/samtools/flagstat/main'
+include { SAMTOOLS_FLAGSTAT as SAMTOOLS_FLAGSTAT_BAMRG     } from '../../../modules/nf-core/samtools/flagstat/main'
+include { SAMTOOLS_FLAGSTAT as SAMTOOLS_FLAGSTAT_BAMMARKDUB } from '../../../modules/nf-core/samtools/flagstat/main'
 include { PICARD_CREATESEQUENCEDICTIONARY               } from '../../../modules/nf-core/picard/createsequencedictionary/main'
 include { GATK4_SPLITNCIGARREADS                        } from '../../../modules/nf-core/gatk4/splitncigarreads/main'
 include { GATK4_BASERECALIBRATOR } from '../../../modules/nf-core/gatk4/baserecalibrator/main'
@@ -26,6 +27,7 @@ workflow PRE_VARIANTCALLING{
     bam
     fasta
     fai
+    intervals //channel: [mandatory] [ intervals, num_intervals ] (or [ [], 0 ] if no intervals)
 
     //bam               // channel: [ val(meta), [ bamfiles ] ]
     //fasta             // channel: /path/to/genome.fa
@@ -43,8 +45,33 @@ workflow PRE_VARIANTCALLING{
     //
     //PICARD_COLLECTMULTIPLEMETRICS
     //
-    PICARD_COLLECTALIGNMENTSUMMARYMETRICS(bam,fasta,fai)
+    PICARD_COLLECTMULTIPLEMETRICS(bam,fasta,fai)
 
+    PICARD_ADDORREPLACEREADGROUPS (bam, [[:],[]], [[:],[]])
+
+    //SAMTOOLS_FLAGSTAT_BAMRG (PICARD_ADDORREPLACEREADGROUPS.out.bam)
+
+    PICARD_MARKDUPLICATES (PICARD_ADDORREPLACEREADGROUPS.out.bam, fasta,fai)
+
+    //SAMTOOLS_FLAGSTAT_BAMMARKDUB (PICARD_MARKDUPLICATES.out.bam)
+
+    PICARD_CREATESEQUENCEDICTIONARY (fasta.join(fai,by:[0]))
+
+    ch_dict = PICARD_CREATESEQUENCEDICTIONARY.out.reference_dict
+    ch_versions = ch_versions.mix(PICARD_CREATESEQUENCEDICTIONARY.out.versions)
+
+    ch_bam_bai = PICARD_MARKDUPLICATES.out.bam
+        .join(PICARD_MARKDUPLICATES.out.bai, by: [0])
+        .join(intervals, by: [0])
+        .map {
+        meta, bam, bai, intervals -> {[meta, bam, bai, intervals]}
+        }
+        .set{ch_bam_bai_int}
+
+    ch_bam_bai_int.view()
+
+
+    GATK4_SPLITNCIGARREADS (PICARD_MARKDUPLICATES.out.bam.join(PICARD_MARKDUPLICATES.out.bai,by:[0]),fasta,fai,ch_dict)
     //
     // Creates index for given vcf file. - Can be used when .tbi file of known indels are not provided
     //

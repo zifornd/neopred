@@ -109,9 +109,10 @@ workflow RIMA {
     ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
 
     PRE_VARIANTCALLING(
-        ch_transcriptome_bam,
+        ch_bam_bai,
         PREPARE_GENOME.out.fasta.map { [ [:], it ] },
-        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+        [ [], 0 ]
     )
 
     //
