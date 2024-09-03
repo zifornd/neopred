@@ -1,23 +1,8 @@
-name: STAR
+name: rseqc_genebodycoverageplot
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
-  - star>=2.7.11b
-  - samtools=1.19.2=h50ea8bc_0
-  - bedtools=2.31.1=hf5e1c6e_0
-  - picard=3.1.1=hdfd78af_0
-  - rseqc=5.0.3=py310h4b81fae_0
-  - salmon=0.14.2=ha0cc327_0
-  - r=4.3=r43hd8ed1ab_1007
-  - r-ggfortify=0.4.16=r43hc72bb7e_1
-  - r-reshape=0.8.9=r43hc72bb7e_2
-  - r-ggplot2=3.4.4=r43hc72bb7e_0
-  - r-optparse=1.7.4=r43hc72bb7e_0
-  - r-ggpubr=0.6.0=r43hc72bb7e_1
-  - perl=5.32.1=7_hd590300_perl5
-  - bioconductor-deseq2=1.42.0=r43hf17093f_0
-  - bioconductor-tximport=1.30.0=r43hdfd78af_1
-  - bioconductor-sva=3.50.0=r43ha9d7317_0
-  - bioconductor-limma=3.58.1=r43ha9d7317_0
+  - bioconda::rseqc=5.0.3
+  - conda-forge::r-base>=3.5

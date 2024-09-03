@@ -1,4 +1,4 @@
-name: rseqc_readdistributionmatrix
+name: rseqc_tin
 channels:
   - conda-forge
   - bioconda
