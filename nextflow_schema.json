@@ -330,6 +330,14 @@
         },
         "save_align_intermeds": {
             "type": "boolean"
+        },
+        "batch": {
+            "type": "string",
+            "default": "batch"
+        },
+        "design": {
+            "type": "string",
+            "default": "design"
         }
     }
 }

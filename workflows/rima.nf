@@ -118,8 +118,7 @@ workflow RIMA {
     //
     // SUBWORKFLOW: Batch removal and PCA
     //
-
-    BATCH_REMOVAL_ANALYSIS (params.input,QUANTIFY_SALMON.out.tpm_gene)
+    BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
     ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)

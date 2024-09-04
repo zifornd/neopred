@@ -9,6 +9,8 @@ process PCA_SAMPLE_CLUSTERING {
 
     input:
     path samplesheet
+    val batch
+    val design
     path after_br
     path before_br
 
@@ -20,16 +22,16 @@ process PCA_SAMPLE_CLUSTERING {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
+    script:
     """
     pca.R \\
         -b ${before_br} \\
         -a ${after_br} \\
         -m ${samplesheet} \\
-        -c batch \\
-        -g design \\
-        -i design_batch_pca_plot_before.pdf \\
-        -j design_batch_pca_plot_after.pdf
+        -c ${batch} \\
+        -g ${design} \\
+        -i ${design}_${batch}_pca_plot_before.pdf \\
+        -j ${design}_${batch}_pca_plot_after.pdf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

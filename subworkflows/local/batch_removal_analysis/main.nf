@@ -1,4 +1,5 @@
-//include batch removal and pca
+//Runs batch removal using limma method and generates PCA plot for clustering samples
+
 include { BATCH_REMOVAL              } from '../../../modules/local/batch_removal'
 include { PCA_SAMPLE_CLUSTERING      } from '../../../modules/local/pca_sample_clustering'
 
@@ -6,6 +7,8 @@ include { PCA_SAMPLE_CLUSTERING      } from '../../../modules/local/pca_sample_c
 workflow BATCH_REMOVAL_ANALYSIS {
     take:
     sample               // channel: [ val(meta), [ reads ] ]
+    batch                // batch variable
+    design               // design variable
     tpm_gene             // channel: /path/to/tx2gene/tpm_gene
 
     main:
@@ -15,10 +18,10 @@ workflow BATCH_REMOVAL_ANALYSIS {
     //
     // Module: Batch removal
     //
-    BATCH_REMOVAL ( sample, tpm_gene )
+    BATCH_REMOVAL ( sample,batch,design,tpm_gene )
     ch_versions       = ch_versions.mix(BATCH_REMOVAL.out.versions)
 
-    PCA_SAMPLE_CLUSTERING ( sample, BATCH_REMOVAL.out.after_br, BATCH_REMOVAL.out.before_br )
+    PCA_SAMPLE_CLUSTERING ( sample,batch,design,BATCH_REMOVAL.out.after_br, BATCH_REMOVAL.out.before_br )
     ch_versions       = ch_versions.mix(PCA_SAMPLE_CLUSTERING.out.versions)
 
     emit:

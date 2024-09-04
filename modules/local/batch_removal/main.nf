@@ -8,8 +8,10 @@ process BATCH_REMOVAL {
 
 
     input:
-    path (samplesheet)
-    path (tpm_gene)
+    path samplesheet
+    val batch
+    val design
+    path tpm_gene
 
     output:
     path "*_tpm.genesymbol.batchremoved.csv", emit: after_br
@@ -19,17 +21,16 @@ process BATCH_REMOVAL {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
-
+    script:
     """
     batch_removal.R \\
         -e ${tpm_gene} \\
-        -c batch \\
-        -d design \\
+        -c ${batch} \\
+        -d ${design} \\
         -m ${samplesheet} \\
-        -b design_batch_tpm.genesymbol.csv \\
-        -a design_batch_tpm.genesymbol.batchremoved.csv
-    cp design_batch_tpm.genesymbol.batchremoved.csv tpm.genesymbol.batchremoved.csv
+        -b ${design}_${batch}_tpm.genesymbol.csv \\
+        -a ${design}_${batch}_tpm.genesymbol.batchremoved.csv
+    cp ${design}_${batch}_tpm.genesymbol.batchremoved.csv tpm.genesymbol.batchremoved.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
