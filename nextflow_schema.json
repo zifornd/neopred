@@ -339,8 +339,7 @@
         },
         "gene_bed": {
             "type": "string",
-            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified.",
-            "default": "/home/sai/nf-rima/assets/refseqGenes.bed"
+            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
         },
         "gtf": {
             "type": "string",
