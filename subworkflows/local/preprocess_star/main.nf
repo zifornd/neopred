@@ -103,3 +103,4 @@ workflow PREPROCESS_STAR {
 
     versions       = ch_versions                    // channel: [ versions.yml ]
 }
+
