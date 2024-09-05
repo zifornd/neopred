@@ -33,11 +33,13 @@ workflow PRE_VARIANTCALLING{
     ch_versions = ch_versions.mix(PICARD_ADDORREPLACEREADGROUPS.out.versions.first())
 
     SAMTOOLS_FLAGSTAT_BAMRG (PICARD_ADDORREPLACEREADGROUPS.out.bam.join(PICARD_ADDORREPLACEREADGROUPS.out.bai, by: [0]))
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT_BAMRG.out.versions.first())
 
     PICARD_MARKDUPLICATES (PICARD_ADDORREPLACEREADGROUPS.out.bam, fasta,fasta_fai)
     ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())
 
     SAMTOOLS_FLAGSTAT_BAMMARKDUB (PICARD_MARKDUPLICATES.out.bam.join(PICARD_MARKDUPLICATES.out.bai, by: [0]))
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT_BAMMARKDUB.out.versions.first())
 
     ch_bam_bai_int = PICARD_MARKDUPLICATES.out.bam
         .join(PICARD_MARKDUPLICATES.out.bai, by: [0])
@@ -58,16 +60,15 @@ workflow PRE_VARIANTCALLING{
     ch_recal_table = GATK4_BASERECALIBRATOR.out.table
     ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR.out.versions.first())
 
-    ch_input_bqsr = ch_bam_bai_int.join(ch_recal_table,by:[0])
+    ch_input_bqsr = ch_bam_bai_int_split.join(GATK4_BASERECALIBRATOR.out.table,by:[0])
         .map{ meta, bam, bai, empty, table -> [ meta, bam, bai, table, empty] }
 
     GATK4_APPLYBQSR(ch_input_bqsr, fasta.map{ meta, it -> it }, fasta_fai.map{ meta, it -> it }, ch_dict.map{ meta, it -> it })
-    bqsr_bam = GATK4_APPLYBQSR.out.bam
-    bqsr_cram = GATK4_APPLYBQSR.out.cram
+    ch_bqsr_bam = GATK4_APPLYBQSR.out.bam
+    ch_bqsr_cram = GATK4_APPLYBQSR.out.cram
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions.first())
 
     emit:
-
     recal_table     = ch_recal_table             // channel: [ val(meta), bqsr_table ]
     bqsr_bam        = ch_bqsr_bam                // channel: [ val(meta), bqsr_bam  ]
     bqsr_cram       = ch_bqsr_cram               // channel: [ val(meta), bqsr_cram ]
