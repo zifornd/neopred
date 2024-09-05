@@ -1,4 +1,4 @@
-process ARCASHLA_GENOTYPE {
+process ARCASHLA_MERGE {
     tag "$meta.id"
     label 'process_medium'
 
@@ -23,7 +23,6 @@ process ARCASHLA_GENOTYPE {
     def VERSION = "0.5.0" // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    // cp ${gt} ./
     arcasHLA \\
         merge \\
         -i . \\
