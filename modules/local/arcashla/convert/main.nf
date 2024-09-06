@@ -1,4 +1,4 @@
-process ARCASHLA_MERGE {
+process ARCASHLA_CONVERT {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
@@ -10,8 +10,8 @@ process ARCASHLA_MERGE {
     path(gt)
 
     output:
-    path ("*.genotypes.tsv")   , emit: merged_gt
-    path "versions.yml"                         , emit: versions
+    path ("*genotypes.p-group.tsv")   , emit: gt_group
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,9 +22,9 @@ process ARCASHLA_MERGE {
 
     """
     arcasHLA \\
-        merge \\
-        -i $gt \\
-        -o . 
+        convert \\
+        -r $gt \\
+        -o .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
