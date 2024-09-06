@@ -21,9 +21,7 @@ process ARCASHLA_GENOTYPE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def single_end  = meta.single_end ? "--single" : ""
     def VERSION = "0.5.0" // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
@@ -31,7 +29,6 @@ process ARCASHLA_GENOTYPE {
         genotype \\
         $read \\
         -g A,B,C,DPB1,DQB1,DQA1,DRB1 \\
-        $args \\
         -o . \\
         -t $task.cpus \\
         -v

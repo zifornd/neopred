@@ -4,19 +4,20 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { FASTQC                  } from '../modules/nf-core/fastqc/main'
+include { MULTIQC                 } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap        } from 'plugin/nf-validation'
 
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
+include { HLA_TYPING              } from '../subworkflows/local/hla_typing'
 
 
 /*
@@ -98,7 +99,7 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-    //
+    /*//
     // SUBWORKFLOW: RSeQC
     //
 
@@ -117,6 +118,7 @@ workflow RIMA {
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
+	 */
 
     //
     // SUBWORKFLOW: Salmon Quantification
@@ -138,10 +140,27 @@ workflow RIMA {
     //
     // SUBWORKFLOW: Batch removal and PCA
     //
-    BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
+    BATCH_REMOVAL_ANALYSIS (
+        params.input,
+        params.batch,
+        params.design,
+        QUANTIFY_SALMON.out.tpm_gene)
+    
     ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
+    
+    //
+    // SUBWORKFLOW: arcasHLA Typing
+    //
+    HLA_TYPING (
+		  params.input,
+        ch_sorted_bam,
+        BATCH_REMOVAL_ANALYSIS.out.after_br,
+        params.batch,
+        params.design)
+    
+    ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
 
     //

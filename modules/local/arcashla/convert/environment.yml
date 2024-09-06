@@ -1,4 +1,4 @@
-name: arcashla_extract
+name: arcashla_convert
 channels:
   - conda-forge
   - bioconda
