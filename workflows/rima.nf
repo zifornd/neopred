@@ -17,6 +17,7 @@ include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
+include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,6 +117,11 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
+    //
+    // SUBWORKFLOW: Salmon Quantification
+    //
+
+
     QUANTIFY_SALMON (
         ch_transcriptome_bam,
         ch_dummy_file,
@@ -126,6 +132,16 @@ workflow RIMA {
     )
 
     ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_SALMON.out.multiqc.collect{it[1]})
+
+    //
+    // SUBWORKFLOW: Batch removal and PCA
+    //
+    BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
+    ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
+
 
     PRE_VARIANTCALLING(
         ch_sorted_bam,

@@ -344,6 +344,16 @@
         "gtf": {
             "type": "string",
             "description": "Path to GTF annotation file."
+        },
+        "batch": {
+            "type": "string",
+            "default": "batch",
+            "description": "Column that describes the batch effect of various samples"
+        },
+        "design": {
+            "type": "string",
+            "default": "design",
+            "description": "Condition to compare samples (column from metasheet)"
         }
     }
 }
