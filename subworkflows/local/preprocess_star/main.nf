@@ -82,7 +82,7 @@ workflow PREPROCESS_STAR {
     //
     // Module: STAR metrics
     //
-    STAR_METRICS (ch_log_final)
+    STAR_METRICS (ch_log_final.map{ it[1] }.collect())
     ch_versions = ch_versions.mix(STAR_METRICS.out.versions)
 
     emit:
@@ -103,3 +103,4 @@ workflow PREPROCESS_STAR {
 
     versions       = ch_versions                    // channel: [ versions.yml ]
 }
+

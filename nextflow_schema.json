@@ -314,22 +314,46 @@
     ],
     "properties": {
         "seq_center": {
-            "type": "string"
+            "type": "string",
+            "description": "Sequencing center information to be added to read group of BAM files."
         },
         "bam_csi_index": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes."
         },
         "star_ignore_sjdbgtf": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
         },
         "save_merged_fastq": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
         },
         "save_unaligned": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory."
         },
         "save_align_intermeds": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Save the intermediate BAM files from the alignment step."
+        },
+        "gene_bed": {
+            "type": "string",
+            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+        },
+        "gtf": {
+            "type": "string",
+            "description": "Path to GTF annotation file."
+        },
+        "batch": {
+            "type": "string",
+            "default": "batch",
+            "description": "Column that describes the batch effect of various samples"
+        },
+        "design": {
+            "type": "string",
+            "default": "design",
+            "description": "Condition to compare samples (column from metasheet)"
         }
     }
 }

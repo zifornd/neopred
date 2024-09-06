@@ -14,7 +14,10 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
+include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,9 +95,33 @@ workflow RIMA {
     samtools_stats   = PREPROCESS_STAR.out.stats
     star_metrics     = PREPROCESS_STAR.out.metrics
     ch_versions      = ch_versions.mix(PREPROCESS_STAR.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
+
+    //
+    // SUBWORKFLOW: RSeQC
+    //
+
+    RSEQC (
+        ch_bam_bai,
+        params.gtf
+    )
+
+    ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
+    ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
+    ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
+    ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
+    //ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
+    ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
+    ch_versions                   = ch_versions.mix(RSEQC.out.versions)
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
+
+    //
+    // SUBWORKFLOW: Salmon Quantification
+    //
+
 
     QUANTIFY_SALMON (
         ch_transcriptome_bam,
@@ -106,6 +133,16 @@ workflow RIMA {
     )
 
     ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_SALMON.out.multiqc.collect{it[1]})
+
+    //
+    // SUBWORKFLOW: Batch removal and PCA
+    //
+    BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
+    ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
+
 
     //
     // Collate and save software versions
