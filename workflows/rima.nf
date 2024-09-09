@@ -23,6 +23,10 @@ include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rim
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
+include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
+include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -77,7 +81,6 @@ workflow RIMA {
     // SUBWORKFLOW: Preprocess STAR
     //
 
-
     PREPROCESS_STAR (
         ch_samplesheet,
         PREPARE_GENOME.out.star_index.map { [ [:], it ] },
@@ -113,6 +116,43 @@ workflow RIMA {
     //ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
     ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
     ch_versions                   = ch_versions.mix(RSEQC.out.versions)
+
+    //
+    // SUBWORKFLOW: Salmon Quantification
+    //
+
+
+    QUANTIFY_SALMON (
+        ch_transcriptome_bam,
+        ch_dummy_file,
+        PREPARE_GENOME.out.transcript_fasta,
+        PREPARE_GENOME.out.gtf,
+        true,
+        params.salmon_quant_libtype ?: ''
+    )
+
+    ch_versions = ch_versions.mix(QUANTIFY_SALMON.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(QUANTIFY_SALMON.out.multiqc.collect{it[1]})
+
+    //
+    // SUBWORKFLOW: Batch removal and PCA
+    //
+    BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
+    ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
+    ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
+
+
+    PRE_VARIANTCALLING(
+        ch_sorted_bam,
+        ch_bam_bai,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+        params.dbsnp,
+        params.dbsnp_tbi
+    )
+
+    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions) 
 
     //
     // Subworkflow: Variant Identification and Filtering using GATK

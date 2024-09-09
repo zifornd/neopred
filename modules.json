@@ -20,6 +20,26 @@
                         "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
                         "installed_by": ["modules"]
                     },
+                    "gatk4/applybqsr": {
+                        "branch": "master",
+                        "git_sha": "af273ea6618c50e82c372abe18b0a225e84fe6f7",
+                        "installed_by": ["modules"]
+                    },
+                    "gatk4/baserecalibrator": {
+                        "branch": "master",
+                        "git_sha": "8a223e11d4e6deb36484e01891eae9c1cacb5f5d",
+                        "installed_by": ["modules"]
+                    },
+                    "gatk4/indexfeaturefile": {
+                        "branch": "master",
+                        "git_sha": "fc1f68b58e200e864ac8231e58b61634f6e509d2",
+                        "installed_by": ["modules"]
+                    },
+                    "gatk4/splitncigarreads": {
+                        "branch": "master",
+                        "git_sha": "e4e61bf24a6069b762c21d5f3649c91237163f86",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/gatk4/splitncigarreads/gatk4-splitncigarreads.diff"
                     "gatk4/calculatecontamination": {
                         "branch": "master",
                         "git_sha": "77ffba959bbe8b6e1d95d47688075d113e24f0d4",
@@ -65,11 +85,63 @@
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": ["modules"]
                     },
+                    "picard/addorreplacereadgroups": {
+                        "branch": "master",
+                        "git_sha": "0dee12b56ccecc416d6f7a1ccd85fd571eab3307",
+                        "installed_by": ["modules"]
+                    },
+                    "picard/collectmultiplemetrics": {
+                        "branch": "master",
+                        "git_sha": "e989cd75daa00e8e66a16eb3fe0aded361204886",
+                        "installed_by": ["modules"]
+                    },
+                    "picard/createsequencedictionary": {
+                        "branch": "master",
+                        "git_sha": "759232fe6aed8761bcb3a5d23813f2fa59d985ed",
+                        "installed_by": ["modules"]
+                    },
+                    "picard/markduplicates": {
+                        "branch": "master",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "installed_by": ["modules"]
+                    },
+                    "rsem/preparereference": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": ["modules"]
+                    },
+                    "rseqc/junctionsaturation": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/rseqc/junctionsaturation/rseqc-junctionsaturation.diff"
+                    },
+                    "rseqc/readdistribution": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/rseqc/readdistribution/rseqc-readdistribution.diff"
+                    },
+                    "rseqc/tin": {
+                        "branch": "master",
+                        "git_sha": "b4919e9a2b4d8b71061e601633db4600a3858fa1",
+                        "installed_by": ["modules"]
+                    },
                     "salmon/quant": {
                         "branch": "master",
                         "git_sha": "727232afb8294b53dd9d05bfe469b70cce1675bb",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/salmon/quant/salmon-quant.diff"
+                    },
+                    "samtools/faidx": {
+                        "branch": "master",
+                        "git_sha": "04fbbc7c43cebc0b95d5b126f6d9fe4effa33519",
+                        "installed_by": ["modules"]
+                    },
+                    "samtools/flagstat": {
+                        "branch": "master",
+                        "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
+                        "installed_by": ["modules"]
                     },
                     "samtools/index": {
                         "branch": "master",
