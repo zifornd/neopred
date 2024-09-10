@@ -1,0 +1,7 @@
+name: pvacseq
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::pvacseq=4.1.1

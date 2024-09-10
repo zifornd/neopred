@@ -1,4 +1,5 @@
-process REFTRANSMISMATREPORT {
+process VATOOLS_VCFEXPRESSIONANNOTATOR {
+    tag "$meta.id"
     label "process_medium"
 
     conda "${moduleDir}/environment.yml"
@@ -8,6 +9,7 @@ process REFTRANSMISMATREPORT {
 
     input:
     tuple val(meta), path(vcf)
+    tuple val(meta), path(csv)
 
     output:
     tuple val(meta), path("*.vcf")  , optional:true, emit: filter_vcf
@@ -16,9 +18,10 @@ process REFTRANSMISMATREPORT {
     task.ext.when == null || task.ext.when
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}.filter"
+    prefix = task.ext.prefix ?: "${meta.id}.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx"
     """
-    ref-transcript-mismatch-reporter {input.vcf} --filter {params.filter} -o {output.vcf}
+    vcf-expression-annotator ${input} ${tmp} custom gene --id-column Gene_ID --expression-column ${meta.id} -s ${meta.id} -o ${prefix}.vcf
+    rm {params.tmp}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
