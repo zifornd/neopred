@@ -3,14 +3,14 @@
 //
 
 include { GATK4_MUTECT2                     } from '../../../modules/nf-core/gatk4/mutect2/main'
-include { GATK4_GETPILEUPSUMMARIES          } from '../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_LEARNREADORIENTATIONMODEL   } from '../../modules/nf-core/gatk4/learnreadorientationmodel/main'
-include { GATK4_CALCULATECONTAMINATION      } from '../../modules/nf-core/gatk4/calculatecontamination/main'
-include { GATK4_FILTERMUTECTCALLS           } from '../../modules/nf-core/gatk4/filtermutectcalls/main'
-include { GATK4_SELECTVARIANTS              } from '../../modules/nf-core/gatk4/selectvariants/main'
-include { BCFTOOLS_VIEW                     } from '../../modules/nf-core/bcftools/view/main'
-include { BCFTOOLS_INDEX                    } from '../../modules/nf-core/bcftools/index/main'
-include { GATK4_COUNTVARIANTS as GATK4_SNP_COUNTS              } from '../../modules/local/gatk4_countvariants'
+include { GATK4_GETPILEUPSUMMARIES          } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
+include { GATK4_CALCULATECONTAMINATION      } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
+include { GATK4_FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
+include { GATK4_SELECTVARIANTS              } from '../../../modules/nf-core/gatk4/selectvariants/main'
+include { BCFTOOLS_VIEW                     } from '../../../modules/nf-core/bcftools/view/main'
+include { BCFTOOLS_INDEX                    } from '../../../modules/nf-core/bcftools/index/main'
+include { GATK4_COUNTVARIANTS as GATK4_SNP_COUNTS              } from '../../../modules/local/gatk4_countvariants'
 
 workflow VARIANT_CALLINGFILTERING {
 
