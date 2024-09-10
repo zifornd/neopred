@@ -24,8 +24,9 @@ include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
-include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
+include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
+include { VARIANT_IDENTIFICATION  } from '../subworkflows/local/gatk_varcall'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,6 +59,9 @@ workflow RIMA {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // Stage dummy file to be used as an optional input where required
+    ch_dummy_file = file("$projectDir/assets/dummy_file.txt", checkIfExists: true)
+
     //
     // MODULE: Run FastQC
     //
@@ -74,6 +78,7 @@ workflow RIMA {
     PREPARE_GENOME (
         params.fasta,
         params.gtf,
+        params.transcript_fasta
         )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
@@ -92,6 +97,7 @@ workflow RIMA {
         PREPARE_GENOME.out.fasta.map { [ [:], it ] }
     )
 
+    ch_transcriptome_bam = PREPROCESS_STAR.out.bam_transcript
     ch_sorted_bam    = PREPROCESS_STAR.out.bam_sort
     ch_bam_bai       = PREPROCESS_STAR.out.bam_bai
     samtools_stats   = PREPROCESS_STAR.out.stats
@@ -152,15 +158,20 @@ workflow RIMA {
         params.dbsnp_tbi
     )
 
-    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions) 
+    ch_bqsr_bam = PRE_VARIANTCALLING.out.bqsr_bam
+    ch_dict     = PRE_VARIANTCALLING.out.dict
+    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
 
     //
     // Subworkflow: Variant Identification and Filtering using GATK
     //
 
+    ch_fasta = PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+    ch_fai   = PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
+
     VARIANT_IDENTIFICATION (
         ch_bqsr_bam,
-        ch_bqsr_bai,
+        //ch_bqsr_bai,
         ch_fasta,
         ch_fai,
         ch_dict,
