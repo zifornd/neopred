@@ -6,7 +6,7 @@ include { PICARD_COLLECTMULTIPLEMETRICS                     } from '../../../mod
 include { PICARD_ADDORREPLACEREADGROUPS                     } from '../../../modules/nf-core/picard/addorreplacereadgroups/main'
 include { PICARD_MARKDUPLICATES                             } from '../../../modules/nf-core/picard/markduplicates/main'
 include { SAMTOOLS_FLAGSTAT as SAMTOOLS_FLAGSTAT_BAMRG      } from '../../../modules/nf-core/samtools/flagstat/main'
-include { SAMTOOLS_FLAGSTAT as SAMTOOLS_FLAGSTAT_BAMMARKDUB } from '../../../modules/nf-core/samtools/flagstat/main'
+include { SAMTOOLS_FLAGSTAT as SAMTOOLS_FLAGSTAT_BAMMARKDUP } from '../../../modules/nf-core/samtools/flagstat/main'
 include { PICARD_CREATESEQUENCEDICTIONARY                   } from '../../../modules/nf-core/picard/createsequencedictionary/main'
 include { GATK4_SPLITNCIGARREADS                            } from '../../../modules/nf-core/gatk4/splitncigarreads/main'
 include { GATK4_BASERECALIBRATOR                            } from '../../../modules/nf-core/gatk4/baserecalibrator/main'
@@ -38,8 +38,8 @@ workflow PRE_VARIANTCALLING{
     PICARD_MARKDUPLICATES (PICARD_ADDORREPLACEREADGROUPS.out.bam, fasta,fasta_fai)
     ch_versions = ch_versions.mix(PICARD_MARKDUPLICATES.out.versions.first())
 
-    SAMTOOLS_FLAGSTAT_BAMMARKDUB (PICARD_MARKDUPLICATES.out.bam.join(PICARD_MARKDUPLICATES.out.bai, by: [0]))
-    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT_BAMMARKDUB.out.versions.first())
+    SAMTOOLS_FLAGSTAT_BAMMARKDUP (PICARD_MARKDUPLICATES.out.bam.join(PICARD_MARKDUPLICATES.out.bai, by: [0]))
+    ch_versions = ch_versions.mix(SAMTOOLS_FLAGSTAT_BAMMARKDUP.out.versions.first())
 
     ch_bam_bai_int = PICARD_MARKDUPLICATES.out.bam
         .join(PICARD_MARKDUPLICATES.out.bai, by: [0])
@@ -69,9 +69,9 @@ workflow PRE_VARIANTCALLING{
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions.first())
 
     emit:
-    recal_table  = ch_recal_table  // channel: [ val(meta), bqsr_table ]
-    bqsr_bam     = ch_bqsr_bam     // channel: [ val(meta), bqsr_bam  ]
-    bqsr_cram    = ch_bqsr_cram    // channel: [ val(meta), bqsr_cram ]
-    dict	     = ch_dict         // channel: [ val(meta), dict ]
-    versions     = ch_versions     // channel: [ versions.yml	]
+    recal_table     = ch_recal_table             // channel: [ val(meta), bqsr_table ]
+    bqsr_bam        = ch_bqsr_bam                // channel: [ val(meta), bqsr_bam  ]
+    bqsr_cram       = ch_bqsr_cram               // channel: [ val(meta), bqsr_cram ]
+    dict	        = ch_dict		             // channel: [ val(meta), dict ]
+    versions        = ch_versions                // channel: [ versions.yml	]
 }
