@@ -1,0 +1,13 @@
+Changes in module 'nf-core/gatk4/splitncigarreads'
+--- modules/nf-core/gatk4/splitncigarreads/main.nf
++++ modules/nf-core/gatk4/splitncigarreads/main.nf
+@@ -15,6 +15,7 @@
+ 
+     output:
+     tuple val(meta), path('*.bam'), emit: bam
++    tuple val(meta), path("*.bai") , emit: bai,  optional: true
+     path  "versions.yml"          , emit: versions
+ 
+     when:
+
+************************************************************
