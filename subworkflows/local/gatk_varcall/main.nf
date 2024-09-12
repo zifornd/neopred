@@ -79,9 +79,12 @@ workflow VARIANT_CALLINGFILTERING {
     ch_artifactprior    = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior
     ch_versions         = ch_versions.mix(GATK4_LEARNREADORIENTATIONMODEL.out.versions.first())
 
-    GATK4_CALCULATECONTAMINATION ( ch_table )
-    ch_contaminationtable       =  GATK4_CALCULATECONTAMINATION.out.contamination
-    ch_tumoursegmentationtable  = GATK4_CALCULATECONTAMINATION.out.segmentation
+    ch_table_normal = ch_table
+        .map{ meta, table -> [ meta, table, [] ] }
+
+    GATK4_CALCULATECONTAMINATION ( ch_table_normal )
+    ch_contaminationtable       =  GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('num_intervals'), cont ] }
+    ch_tumoursegmentationtable  = GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }
     ch_versions                 = ch_versions.mix(GATK4_CALCULATECONTAMINATION.out.versions.first())
 
     vcf_to_filter = variants.join(variants_tbi, failOnDuplicate: true, failOnMismatch: true)
@@ -111,8 +114,7 @@ workflow VARIANT_CALLINGFILTERING {
         [],
         []
     )
-    ch_bcfview_vcf = BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_VIEW.out.tbi, failOnDuplicate: true, failOnMismatch: true)
-                    .map{ meta, vcf, tbi -> [ meta, vcf, tbi ]}
+    ch_bcfview_vcf = BCFTOOLS_VIEW.out.vcf
     ch_versions     = ch_versions.mix(BCFTOOLS_VIEW.out.versions.first())
 
     BCFTOOLS_INDEX (
@@ -121,8 +123,11 @@ workflow VARIANT_CALLINGFILTERING {
     ch_bcfview_tbi  = BCFTOOLS_INDEX.out.tbi
     ch_versions     = ch_versions.mix(BCFTOOLS_INDEX.out.versions.first())
 
+    ch_bcfview_index = ch_bcfview_vcf.join(ch_bcfview_tbi, failOnDuplicate: true, failOnMismatch: true)
+                    .map{ meta, vcf, tbi -> [ meta, vcf, tbi, [] ]}
+
     GATK4_SELECTVARIANTS (
-        ch_bcfview_vcf
+        ch_bcfview_index
     )
     ch_selected_vcf = GATK4_SELECTVARIANTS.out.vcf
     ch_selected_tbi = GATK4_SELECTVARIANTS.out.tbi

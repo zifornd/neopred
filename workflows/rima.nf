@@ -106,6 +106,7 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
+    /*
     //
     // SUBWORKFLOW: RSeQC
     //
@@ -147,7 +148,7 @@ workflow RIMA {
     ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
-
+*/
 
     PRE_VARIANTCALLING(
         ch_sorted_bam,
