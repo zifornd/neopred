@@ -65,12 +65,14 @@ workflow PRE_VARIANTCALLING{
 
     GATK4_APPLYBQSR(ch_input_bqsr, fasta.map{ meta, it -> it }, fasta_fai.map{ meta, it -> it }, ch_dict.map{ meta, it -> it })
     ch_bqsr_bam = GATK4_APPLYBQSR.out.bam
+    ch_bqsr_bai = GATK4_APPLYBQSR.out.bai
     ch_bqsr_cram = GATK4_APPLYBQSR.out.cram
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions.first())
 
     emit:
     recal_table     = ch_recal_table             // channel: [ val(meta), bqsr_table ]
     bqsr_bam        = ch_bqsr_bam                // channel: [ val(meta), bqsr_bam  ]
+    bqsr_bai        = ch_bqsr_bai                // channel: [ val(meta), bqsr_bam  ]
     bqsr_cram       = ch_bqsr_cram               // channel: [ val(meta), bqsr_cram ]
     dict	        = ch_dict		             // channel: [ val(meta), dict ]
     versions        = ch_versions                // channel: [ versions.yml	]

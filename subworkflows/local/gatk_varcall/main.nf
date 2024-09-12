@@ -10,22 +10,24 @@ include { GATK4_FILTERMUTECTCALLS           } from '../../../modules/nf-core/gat
 include { GATK4_SELECTVARIANTS              } from '../../../modules/nf-core/gatk4/selectvariants/main'
 include { BCFTOOLS_VIEW                     } from '../../../modules/nf-core/bcftools/view/main'
 include { BCFTOOLS_INDEX                    } from '../../../modules/nf-core/bcftools/index/main'
-include { GATK4_COUNTVARIANTS as GATK4_SNP_COUNTS              } from '../../../modules/local/gatk4_countvariants'
+include { GATK4_COUNTVARIANTS               } from '../../../modules/local/gatk4/countvariants'
 
 workflow VARIANT_CALLINGFILTERING {
 
     take:
     bam
     bai
+    fasta                   // channel: /path/to/genome.fa
+    fai                     // channel: /path/to/genome.fai
+    dict                    // channel: /path/to/genome.dict
+    germline_resource       // channel: /path/to/reference.vcf.gz
+    germline_resource_tbi   // channel: /path/to/genome.vcf.gz.tbi
+    pon                     // channel: /path/to/genome.vcf.gz
+    pon_tbi                 // channel: /path/to/genome.vcf.gz.tbi
+    dbsnp                   // channel: /path/to/reference.vcf.gz
+    dbsnp_tbi               // channel: /path/to/reference.vcf.gz.tbi
     pileup_vcf
     pileup_vcftbi
-    f1r2
-    variants
-    variants_tbi
-    variants_stats
-    fasta
-    fai
-    dict
 
     main:
 
@@ -34,35 +36,46 @@ workflow VARIANT_CALLINGFILTERING {
     //
     // Variant Identification using Mutect2
     //
+
+    bam_bai_int = bam
+        .join(bai, by: [0])
+        .map{ meta, bam, bai -> [ meta, bam, bai, [] ] }
+
     GATK4_MUTECT2 (
-    bam,
+    bam_bai_int,
     fasta,
     fai,
     dict,
     germline_resource,
-    pon,
     germline_resource_tbi,
+    pon,
     pon_tbi
     )
 
-    ch_variants_rna_vcf      =  GATK4_MUTECT2.out.vcf
-    ch_variants_rna_tbi      =  GATK4_MUTECT2.out.tbi
-    ch_variants_stats        =  GATK4_MUTECT2.out.stats
-    ch_versions              =  ch_versions.mix(GATK4_MUTECT2.out.versions.first())
-    ch_f1r2                  =  GATK4_MUTECT2.out.f1r2
+    variants            =  GATK4_MUTECT2.out.vcf
+    variants_tbi        =  GATK4_MUTECT2.out.tbi
+    variants_stats      =  GATK4_MUTECT2.out.stats
+    ch_versions         =  ch_versions.mix(GATK4_MUTECT2.out.versions.first())
+    ch_f1r2             =  GATK4_MUTECT2.out.f1r2
+
+    bam_bai_int = bam
+        .join(bai, by: [0])
+        .map{ meta, bam, bai -> [ meta, bam, bai, [] ] }
 
     ch_contaminationtable = Channel.empty()
     ch_tumoursegmentationtable = Channel.empty()
     GATK4_GETPILEUPSUMMARIES(
-        bam,
-        bai,
+        bam_bai_int,
+        fasta,
+        fai,
+        dict,
         pileup_vcf,
         pileup_vcftbi
     )
     ch_table    = GATK4_GETPILEUPSUMMARIES.out.table
     ch_versions = ch_versions.mix(GATK4_GETPILEUPSUMMARIES.out.versions.first())
 
-    GATK4_LEARNREADORIENTATIONMODEL ( f1r2 )
+    GATK4_LEARNREADORIENTATIONMODEL ( ch_f1r2 )
     ch_artifactprior    = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior
     ch_versions         = ch_versions.mix(GATK4_LEARNREADORIENTATIONMODEL.out.versions.first())
 
@@ -71,27 +84,35 @@ workflow VARIANT_CALLINGFILTERING {
     ch_tumoursegmentationtable  = GATK4_CALCULATECONTAMINATION.out.segmentation
     ch_versions                 = ch_versions.mix(GATK4_CALCULATECONTAMINATION.out.versions.first())
 
+    vcf_to_filter = variants.join(variants_tbi, failOnDuplicate: true, failOnMismatch: true)
+                        .join(variants_stats, failOnDuplicate: true, failOnMismatch: true)
+                        .join(ch_artifactprior, failOnDuplicate: true, failOnMismatch: true)
+                        .join(ch_tumoursegmentationtable)
+                        .join(ch_contaminationtable)
+                    .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
 
     GATK4_FILTERMUTECTCALLS (
-        variants,
-        variants_tbi,
-        variants_stats,
-        ch_artifactprior,
-        ch_contaminationtable,
-        ch_tumoursegmentationtable,
+        vcf_to_filter,
         fasta,
         fai,
         dict
     )
-    ch_filtered_vcf = GATK4_FILTERMUTECTCALLS.out.vcf
+    ch_filtered_vcf = GATK4_FILTERMUTECTCALLS.out.vcf.join(GATK4_FILTERMUTECTCALLS.out.tbi, failOnDuplicate: true, failOnMismatch: true)
+                    .map{ meta, vcf, tbi -> [ meta, vcf, tbi ]}
     ch_filtered_tbi = GATK4_FILTERMUTECTCALLS.out.tbi
     ch_versions     = ch_versions.mix(GATK4_FILTERMUTECTCALLS.out.versions.first())
 
+    //vcf_bcfview   = variants.join(variants_tbi, failOnDuplicate: true, failOnMismatch: true)
+                    //.map{ meta, vcf, tbi }
+
     BCFTOOLS_VIEW (
         ch_filtered_vcf,
-        ch_filtered_tbi,
+        [],
+        [],
+        []
     )
-    ch_bcfview_vcf  = BCFTOOLS_VIEW.out.vcf
+    ch_bcfview_vcf = BCFTOOLS_VIEW.out.vcf.join(BCFTOOLS_VIEW.out.tbi, failOnDuplicate: true, failOnMismatch: true)
+                    .map{ meta, vcf, tbi -> [ meta, vcf, tbi ]}
     ch_versions     = ch_versions.mix(BCFTOOLS_VIEW.out.versions.first())
 
     BCFTOOLS_INDEX (
@@ -101,17 +122,18 @@ workflow VARIANT_CALLINGFILTERING {
     ch_versions     = ch_versions.mix(BCFTOOLS_INDEX.out.versions.first())
 
     GATK4_SELECTVARIANTS (
-        ch_bcfview_vcf,
-        ch_bcfview_tbi,
-        fasta,
-        fai,
-        dict
+        ch_bcfview_vcf
     )
     ch_selected_vcf = GATK4_SELECTVARIANTS.out.vcf
     ch_selected_tbi = GATK4_SELECTVARIANTS.out.tbi
     ch_versions     = ch_versions.mix(GATK4_SELECTVARIANTS.out.versions.first())
 
-    GATK4_SNP_COUNTS ( ch_selected_vcf, ch_selected_tbi )
+    GATK4_COUNTVARIANTS (
+        ch_selected_vcf,
+        ch_selected_tbi
+    )
+    ch_variants_counts =  GATK4_COUNTVARIANTS.out.counts
+    ch_versions     = ch_versions.mix(GATK4_SELECTVARIANTS.out.versions.first())
 
     emit:
     table                       =   ch_table

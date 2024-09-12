@@ -26,7 +26,7 @@ include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
-include { VARIANT_IDENTIFICATION  } from '../subworkflows/local/gatk_varcall'
+include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,7 +109,7 @@ workflow RIMA {
     //
     // SUBWORKFLOW: RSeQC
     //
-
+    if (params.rseqc) {
     RSEQC (
         ch_bam_bai,
         params.gtf
@@ -121,7 +121,7 @@ workflow RIMA {
     ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
     //ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
     ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
-    ch_versions                   = ch_versions.mix(RSEQC.out.versions)
+    ch_versions                   = ch_versions.mix(RSEQC.out.versions) }
 
     //
     // SUBWORKFLOW: Salmon Quantification
@@ -159,6 +159,7 @@ workflow RIMA {
     )
 
     ch_bqsr_bam = PRE_VARIANTCALLING.out.bqsr_bam
+    ch_bqsr_bai = PRE_VARIANTCALLING.out.bqsr_bai
     ch_dict     = PRE_VARIANTCALLING.out.dict
     ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
 
@@ -169,9 +170,9 @@ workflow RIMA {
     ch_fasta = PREPARE_GENOME.out.fasta.map { [ [:], it ] }
     ch_fai   = PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
 
-    VARIANT_IDENTIFICATION (
+    VARIANT_CALLINGFILTERING (
         ch_bqsr_bam,
-        //ch_bqsr_bai,
+        ch_bqsr_bai,
         ch_fasta,
         ch_fai,
         ch_dict,
@@ -180,16 +181,18 @@ workflow RIMA {
         params.pon,
         params.pon_tbi,
         params.dbsnp,
-        params.dbsnp_tbi
+        params.dbsnp_tbi,
+        params.pileup_vcf,
+        params.pileup_vcftbi
     )
 
-    ch_variants         = VARIANT_IDENTIFICATION.out.variants_vcf
-    ch_f1r2             = VARIANT_IDENTIFICATION.out.f1r2
-    ch_variants_tbi     = VARIANT_IDENTIFICATION.out.variants_tbi
-    ch_variants_stats   = VARIANT_IDENTIFICATION.out.variants_stats
-    ch_variants_rna_vcf = VARIANT_IDENTIFICATION.out.variants_rna_vcf
-    ch_variants_rna_tbi = VARIANT_IDENTIFICATION.out.variants_rna_tbi
-    ch_versions         = ch_versions.mix(VARIANT_IDENTIFICATION.out.versions)
+    /*ch_variants         =  VARIANT_CALLINGFILTERING.out.variants_vcf
+    ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
+    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.variants_tbi
+    ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
+    ch_variants_rna_vcf =  VARIANT_CALLINGFILTERING.out.variants_rna_vcf
+    ch_variants_rna_tbi =  VARIANT_CALLINGFILTERING.out.variants_rna_tbi
+    ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)*/
 
     //
     // Collate and save software versions
