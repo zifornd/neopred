@@ -98,7 +98,7 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-    /*//
+    //
     // SUBWORKFLOW: RSeQC
     //
 
@@ -117,7 +117,7 @@ workflow RIMA {
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
-     */
+
 
     //
     // SUBWORKFLOW: Salmon Quantification
