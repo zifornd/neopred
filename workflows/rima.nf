@@ -16,9 +16,9 @@ include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { HLA_TYPING              } from '../subworkflows/local/hla_typing'
-
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,7 +77,6 @@ workflow RIMA {
     //
     // SUBWORKFLOW: Preprocess STAR
     //
-
 
     PREPROCESS_STAR (
         ch_samplesheet,
@@ -165,6 +164,17 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
+
+    PRE_VARIANTCALLING(
+        ch_sorted_bam,
+        ch_bam_bai,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+        params.dbsnp,
+        params.dbsnp_tbi
+    )
+
+    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
 
     //
     // Collate and save software versions
