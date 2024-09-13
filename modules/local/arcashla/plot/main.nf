@@ -3,9 +3,8 @@ process ARCASHLA_PLOT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://community.wave.seqera.io/library/bioconductor-limma_bioconductor-sva_r-base_r-optparse:d938a560bf123c62' :
-        'community.wave.seqera.io/library/bioconductor-limma_bioconductor-sva_r-base_r-optparse:d938a560bf123c62' }"
-
+        'oras://community.wave.seqera.io/library/bioconductor-complexheatmap_r-dplyr_r-ggplot2_r-optparse_pruned:3526b6f9e2287908' :
+        'community.wave.seqera.io/library/bioconductor-complexheatmap_r-dplyr_r-ggplot2_r-optparse_pruned:3526b6f9e2287908' }"
 
 
     input:
@@ -34,7 +33,8 @@ process ARCASHLA_PLOT {
         --expression $after_br \\
         --design $design \\
         --patID $patid \\
-        --outdir .
+        --source ${baseDir}/bin/hlaonco_plot.R \\
+        --outdir ./
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

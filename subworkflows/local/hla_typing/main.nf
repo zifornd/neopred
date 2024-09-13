@@ -4,7 +4,7 @@ include { ARCASHLA_EXTRACT               } from '../../../modules/nf-core/arcash
 include { ARCASHLA_GENOTYPE              } from '../../../modules/local/arcashla/genotype'
 include { ARCASHLA_MERGE                 } from '../../../modules/local/arcashla/merge'
 include { ARCASHLA_CONVERT               } from '../../../modules/local/arcashla/convert'
-//include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
+include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
 
 //Workflow
 
@@ -15,15 +15,15 @@ workflow HLA_TYPING {
     after_br                  // channel: [ batch removed genesymbols ]
     batch                     // batch variable
     design                    // design variable
-    //patient_id                // patient ID variable
+    patient_id                // patient ID variable
 
 
     main:
     ch_versions = Channel.empty()
     ch_fastq = Channel.empty()
-    // 
+    //
     // Module: Extracts reads mapped to chromosome 6 and any HLA decoys or chromosome 6 alternates
-    //  
+    //
 
     ARCASHLA_EXTRACT (bam_files)
     ch_fastq = ARCASHLA_EXTRACT.out.extracted_reads_fastq
@@ -45,26 +45,25 @@ workflow HLA_TYPING {
     ch_versions = ch_versions.mix(ARCASHLA_MERGE.out.versions)
 
     //
-    // Module: Changes alleles from its input form to a specified P-group or G-group nomenclature 
+    // Module: Changes alleles from its input form to a specified P-group or G-group nomenclature
     //         or a specified 1, 2 or 3 fields in resolution
     //
 
     ARCASHLA_CONVERT (ARCASHLA_MERGE.out.merged_gt)
     ch_versions = ch_versions.mix(ARCASHLA_CONVERT.out.versions)
 
-    /*
+
     //
     // Module: Generates a png file consisting the frequency of HLA as a plot
     //
 
-    ARCASHLA_PLOT (ARCASHLA_CONVERT.out.gt_group,samplesheet,after_br)
+    ARCASHLA_PLOT (ARCASHLA_CONVERT.out.gt_group,samplesheet,after_br,batch,design,patient_id)
     ch_versions = ch_versions.mix(ARCASHLA_PLOT.out.versions)
-    */
 
 
     emit:
-    //genes      = ARCASHLA_GENOTYPE.out.genes_json   // channel: [meta, genes]
-    //hla_plot   = ARCASHLA_PLOT.out.hla_plot         // channel: [hla_frequency_plot]
+    hla_log    = ARCASHLA_GENOTYPE.out.gt_log   // channel: [meta, genotype log]
+    hla_plot   = ARCASHLA_PLOT.out.hla_plot         // channel: [hla_frequency_plot]
     versions   = ch_versions                        // channel: [ versions.yml ]
 
 }

@@ -118,7 +118,7 @@ workflow RIMA {
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
-	 */
+     */
 
     //
     // SUBWORKFLOW: Salmon Quantification
@@ -145,21 +145,24 @@ workflow RIMA {
         params.batch,
         params.design,
         QUANTIFY_SALMON.out.tpm_gene)
-    
+
     ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
-    
+
     //
     // SUBWORKFLOW: arcasHLA Typing
     //
     HLA_TYPING (
-		  params.input,
+        params.input,
         ch_sorted_bam,
         BATCH_REMOVAL_ANALYSIS.out.after_br,
         params.batch,
-        params.design)
-    
+        params.design,
+        params.patient_id)
+
+    ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
 

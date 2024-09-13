@@ -4,13 +4,13 @@ process ARCASHLA_MERGE {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/arcas-hla:0.5.0--hdfd78af_0':
-        'biocontainers/arcas-hla:0.5.0--hdfd78af_0' }"
+        'docker.io/jfx319/arcashla:latest' }"
 
     input:
     path(gt)
 
     output:
-    path ("*.genotypes.tsv")   , emit: merged_gt
+    path ("genotypes.tsv")   , emit: merged_gt
     path "versions.yml"                         , emit: versions
 
     when:
@@ -23,8 +23,8 @@ process ARCASHLA_MERGE {
     """
     arcasHLA \\
         merge \\
-        -i $gt \\
-        -o . 
+        -i . \\
+        -o .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

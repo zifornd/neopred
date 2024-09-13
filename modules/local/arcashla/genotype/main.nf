@@ -5,8 +5,7 @@ process ARCASHLA_GENOTYPE {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/arcas-hla:0.5.0--hdfd78af_0':
-        'biocontainers/arcas-hla:0.5.0--hdfd78af_0' }"
-
+        'docker.io/jfx319/arcashla:latest' }"
     input:
     tuple val(meta), path(read)
 

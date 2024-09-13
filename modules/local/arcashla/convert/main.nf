@@ -4,13 +4,13 @@ process ARCASHLA_CONVERT {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/arcas-hla:0.5.0--hdfd78af_0':
-        'biocontainers/arcas-hla:0.5.0--hdfd78af_0' }"
+        'docker.io/jfx319/arcashla:latest' }"
 
     input:
     path(gt)
 
     output:
-    path ("*genotypes.p-group.tsv")   , emit: gt_group
+    path ("*.p-group.tsv")   , emit: gt_group
     path "versions.yml"               , emit: versions
 
     when:
@@ -23,8 +23,9 @@ process ARCASHLA_CONVERT {
     """
     arcasHLA \\
         convert \\
-        -r $gt \\
-        -o .
+        -r p-group \\
+        -o ./genotypes.p-group.tsv \\
+        $gt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

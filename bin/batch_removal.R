@@ -41,9 +41,9 @@ Condition <- opts$design
 #print(paste0("Printing Condition variable:", Condition))
 #print(paste0("Printing covariates variable:", opts$covariates))
 meta <- read.table(file = opts$metasheet, sep=',', header = TRUE, stringsAsFactors = FALSE, row.names = 1)
-#print(meta)
+print(meta)
 samples <- subset(meta, meta[,Condition] != 'NA')
-#print(paste0("Dimension of sample:", dim(samples)))
+print(paste0("Dimension of sample:", dim(samples)))
 #print(rownames(samples))
 
 # load data
