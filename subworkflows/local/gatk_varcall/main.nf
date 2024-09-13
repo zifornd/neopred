@@ -64,6 +64,7 @@ workflow VARIANT_CALLINGFILTERING {
 
     ch_contaminationtable = Channel.empty()
     ch_tumoursegmentationtable = Channel.empty()
+
     GATK4_GETPILEUPSUMMARIES(
         bam_bai_int,
         fasta,
@@ -72,17 +73,16 @@ workflow VARIANT_CALLINGFILTERING {
         pileup_vcf,
         pileup_vcftbi
     )
-    ch_table    = GATK4_GETPILEUPSUMMARIES.out.table
+
+    ch_table = GATK4_GETPILEUPSUMMARIES.out.table
+        .map{ meta, table -> [ meta, table, [] ] }
     ch_versions = ch_versions.mix(GATK4_GETPILEUPSUMMARIES.out.versions.first())
 
     GATK4_LEARNREADORIENTATIONMODEL ( ch_f1r2 )
     ch_artifactprior    = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior
     ch_versions         = ch_versions.mix(GATK4_LEARNREADORIENTATIONMODEL.out.versions.first())
 
-    ch_table_normal = ch_table
-        .map{ meta, table -> [ meta, table, [] ] }
-
-    GATK4_CALCULATECONTAMINATION ( ch_table_normal )
+    GATK4_CALCULATECONTAMINATION ( ch_table )
     ch_contaminationtable       =  GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('num_intervals'), cont ] }
     ch_tumoursegmentationtable  = GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }
     ch_versions                 = ch_versions.mix(GATK4_CALCULATECONTAMINATION.out.versions.first())
@@ -100,13 +100,11 @@ workflow VARIANT_CALLINGFILTERING {
         fai,
         dict
     )
+
     ch_filtered_vcf = GATK4_FILTERMUTECTCALLS.out.vcf.join(GATK4_FILTERMUTECTCALLS.out.tbi, failOnDuplicate: true, failOnMismatch: true)
                     .map{ meta, vcf, tbi -> [ meta, vcf, tbi ]}
     ch_filtered_tbi = GATK4_FILTERMUTECTCALLS.out.tbi
     ch_versions     = ch_versions.mix(GATK4_FILTERMUTECTCALLS.out.versions.first())
-
-    //vcf_bcfview   = variants.join(variants_tbi, failOnDuplicate: true, failOnMismatch: true)
-                    //.map{ meta, vcf, tbi }
 
     BCFTOOLS_VIEW (
         ch_filtered_vcf,

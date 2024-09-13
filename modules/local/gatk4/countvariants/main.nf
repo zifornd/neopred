@@ -1,5 +1,5 @@
 process GATK4_COUNTVARIANTS {
-    tag "${meta.id}_${meta.seq_type}"
+    tag "${meta.id}"
     label 'process_single'
 
     conda "bioconda::gatk4=4.3.0.0"
