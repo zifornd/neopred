@@ -20,7 +20,10 @@ process VATOOLS_REFTRANSCRIPTMISMATCHREPORTER {
     script:
     prefix = task.ext.prefix ?: "${meta.id}.filter"
     """
-    ref-transcript-mismatch-reporter $input --filter ${filter} -o ${prfix}.vcf
+    ref-transcript-mismatch-reporter \\
+        $vcf \\
+        --filter ${filter} \\
+        -o ${prfix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,4 +1,4 @@
-process PVACTOOLS {
+process PVACTOOLS_PVACSEQ {
     tag "$meta.id"
     label "process_high"
 
@@ -9,6 +9,7 @@ process PVACTOOLS {
 
     input:
     tuple val(meta), path(vcf)
+    val algorithms
 
     output:
     tuple val(meta), path("*.tsv")  , optional:true, emit: results
@@ -18,19 +19,20 @@ process PVACTOOLS {
 
     script:
     prefix = task.ext.prefix ?: "${meta.id}.filter"
+    def callers = algorithms ?: "MHCflurry,MHCnuggetsII"
     """
     pvacseq run \\
-        {input.vcf} {params.tumor} {params.HLA} {params.callers} {params.output_dir} \\
-        -e1 {params.epitope1_lengths} \\
-        -t {threads} \\
+        $vcf {params.tumor} {params.HLA} $callers {params.output_dir} \\
+        -e1 {params.epitope_lengths} \\
+        -t $task.cpus \\
         -r 5 --pass-only \\
         --fasta-size 200 \\
         -d 250 \\
-        --iedb-install-directory {params.iedb}
+        --iedb-install-directory /opt/iedb
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
+        pvacseq: \$(pvacseq --version | sed 's/Python //g')
     END_VERSIONS
     """
 }

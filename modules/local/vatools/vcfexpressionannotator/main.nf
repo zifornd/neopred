@@ -12,7 +12,7 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     tuple val(meta), path(csv)
 
     output:
-    tuple val(meta), path("*.vcf")  , optional:true, emit: filter_vcf
+    tuple val(meta), path("*.vcf")  , optional:true, emit: expr_vcf
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,8 +20,14 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     script:
     prefix = task.ext.prefix ?: "${meta.id}.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx"
     """
-    vcf-expression-annotator ${input} ${tmp} custom gene --id-column Gene_ID --expression-column ${meta.id} -s ${meta.id} -o ${prefix}.vcf
-    rm {params.tmp}
+    mkdir tmp
+    vcf-expression-annotator \\
+        $vcf $(pwd)/tmp \\
+        custom gene --id-column Gene_ID --expression-column ${meta.id} \\
+        -s ${meta.id} \\
+        -o ${prefix}.vcf \\
+        $csv
+    rm $(pwd)/tmp
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
