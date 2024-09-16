@@ -7,6 +7,7 @@ include { SAMTOOLS_SORT           } from '../../../modules/nf-core/samtools/sort
 include { SAMTOOLS_INDEX          } from '../../../modules/nf-core/samtools/index'
 include { SAMTOOLS_STATS          } from '../../../modules/nf-core/samtools/stats'
 include { STAR_METRICS            } from '../../../modules/local/star/metrics'
+//include { SAMTOOLS_FLAGSTAT       } from '../../../modules/nf-core/samtools/flagstat/main'
 
 workflow PREPROCESS_STAR {
     take:
@@ -82,7 +83,7 @@ workflow PREPROCESS_STAR {
     //
     // Module: STAR metrics
     //
-    STAR_METRICS (ch_log_final)
+    STAR_METRICS (ch_log_final.map{ it[1] }.collect())
     ch_versions = ch_versions.mix(STAR_METRICS.out.versions)
 
     emit:

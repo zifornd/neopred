@@ -89,6 +89,22 @@
                     "type": "string",
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
+                },
+                "dbsnp": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp file.",
+                    "hidden": true,
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz"
+                },
+                "dbsnp_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp index.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.",
+                    "hidden": true,
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi"
                 }
             },
             "required": ["fasta"]
@@ -339,11 +355,101 @@
         },
         "gene_bed": {
             "type": "string",
-            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified.",
+            "default": "/home/asma/nf-rima/assets/refseqGenes.bed"
         },
         "gtf": {
             "type": "string",
             "description": "Path to GTF annotation file."
+        },
+        "batch": {
+            "type": "string",
+            "default": "batch",
+            "description": "Column that describes the batch effect of various samples"
+        },
+        "design": {
+            "type": "string",
+            "default": "design",
+            "description": "Condition to compare samples (column from metasheet)."
+        },
+        "parse_read_group_info_file": {
+            "type": "string"
+        },
+        "picard_sort_order": {
+            "type": "string",
+            "default": "coordinate",
+            "description": "Order in which the SAM/BAM file are sorted."
+        },
+        "picard_create_index": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to create BAM index file."
+        },
+        "picard_RGPL": {
+            "type": "string",
+            "default": "ILLUMINA",
+            "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
+        },
+        "picard_RGLB": {
+            "type": "string",
+            "default": "Hiseq",
+            "description": "Read-Group library"
+        },
+        "picard_RGPU": {
+            "type": "string",
+            "default": "unit1",
+            "description": "Read-Group platform unit (e.g. run barcode)"
+        },
+        "RGSM": {
+            "type": "string",
+            "default": "RGSM_metadata.txt",
+            "description": "Read-Group sample name"
+        },
+        "F1R2_metrics": {
+            "type": "boolean",
+            "default": true,
+            "description": "If specified, collect F1R2 counts and output files into this tar.gz file"
+        },
+        "emit_threshold": {
+            "type": "number",
+            "default": 6.3,
+            "description": "Log 10 odds threshold to emit variant to VCF."
+        },
+        "known_indels": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+        },
+        "known_indels_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+        },
+        "germline_resource": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+        },
+        "germline_resource_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+        },
+        "pileup_vcf": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+        },
+        "pileup_vcftbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+        },
+        "pon": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+        },
+        "pon_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+        },
+        "f_bcftools": {
+            "type": "string",
+            "default": "PASS"
         }
     }
 }
