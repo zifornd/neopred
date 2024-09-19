@@ -72,7 +72,7 @@ workflow PRE_VARIANTCALLING{
     emit:
     recal_table     = ch_recal_table             // channel: [ val(meta), bqsr_table ]
     bqsr_bam        = ch_bqsr_bam                // channel: [ val(meta), bqsr_bam  ]
-    bqsr_bai        = ch_bqsr_bai                // channel: [ val(meta), bqsr_bam  ]
+    bqsr_bai        = ch_bqsr_bai                // channel: [ val(meta), bqsr_bai  ]
     bqsr_cram       = ch_bqsr_cram               // channel: [ val(meta), bqsr_cram ]
     dict	        = ch_dict		             // channel: [ val(meta), dict ]
     versions        = ch_versions                // channel: [ versions.yml	]

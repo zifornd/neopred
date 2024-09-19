@@ -355,8 +355,7 @@
         },
         "gene_bed": {
             "type": "string",
-            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified.",
-            "default": "/home/asma/nf-rima/assets/refseqGenes.bed"
+            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
         },
         "gtf": {
             "type": "string",
@@ -385,25 +384,10 @@
             "default": true,
             "description": "Whether to create BAM index file."
         },
-        "picard_RGPL": {
+        "picard_platform": {
             "type": "string",
             "default": "ILLUMINA",
             "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
-        },
-        "picard_RGLB": {
-            "type": "string",
-            "default": "Hiseq",
-            "description": "Read-Group library"
-        },
-        "picard_RGPU": {
-            "type": "string",
-            "default": "unit1",
-            "description": "Read-Group platform unit (e.g. run barcode)"
-        },
-        "RGSM": {
-            "type": "string",
-            "default": "RGSM_metadata.txt",
-            "description": "Read-Group sample name"
         },
         "F1R2_metrics": {
             "type": "boolean",
