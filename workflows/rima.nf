@@ -187,9 +187,9 @@ workflow RIMA {
         params.pileup_vcftbi
     )
 
-    ch_variants         =  VARIANT_CALLINGFILTERING.out.filtered_vcf
+    ch_variants         =  VARIANT_CALLINGFILTERING.out.selected_vcf
     //ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
-    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.filtered_tbi
+    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.selected_tbi
     //ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
     ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)
 
@@ -200,9 +200,16 @@ workflow RIMA {
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
     ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
-
+var=Channel.fromPath(params.raw_vcf)
+var.view()
     VARIANT_ANNOTATION (
-        ensemblvep_info
+        ensemblvep_info,
+        var,
+        ch_variants_tbi,
+        ch_fasta,
+        params.vep_genome_assembly,
+        params.vep_species,
+        params.vep_cache_version
     )
 
     //
