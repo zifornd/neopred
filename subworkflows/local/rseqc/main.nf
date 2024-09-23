@@ -21,7 +21,7 @@ workflow RSEQC {
 
     take:
     bam_bai       // channel: [ val(meta), [ bam, bai ] ]
-    samtools_stats 
+    samtools_stats
     gtf           // channel: [ gtf ]
     hk_bed
 
@@ -46,8 +46,7 @@ workflow RSEQC {
 
     RSEQC_BAM_DOWNSAMPLING(bam_bai, samtools_stats)
     down_bam     = RSEQC_BAM_DOWNSAMPLING.out.downsample_bam
-    ch_versions  = ch_versions.mix(RSEQC_SIZE_DOWNSAMPLING.out.versions.first())
-
+    ch_versions  = ch_versions.mix(RSEQC_BAM_DOWNSAMPLING.out.versions.first())
 
     //
     // Module: Samtools index
@@ -69,41 +68,36 @@ workflow RSEQC {
     .set { ch_down_bam_bai }
     println ch_down_bam_bai
 
-    
     //
     // Module: Bedtools intersect
     //
 
     if ( params.hk_bed ) {
 
-            BEDTOOLS_INTERSECT ( ch_down_bam_bai, hk_bed )
-            hk_bam_bai  = BEDTOOLS_INTERSECT.out.hk_bam 
-            ch_versions = ch_versions.mix(BEDTOOLS_INTERSECT.out.versions)
+        BEDTOOLS_INTERSECT ( ch_down_bam_bai, hk_bed )
+        hk_bam_bai  = BEDTOOLS_INTERSECT.out.hk_bam
+        ch_versions = ch_versions.mix(BEDTOOLS_INTERSECT.out.versions)
 
+        //
+        // Module: Samtools index
+        //
+        DOWN_HK_INDEX ( BEDTOOLS_INTERSECT.out.hk_bam )
+        ch_versions = ch_versions.mix(DOWN_HK_INDEX.out.versions)
 
-            //
-            // Module: Samtools index
-            //
-            DOWN_HK_INDEX ( BEDTOOLS_INTERSECT.out.hk_bam )
-            ch_versions = ch_versions.mix(DOWN_HK_INDEX.out.versions)
-
-            BEDTOOLS_INTERSECT.out.hk_bam
-            .join(DOWN_HK_INDEX.out.bai, by: [0], remainder: true)
-            .join(DOWN_HK_INDEX.out.csi, by: [0], remainder: true)
-            .map {
-                meta, bam, bai, csi ->
-                    if (bai) {
-                        [ meta, bam, bai ]
-                    } else {
-                        [ meta, bam, csi ]
-                    }
-            }
-            .set { ch_hk_bam_bai }
-            println ch_hk_bam_bai
-
+        BEDTOOLS_INTERSECT.out.hk_bam
+        .join(DOWN_HK_INDEX.out.bai, by: [0], remainder: true)
+        .join(DOWN_HK_INDEX.out.csi, by: [0], remainder: true)
+        .map {
+            meta, bam, bai, csi ->
+                if (bai) {
+                    [ meta, bam, bai ]
+                } else {
+                    [ meta, bam, csi ]
+                }
+        }
+        .set { ch_hk_bam_bai }
+        println ch_hk_bam_bai
     }
-
-
 
     //
     // Run RSeQC tin.py
@@ -111,26 +105,24 @@ workflow RSEQC {
 
 
     if ( params.hk_bed ) {
-    
-    tin_txt = Channel.empty()
 
-    RSEQC_TIN(ch_hk_bam_bai, params.hk_bed)
-    tin_txt      = RSEQC_TIN.out.txt
-    ch_versions  = ch_versions.mix(RSEQC_TIN.out.versions.first())
+        tin_txt = Channel.empty()
+
+        RSEQC_TIN(ch_hk_bam_bai, params.hk_bed)
+        tin_txt      = RSEQC_TIN.out.txt
+        ch_versions  = ch_versions.mix(RSEQC_TIN.out.versions.first())
+
+    } else {
+
+        tin_txt = Channel.empty()
+
+        RSEQC_TIN(ch_down_bam_bai, bed)
+        tin_txt      = RSEQC_TIN.out.txt
+        ch_versions  = ch_versions.mix(RSEQC_TIN.out.versions.first())
 
     }
 
-    else {
-    
-    tin_txt = Channel.empty()
-
-    RSEQC_TIN(ch_down_bam_bai, bed)
-    tin_txt      = RSEQC_TIN.out.txt
-    ch_versions  = ch_versions.mix(RSEQC_TIN.out.versions.first())
-    
-    }
-
-/*    
+/*
     tin_txt = Channel.empty()
 
     RSEQC_TIN(bam_bai, bed)
@@ -200,7 +192,7 @@ workflow RSEQC {
     ch_versions                = ch_versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
 
     }
-    
+
     else {
 
     junctionsaturation_all     = Channel.empty()
@@ -213,7 +205,7 @@ workflow RSEQC {
     junctionsaturation_all     = junctionsaturation_pdf.mix(junctionsaturation_rscript)
     ch_versions                = ch_versions.mix(RSEQC_JUNCTIONSATURATION.out.versions.first())
 
-    } 
+    }
 
     //
     // Run RSeQC Tin Summary
@@ -246,7 +238,6 @@ workflow RSEQC {
     ch_versions                = ch_versions.mix(RSEQC_READDISTRIBUTIONMATRIX.out.versions.first())
 
     emit:
-    tmp_txt
     down_bam_bai               = ch_down_bam_bai
     //hk_bam_bai                 = ch_hk_bam_bai
 

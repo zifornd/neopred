@@ -28,8 +28,7 @@ process RSEQC_BAM_DOWNSAMPLING {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     COUNT="\$(ds_check_size.sh $txt)"
-    downsampling.sh $bam "\${COUNT}" 
-
+    downsampling.sh $bam "\${COUNT}"
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')

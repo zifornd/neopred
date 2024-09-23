@@ -125,7 +125,6 @@ workflow RIMA {
             ch_hk_bed
         )
 
-        tmp_txt = RSEQC.out.tmp_txt
         ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
         ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
         ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
@@ -134,7 +133,7 @@ workflow RIMA {
         ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
         ch_down_bam_bai               = RSEQC.out.down_bam_bai
         //ch_hk_bam_bai                 = RSEQC.out.hk_bam_bai
-        ch_versions                   = ch_versions.mix(RSEQC.out.versions) 
+        ch_versions                   = ch_versions.mix(RSEQC.out.versions)
 
     }
 
@@ -149,7 +148,6 @@ workflow RIMA {
             ch_hk_bed
         )
 
-        tmp_txt = RSEQC.out.tmp_txt
         ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
         ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
         ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
@@ -161,11 +159,9 @@ workflow RIMA {
         ch_versions                   = ch_versions.mix(RSEQC.out.versions)
     }
 
-
     //
     // SUBWORKFLOW: Salmon Quantification
     //
-
 
     QUANTIFY_SALMON (
         ch_transcriptome_bam,

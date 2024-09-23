@@ -11,8 +11,8 @@ FACTOR=$(samtools idxstats $1 | cut -f3 | awk -v COUNT=$((VALUE*1000000)) 'BEGIN
 echo "Printing VALUE variable: $VALUE"
 echo "Printing FACTOR variable: $FACTOR"
 if [[ $FACTOR > 1 ]]
-  then
-  echo '[ERROR]: Requested number of reads exceeds total read count in' $1 '-- exiting' && exit 1
+    then
+    echo '[ERROR]: Requested number of reads exceeds total read count in' $1 '-- exiting' && exit 1
 fi
 
 samtools view -s $FACTOR -b $1 > $1"_"$2"_downsampling.bam"
