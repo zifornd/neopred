@@ -5,7 +5,6 @@
 // TODO nf-core: A subworkflow SHOULD import at least two modules
 
 include { GTF2BED                         } from '../../../modules/local/gtf2bed'
-include { RSEQC_SIZE_DOWNSAMPLING         } from '../../../modules/local/rseqc/size_downsampling/main'
 include { RSEQC_BAM_DOWNSAMPLING          } from '../../../modules/local/rseqc/bam_downsampling/main'
 include { SAMTOOLS_INDEX                  } from '../../../modules/nf-core/samtools/index'
 include { BEDTOOLS_INTERSECT              } from '../../../modules/nf-core/bedtools/intersect/main.nf'
@@ -39,14 +38,6 @@ workflow RSEQC {
     bed              = GTF2BED.out.bed
     ch_versions      = ch_versions.mix(GTF2BED.out.versions)
 
-    //
-    // Run RSeQC size downsampling
-    //
-    tmp_txt = Channel.empty()
-
-    RSEQC_SIZE_DOWNSAMPLING(samtools_stats)
-    tmp_txt      = RSEQC_SIZE_DOWNSAMPLING.out.stat_tmp
-    ch_versions  = ch_versions.mix(RSEQC_SIZE_DOWNSAMPLING.out.versions.first())
 
     //
     // Run RSeQC bam downsampling
