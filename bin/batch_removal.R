@@ -38,13 +38,10 @@ write.table(dat,path,quote = FALSE, sep=',', row.names = FALSE)
 
 # Get samples
 Condition <- opts$design
-#print(paste0("Printing Condition variable:", Condition))
-#print(paste0("Printing covariates variable:", opts$covariates))
 meta <- read.table(file = opts$metasheet, sep=',', header = TRUE, stringsAsFactors = FALSE, row.names = 1)
 print(meta)
 samples <- subset(meta, meta[,Condition] != 'NA')
 print(paste0("Dimension of sample:", dim(samples)))
-#print(rownames(samples))
 
 # load data
 expr.dat <- read.table(opts$expression_dat,sep='\t', header = TRUE, stringsAsFactors = FALSE, row.names = 1,check.names = FALSE)
@@ -53,7 +50,6 @@ print(head(expr.dat))
 expr.dat <- expr.dat[,rownames(samples)]
 writeDF(ssgsvaFormat(expr.dat),opts$output_before)
 print('Load data done!')
-#print(head(expr.dat))
 
 
 ###filtering out genes with low variance among samples
@@ -77,7 +73,6 @@ if(opts$covariates == "False"){
 
 }else {
     samples$Batch <- samples[,opts$covariates]
-    #print(samples)
 
     print('Running limma for batch removal')
     expr.limma = tryCatch(
@@ -86,7 +81,6 @@ if(opts$covariates == "False"){
     error = function(e){
     print(e)
     })
-    #print(paste0("Printing variable expr.limma:", expr.limma))
     expr.limma = rbind(expr.limma,exprZero)
     writeDF(ssgsvaFormat(expr.limma),opts$output_after)
 }

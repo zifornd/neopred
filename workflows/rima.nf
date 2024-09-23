@@ -14,7 +14,7 @@ include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rim
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
-include { RSEQC                   } from '../subworkflows/local/rseqc'
+//include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
@@ -98,7 +98,7 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-    //
+    /*//
     // SUBWORKFLOW: RSeQC
     //
 
@@ -116,7 +116,7 @@ workflow RIMA {
     ch_versions                   = ch_versions.mix(RSEQC.out.versions)
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})*/
 
 
     //

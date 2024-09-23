@@ -35,14 +35,11 @@ expr <- read.table(opt$expression, header = TRUE, row.names = 1, sep = ",", chec
 overlapped_sam <- intersect(hla$subject, colnames(expr))
 
 hla <- hla[hla$subject %in% overlapped_sam,]
-#print(paste0("Printing hla variable from hla_plot script", hla))
 meta <- meta[rownames(meta) %in% overlapped_sam,]
-#print(paste0("Printing meta variable from hla_plot script", meta))
 expr <- expr[overlapped_sam]
 
 source(opt$source)
 hla_plot <- hla_oncoplot(hla, expr, meta, opt$design, opt$patID)
-#png(file = paste(opt$outdir,"hla_frequency_plot.png",sep = ""),res = 300, width = 3200 + 60*nrow(hla), height = 3000)
 pdf(file = paste(opt$outdir,"hla_frequency_plot.pdf",sep = ""), width=8, height=6)
 print(hla_plot)
 dev.off()
