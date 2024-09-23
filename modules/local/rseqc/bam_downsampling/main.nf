@@ -27,7 +27,7 @@ process RSEQC_BAM_DOWNSAMPLING {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    COUNT="\$(ds_check_size1.sh $txt)"
+    COUNT="\$(ds_check_size.sh $txt)"
     downsampling.sh $bam "\${COUNT}" 
 
     cat <<-END_VERSIONS > versions.yml
