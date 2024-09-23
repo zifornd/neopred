@@ -23,16 +23,14 @@ include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rim
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
-<<<<<<< HEAD
 //include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 //include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 //include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
-=======
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
->>>>>>> dev
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
