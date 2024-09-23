@@ -65,6 +65,12 @@
                     "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
                     "fa_icon": "far fa-file-code"
                 },
+                "hk_bed": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "description": "Bed file containing location for only the house-keeping genes"
+                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
@@ -89,6 +95,94 @@
                     "type": "string",
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
+                }
+            },
+            "required": ["fasta"]
+        },
+        "alignment_options": {
+            "title": "Alignment options",
+            "type": "object",
+            "fa_icon": "fas fa-map-signs",
+            "description": "Options to adjust parameters and filtering criteria for read alignments.",
+            "properties": {
+                "seq_center": {
+                    "type": "string",
+                    "description": "Sequencing center information to be added to read group of BAM files."
+                },
+                "bam_csi_index": {
+                    "type": "boolean",
+                    "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes."
+                },
+                "star_ignore_sjdbgtf": {
+                    "type": "boolean",
+                    "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
+                },
+                "save_merged_fastq": {
+                    "type": "boolean",
+                    "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
+                },
+                "save_unaligned": {
+                    "type": "boolean",
+                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory."
+                },
+                "save_align_intermeds": {
+                    "type": "boolean",
+                    "description": "Save the intermediate BAM files from the alignment step."
+                },
+                "gene_bed": {
+                    "type": "string",
+                    "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+                },
+                "gtf": {
+                    "type": "string",
+                    "description": "Path to GTF annotation file."
+                },
+                "batch": {
+                    "type": "string",
+                    "default": "batch",
+                    "description": "Column that describes the batch effect of various samples"
+                },
+                "design": {
+                    "type": "string",
+                    "default": "design",
+                    "description": "Condition to compare samples (column from metasheet)."
+                }
+            }
+        },
+        "variant_options": {
+            "title": "Variant options",
+            "type": "object",
+            "fa_icon": "fas fa-map-signs",
+            "description": "Options to Variant calling modules.",
+            "properties": {
+                "parse_read_group_info_file": {
+                    "type": "string",
+                    "description": "path to parse read group info file."
+                },
+                "picard_sort_order": {
+                    "type": "string",
+                    "default": "coordinate",
+                    "description": "Order in which the SAM/BAM file are sorted."
+                },
+                "picard_create_index": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to create BAM index file."
+                },
+                "picard_platform": {
+                    "type": "string",
+                    "default": "ILLUMINA",
+                    "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
+                },
+                "F1R2_metrics": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "If specified, collect F1R2 counts and output files into this tar.gz file"
+                },
+                "emit_threshold": {
+                    "type": "number",
+                    "default": 6.3,
+                    "description": "Log 10 odds threshold to emit variant to VCF."
                 },
                 "dbsnp": {
                     "type": "string",
@@ -105,9 +199,53 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.",
                     "hidden": true,
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi"
+                },
+                "known_indels": {
+                    "type": "string",
+                    "description": "Path to known indels vcf.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+                },
+                "known_indels_tbi": {
+                    "type": "string",
+                    "description": "Path to known indels index.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+                },
+                "germline_resource": {
+                    "type": "string",
+                    "description": "Path to germline resource vcf.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+                },
+                "germline_resource_tbi": {
+                    "type": "string",
+                    "description": "Path to germline resource file index.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+                },
+                "pileup_vcf": {
+                    "type": "string",
+                    "description": "Path to pileup vcf.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+                },
+                "pileup_vcftbi": {
+                    "type": "string",
+                    "description": "Path to pileup index.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+                },
+                "pon": {
+                    "type": "string",
+                    "description": "Path to pon vcf.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+                },
+                "pon_tbi": {
+                    "type": "string",
+                    "description": "Path to pon index.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+                },
+                "f_bcftools": {
+                    "type": "string",
+                    "description": "Path to dbsnp index.",
+                    "default": "PASS"
                 }
-            },
-            "required": ["fasta"]
+            }
         },
         "institutional_config_options": {
             "title": "Institutional config options",
@@ -319,6 +457,12 @@
             "$ref": "#/definitions/reference_genome_options"
         },
         {
+            "$ref": "#/definitions/alignment_options"
+        },
+        {
+            "$ref": "#/definitions/variant_options"
+        },
+        {
             "$ref": "#/definitions/institutional_config_options"
         },
         {
@@ -327,113 +471,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "seq_center": {
-            "type": "string",
-            "description": "Sequencing center information to be added to read group of BAM files."
-        },
-        "bam_csi_index": {
-            "type": "boolean",
-            "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes."
-        },
-        "star_ignore_sjdbgtf": {
-            "type": "boolean",
-            "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
-        },
-        "save_merged_fastq": {
-            "type": "boolean",
-            "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
-        },
-        "save_unaligned": {
-            "type": "boolean",
-            "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory."
-        },
-        "save_align_intermeds": {
-            "type": "boolean",
-            "description": "Save the intermediate BAM files from the alignment step."
-        },
-        "gene_bed": {
-            "type": "string",
-            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
-        },
-        "gtf": {
-            "type": "string",
-            "description": "Path to GTF annotation file."
-        },
-        "batch": {
-            "type": "string",
-            "default": "batch",
-            "description": "Column that describes the batch effect of various samples"
-        },
-        "design": {
-            "type": "string",
-            "default": "design",
-            "description": "Condition to compare samples (column from metasheet)."
-        },
-        "parse_read_group_info_file": {
-            "type": "string"
-        },
-        "picard_sort_order": {
-            "type": "string",
-            "default": "coordinate",
-            "description": "Order in which the SAM/BAM file are sorted."
-        },
-        "picard_create_index": {
-            "type": "boolean",
-            "default": true,
-            "description": "Whether to create BAM index file."
-        },
-        "picard_platform": {
-            "type": "string",
-            "default": "ILLUMINA",
-            "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
-        },
-        "F1R2_metrics": {
-            "type": "boolean",
-            "default": true,
-            "description": "If specified, collect F1R2 counts and output files into this tar.gz file"
-        },
-        "emit_threshold": {
-            "type": "number",
-            "default": 6.3,
-            "description": "Log 10 odds threshold to emit variant to VCF."
-        },
-        "known_indels": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
-        },
-        "known_indels_tbi": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
-        },
-        "germline_resource": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
-        },
-        "germline_resource_tbi": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
-        },
-        "pileup_vcf": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
-        },
-        "pileup_vcftbi": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
-        },
-        "pon": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
-        },
-        "pon_tbi": {
-            "type": "string",
-            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
-        },
-        "f_bcftools": {
-            "type": "string",
-            "default": "PASS"
-        }
-    }
+    ]
 }
