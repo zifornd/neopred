@@ -2,6 +2,7 @@
 // Run Variant Annotation
 //
 
+include { PVACTOOLS_INSTALLVEPPLUGIN } from '../../../modules/nf-core/pvactools/installvepplugin/main'
 include { ENSEMBLVEP_DOWNLOAD } from '../../../modules/nf-core/ensemblvep/download/main'
 include { ENSEMBLVEP_VEP      } from '../../../modules/nf-core/ensemblvep/vep/main'
 
@@ -18,9 +19,11 @@ workflow VARIANT_ANNOTATION {
     main:
     versions = Channel.empty()
 
+    PVACTOOLS_INSTALLVEPPLUGIN()
+
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
     //vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache
-    
+
     //vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
     vep_extra_files = []
     vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.map{ meta, cache -> cache}
