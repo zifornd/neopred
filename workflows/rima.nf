@@ -1,24 +1,35 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT NF-CORE MODULES / SUBWORKFLOWS / FUNCTIONS
+    IMPORT MODULES / FUNCTIONS : Consists of validation based plugins and modules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 include { FASTQC                  } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                 } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap        } from 'plugin/nf-validation'
-
 include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT SUBWORKFLOWS : Consists of a mix of local and nf-core subworkflows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
-//include { RSEQC                   } from '../subworkflows/local/rseqc'
+include { RSEQC                   } from '../subworkflows/local/rseqc'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
-include { PRE_VARIANTCALLING         } from '../subworkflows/local/pre_variantcalling'
+include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { HLA_TYPING              } from '../subworkflows/local/hla_typing'
+include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -98,7 +109,7 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
-    /*//
+    //
     // SUBWORKFLOW: RSeQC
     //
 
@@ -116,7 +127,7 @@ workflow RIMA {
     ch_versions                   = ch_versions.mix(RSEQC.out.versions)
 
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})*/
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
 
 
     //
@@ -174,7 +185,41 @@ workflow RIMA {
         params.dbsnp_tbi
     )
 
+    ch_bqsr_bam = PRE_VARIANTCALLING.out.bqsr_bam
+    ch_bqsr_bai = PRE_VARIANTCALLING.out.bqsr_bai
+    ch_dict     = PRE_VARIANTCALLING.out.dict
     ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
+
+    //
+    // Subworkflow: Variant Identification and Filtering using GATK
+    //
+
+    ch_fasta = PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+    ch_fai   = PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
+
+    VARIANT_CALLINGFILTERING (
+        ch_bqsr_bam,
+        ch_bqsr_bai,
+        ch_fasta,
+        ch_fai,
+        ch_dict,
+        params.germline_resource,
+        params.germline_resource_tbi,
+        params.pon,
+        params.pon_tbi,
+        params.dbsnp,
+        params.dbsnp_tbi,
+        params.pileup_vcf,
+        params.pileup_vcftbi
+    )
+
+    /*ch_variants         =  VARIANT_CALLINGFILTERING.out.variants_vcf
+    ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
+    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.variants_tbi
+    ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
+    ch_variants_rna_vcf =  VARIANT_CALLINGFILTERING.out.variants_rna_vcf
+    ch_variants_rna_tbi =  VARIANT_CALLINGFILTERING.out.variants_rna_tbi
+    ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)*/
 
     //
     // Collate and save software versions

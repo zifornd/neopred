@@ -43,6 +43,75 @@
                 }
             }
         },
+<<<<<<< HEAD
+=======
+        "reference_genome_options": {
+            "title": "Reference genome options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Reference genome related files and options required for the workflow.",
+            "properties": {
+                "genome": {
+                    "type": "string",
+                    "description": "Name of iGenomes reference.",
+                    "fa_icon": "fas fa-book",
+                    "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`. \n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
+                },
+                "fasta": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
+                    "description": "Path to FASTA genome file.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
+                    "fa_icon": "far fa-file-code"
+                },
+                "igenomes_ignore": {
+                    "type": "boolean",
+                    "description": "Do not load the iGenomes reference config.",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "gtf_extra_attributes": {
+                    "type": "string",
+                    "default": "gene_name",
+                    "fa_icon": "fas fa-plus-square",
+                    "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
+                    "help_text": "This behaviour can be modified by specifying `--gtf_extra_attributes` when running the pipeline. Note that you can also specify more than one desired value, separated by a comma e.g. `--gtf_extra_attributes gene_id,...`.\n"
+                },
+                "gtf_group_features": {
+                    "type": "string",
+                    "default": "gene_id",
+                    "description": "Define the attribute type used to group features in the GTF file when running Salmon.",
+                    "fa_icon": "fas fa-layer-group"
+                },
+                "extra_salmon_quant_args": {
+                    "type": "string",
+                    "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
+                    "fa_icon": "fas fa-plus"
+                },
+                "dbsnp": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp file.",
+                    "hidden": true,
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz"
+                },
+                "dbsnp_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp index.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.",
+                    "hidden": true,
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi"
+                }
+            },
+            "required": ["fasta"]
+        },
+>>>>>>> dev
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -341,6 +410,91 @@
         "save_align_intermeds": {
             "type": "boolean",
             "description": "Save the intermediate BAM files from the alignment step."
+<<<<<<< HEAD
+=======
+        },
+        "gene_bed": {
+            "type": "string",
+            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+        },
+        "gtf": {
+            "type": "string",
+            "description": "Path to GTF annotation file."
+        },
+        "batch": {
+            "type": "string",
+            "default": "batch",
+            "description": "Column that describes the batch effect of various samples"
+        },
+        "design": {
+            "type": "string",
+            "default": "design",
+            "description": "Condition to compare samples (column from metasheet)."
+        },
+        "parse_read_group_info_file": {
+            "type": "string"
+        },
+        "picard_sort_order": {
+            "type": "string",
+            "default": "coordinate",
+            "description": "Order in which the SAM/BAM file are sorted."
+        },
+        "picard_create_index": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to create BAM index file."
+        },
+        "picard_platform": {
+            "type": "string",
+            "default": "ILLUMINA",
+            "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
+        },
+        "F1R2_metrics": {
+            "type": "boolean",
+            "default": true,
+            "description": "If specified, collect F1R2 counts and output files into this tar.gz file"
+        },
+        "emit_threshold": {
+            "type": "number",
+            "default": 6.3,
+            "description": "Log 10 odds threshold to emit variant to VCF."
+        },
+        "known_indels": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+        },
+        "known_indels_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+        },
+        "germline_resource": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+        },
+        "germline_resource_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+        },
+        "pileup_vcf": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz"
+        },
+        "pileup_vcftbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz.tbi"
+        },
+        "pon": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz"
+        },
+        "pon_tbi": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/vcf/mills_and_1000G.indels.vcf.gz.tbi"
+        },
+        "f_bcftools": {
+            "type": "string",
+            "default": "PASS"
+>>>>>>> dev
         }
     }
 }
