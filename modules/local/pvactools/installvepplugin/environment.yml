@@ -5,5 +5,5 @@ dependencies:
   - python=3.8
   - pip
   - pip:
-    - vatools==5.1.1
-    - pvactools==4.4.1
+      - vatools==5.1.1
+      - pvactools==4.4.1

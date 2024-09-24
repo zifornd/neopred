@@ -200,11 +200,11 @@ workflow RIMA {
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
     ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
-var=Channel.fromPath(params.raw_vcf)
-var.view()
+    var=Channel.fromPath(params.raw_vcf)
+
     VARIANT_ANNOTATION (
         ensemblvep_info,
-        var,
+        ch_variants,
         ch_variants_tbi,
         ch_fasta,
         params.vep_genome_assembly,

@@ -4,11 +4,11 @@ process PVACTOOLS_INSTALLVEPPLUGIN {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/griffithlab/pvactools:4.1.1' :
-        'griffithlab/pvactools:4.1.1' }"
+        'docker.io/griffithlab/pvactools:4.1.1' }"
 
     output:
-    path("Wildtype.pm")  , emit: results_1
-    path("Frameshift.pm")  , emit: results_2
+    path("Wildtype.pm")    , emit: results_wt
+    path("Frameshift.pm")  , emit: results_fs
 
     when:
     task.ext.when == null || task.ext.when

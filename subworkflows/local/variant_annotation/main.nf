@@ -2,7 +2,7 @@
 // Run Variant Annotation
 //
 
-include { PVACTOOLS_INSTALLVEPPLUGIN } from '../../../modules/nf-core/pvactools/installvepplugin/main'
+include { PVACTOOLS_INSTALLVEPPLUGIN } from '../../../modules/local/pvactools/installvepplugin/main'
 include { ENSEMBLVEP_DOWNLOAD } from '../../../modules/nf-core/ensemblvep/download/main'
 include { ENSEMBLVEP_VEP      } from '../../../modules/nf-core/ensemblvep/vep/main'
 
@@ -22,13 +22,14 @@ workflow VARIANT_ANNOTATION {
     PVACTOOLS_INSTALLVEPPLUGIN()
 
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
-    //vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache
 
-    //vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
-    vep_extra_files = []
+    vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
+    plugin_wt = PVACTOOLS_INSTALLVEPPLUGIN.out.results_wt
+    plugin_fs = PVACTOOLS_INSTALLVEPPLUGIN.out.results_fs
+    vep_extra_files = plugin_wt.combine(plugin_fs)
+    vep_extra_files.view()
     vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.map{ meta, cache -> cache}
-    vcf_for_vep = vcf.map{vcf -> [ [], vcf, []]}
-    vcf_tbi.view()
+    //vcf_for_vep = vcf.map{vcf -> [ [], vcf, []]}
 
     ENSEMBLVEP_VEP(vcf_for_vep, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files)
 
@@ -38,7 +39,6 @@ workflow VARIANT_ANNOTATION {
 
     emit:
     ensemblvep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.collect()  // channel: [ meta, cache ]
-    //snpeff_cache     = SNPEFF_DOWNLOAD.out.cache.collect()      // channel: [ meta, cache ]
 
     versions // channel: [ versions.yml ]
 }
