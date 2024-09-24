@@ -1,0 +1,15 @@
+name: neoantigen
+channels:
+  - r
+  - bioconda
+  - defaults
+  - anaconda
+  - conda-forge
+dependencies:
+  - r=4.3=r43hd8ed1ab_1007
+  - r-ggplot2
+  - r-dplyr=1.1.4=r43ha503ecb_0
+  - r-optparse=1.7.4=r43hc72bb7e_0
+  - r-reshape2=1.4.4=r43ha503ecb_3
+  - r-rcolorbrewer=1.1_3=r43h785f33e_2
+  - bioconductor-complexheatmap=2.18.0=r43hdfd78af_0

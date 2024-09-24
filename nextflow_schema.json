@@ -146,6 +146,11 @@
                     "type": "string",
                     "default": "design",
                     "description": "Condition to compare samples (column from metasheet)."
+                },
+                "patient_id": {
+                    "type": "string",
+                    "default": "sample_group",
+                    "description": "Column that identifies various patient samples"
                 }
             }
         },

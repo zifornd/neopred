@@ -27,6 +27,8 @@ workflow BATCH_REMOVAL_ANALYSIS {
     ch_versions       = ch_versions.mix(PCA_SAMPLE_CLUSTERING.out.versions)
 
     emit:
+
+    after_br      = BATCH_REMOVAL.out.after_br            // channel: [ after_batch_removal_genes ]
     before_br_pca = PCA_SAMPLE_CLUSTERING.out.before_pca  // channel: [ pca_before_batch_removal_plot ]
     after_br_pca  = PCA_SAMPLE_CLUSTERING.out.after_pca   // channel: [ pca_after_batch_removal_plot ]
 
