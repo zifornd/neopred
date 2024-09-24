@@ -7,19 +7,16 @@
 include { FASTQC                  } from '../modules/nf-core/fastqc/main'
 include { MULTIQC                 } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap        } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT SUBWORKFLOWS : Consists of a mix of local and nf-core subworkflows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'

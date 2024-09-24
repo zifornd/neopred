@@ -43,8 +43,6 @@
                 }
             }
         },
-<<<<<<< HEAD
-=======
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -111,7 +109,6 @@
             },
             "required": ["fasta"]
         },
->>>>>>> dev
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -410,26 +407,6 @@
         "save_align_intermeds": {
             "type": "boolean",
             "description": "Save the intermediate BAM files from the alignment step."
-<<<<<<< HEAD
-=======
-        },
-        "gene_bed": {
-            "type": "string",
-            "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
-        },
-        "gtf": {
-            "type": "string",
-            "description": "Path to GTF annotation file."
-        },
-        "batch": {
-            "type": "string",
-            "default": "batch",
-            "description": "Column that describes the batch effect of various samples"
-        },
-        "design": {
-            "type": "string",
-            "default": "design",
-            "description": "Condition to compare samples (column from metasheet)."
         },
         "parse_read_group_info_file": {
             "type": "string"
@@ -494,7 +471,6 @@
         "f_bcftools": {
             "type": "string",
             "default": "PASS"
->>>>>>> dev
         }
     }
 }
