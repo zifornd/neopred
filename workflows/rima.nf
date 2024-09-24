@@ -30,6 +30,7 @@ include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
+include { VARIANT_ANNOTATION      } from '../subworkflows/local/variant_annotation'
 
 
 /*
@@ -179,6 +180,7 @@ workflow RIMA {
     // SUBWORKFLOW: Batch removal and PCA
     //
     BATCH_REMOVAL_ANALYSIS (params.input,params.batch,params.design,QUANTIFY_SALMON.out.tpm_gene)
+
     ch_versions = ch_versions.mix(BATCH_REMOVAL_ANALYSIS.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
@@ -220,13 +222,30 @@ workflow RIMA {
         params.pileup_vcftbi
     )
 
-    /*ch_variants         =  VARIANT_CALLINGFILTERING.out.variants_vcf
-    ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
-    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.variants_tbi
-    ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
-    ch_variants_rna_vcf =  VARIANT_CALLINGFILTERING.out.variants_rna_vcf
-    ch_variants_rna_tbi =  VARIANT_CALLINGFILTERING.out.variants_rna_tbi
-    ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)*/
+    ch_variants         =  VARIANT_CALLINGFILTERING.out.selected_vcf
+    //ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
+    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.selected_tbi
+    //ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
+    ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)
+
+    //
+    // Subworkflow: Variant Annotation using VEP
+    //
+
+    // Download cache if needed
+    // Assuming that if the cache is provided, the user has already downloaded it
+    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
+    //var=Channel.fromPath(params.raw_vcf)
+
+    VARIANT_ANNOTATION (
+        ensemblvep_info,
+        ch_variants,
+        ch_variants_tbi,
+        ch_fasta,
+        params.vep_genome_assembly,
+        params.vep_species,
+        params.vep_cache_version
+    )
 
     //
     // Collate and save software versions
