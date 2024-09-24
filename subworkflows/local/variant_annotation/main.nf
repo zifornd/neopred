@@ -20,6 +20,7 @@ workflow VARIANT_ANNOTATION {
     versions = Channel.empty()
 
     PVACTOOLS_INSTALLVEPPLUGIN()
+    versions = versions.mix(PVACTOOLS_INSTALLVEPPLUGIN.out.versions)
 
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
 
@@ -27,7 +28,6 @@ workflow VARIANT_ANNOTATION {
     plugin_wt = PVACTOOLS_INSTALLVEPPLUGIN.out.results_wt
     plugin_fs = PVACTOOLS_INSTALLVEPPLUGIN.out.results_fs
     vep_extra_files = plugin_wt.combine(plugin_fs)
-    vep_extra_files.view()
     vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.map{ meta, cache -> cache}
     //vcf_for_vep = vcf.map{vcf -> [ [], vcf, []]}
 

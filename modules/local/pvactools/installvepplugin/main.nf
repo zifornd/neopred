@@ -9,6 +9,7 @@ process PVACTOOLS_INSTALLVEPPLUGIN {
     output:
     path("Wildtype.pm")    , emit: results_wt
     path("Frameshift.pm")  , emit: results_fs
+    path "versions.yml"    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
