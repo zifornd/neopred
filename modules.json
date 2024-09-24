@@ -8,6 +8,8 @@
                     "arcashla/extract": {
                         "branch": "master",
                         "git_sha": "480a8e6db24bedff904c31f65b01fc80ebc51e38",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/index": {
                         "branch": "master",
                         "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
@@ -196,5 +198,4 @@
             }
         }
     }
-}
 }
