@@ -1,6 +1,6 @@
 {
     "name": "nf/rima",
-    "homePage": "https://github.com/zifornd/nf-rima",
+    "homePage": "https://github.com/nf/rima",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {
