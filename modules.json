@@ -33,6 +33,11 @@
                             "modules"
                         ]
                     },
+                    "bedtools/intersect": {
+                        "branch": "master",
+                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "installed_by": ["modules"]
+                    },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "46eca555142d6e597729fcb682adcc791796f514",
