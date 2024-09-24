@@ -56,7 +56,7 @@ workflow HLA_TYPING {
     //
     // Module: Generates a png file consisting the frequency of HLA as a plot
     //
-    ch_sample   = Channel.value(file(samplesheet)) 
+    ch_sample   = Channel.value(file(samplesheet))
     ARCASHLA_PLOT (ARCASHLA_CONVERT.out.gt_group,ch_sample,after_br,batch,design,patient_id)
     ch_versions = ch_versions.mix(ARCASHLA_PLOT.out.versions)
 

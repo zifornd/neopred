@@ -249,6 +249,25 @@
                     "type": "string",
                     "description": "Path to dbsnp index.",
                     "default": "PASS"
+                },
+                "vep_cache": {
+                    "type": "string",
+                    "description": "Configures where cache files are installed"
+                },
+                "vep_genome_assembly": {
+                    "type": "string",
+                    "default": "GRCh38",
+                    "description": "Assembly version to use when using --AUTO."
+                },
+                "vep_species": {
+                    "type": "string",
+                    "default": "homo_sapiens",
+                    "description": "Comma-separated list of species to install when using --AUTO."
+                },
+                "vep_cache_version": {
+                    "type": "integer",
+                    "default": 112,
+                    "description": "Version of VEP caches and FASTA files to download (default latest)"
                 }
             }
         },

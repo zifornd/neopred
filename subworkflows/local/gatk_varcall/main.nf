@@ -143,6 +143,7 @@ workflow VARIANT_CALLINGFILTERING {
     artifactprior               =   ch_artifactprior
     contaminationtable          =   ch_contaminationtable
     tumour_segmentationtable    =   ch_tumoursegmentationtable
+    variants                    =   variants
     filtered_vcf                =   ch_filtered_vcf
     filtered_tbi                =   ch_filtered_tbi
     selected_vcf                =   ch_selected_vcf
