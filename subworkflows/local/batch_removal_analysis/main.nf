@@ -15,13 +15,15 @@ workflow BATCH_REMOVAL_ANALYSIS {
 
     ch_versions = Channel.empty()
 
+    ch_samplesheet = Channel.value(file(sample))
+
     //
     // Module: Batch removal
     //
-    BATCH_REMOVAL ( sample,batch,design,tpm_gene )
+    BATCH_REMOVAL ( ch_samplesheet,batch,design,tpm_gene )
     ch_versions       = ch_versions.mix(BATCH_REMOVAL.out.versions)
 
-    PCA_SAMPLE_CLUSTERING ( sample,batch,design,BATCH_REMOVAL.out.after_br, BATCH_REMOVAL.out.before_br )
+    PCA_SAMPLE_CLUSTERING ( ch_samplesheet,batch,design,BATCH_REMOVAL.out.after_br, BATCH_REMOVAL.out.before_br )
     ch_versions       = ch_versions.mix(PCA_SAMPLE_CLUSTERING.out.versions)
 
     emit:
