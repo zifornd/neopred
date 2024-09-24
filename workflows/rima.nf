@@ -23,11 +23,15 @@ include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rim
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
+//include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
+//include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
+//include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { QUANTIFY_SALMON         } from '../subworkflows/local/quantify_salmon'
 include { PRE_VARIANTCALLING      } from '../subworkflows/local/pre_variantcalling'
 include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_analysis'
 include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
 include { VARIANT_ANNOTATION      } from '../subworkflows/local/variant_annotation'
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,23 +115,54 @@ workflow RIMA {
     // SUBWORKFLOW: RSeQC
     //
 
-    RSEQC (
-        ch_bam_bai,
-        params.gtf
-    )
+    if (!params.hk_bed) {
 
-    ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
-    ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
-    ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
-    ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
-    //ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
-    ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
-    ch_versions                   = ch_versions.mix(RSEQC.out.versions)
+        ch_hk_bed = file("$baseDir/assets/dummy_file.txt", checkIfExists: true)
+
+        RSEQC (
+            ch_bam_bai,
+            samtools_stats,
+            params.gtf,
+            ch_hk_bed
+        )
+
+        ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
+        ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
+        ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
+        ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
+        ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
+        ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
+        ch_down_bam_bai               = RSEQC.out.down_bam_bai
+        //ch_hk_bam_bai                 = RSEQC.out.hk_bam_bai
+        ch_versions                   = ch_versions.mix(RSEQC.out.versions)
+
+    }
+
+    else {
+
+        ch_hk_bed = params.hk_bed
+
+        RSEQC (
+            ch_bam_bai,
+            samtools_stats,
+            params.gtf,
+            ch_hk_bed
+        )
+
+        ch_tin_multiqc                = RSEQC.out.tin_txt.collect{it[1]}
+        ch_tin_multiqc                = ch_tin_multiqc.mix(RSEQC.out.tin_summary.collect{it[1]})
+        ch_junctionsaturation_multiqc = RSEQC.out.junctionsaturation_rscript.collect{it[1]}
+        ch_readdistribution_multiqc   = RSEQC.out.readdistribution_txt.collect{it[1]}
+        ch_readdistribution_multiqc   = ch_readdistribution_multiqc.mix(RSEQC.out.readdistribution_matrix)
+        ch_multiqc_files              = ch_multiqc_files.mix(ch_tin_multiqc,ch_junctionsaturation_multiqc,ch_readdistribution_multiqc)
+        ch_down_bam_bai               = RSEQC.out.down_bam_bai
+        //ch_hk_bam_bai               = RSEQC.out.hk_bam_bai
+        ch_versions                   = ch_versions.mix(RSEQC.out.versions)
+    }
 
     //
     // SUBWORKFLOW: Salmon Quantification
     //
-
 
     QUANTIFY_SALMON (
         ch_transcriptome_bam,
