@@ -83,7 +83,7 @@ workflow RIMA {
         )
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
 
-    //
+    /*//
     // SUBWORKFLOW: Preprocess STAR
     //
 
@@ -105,9 +105,9 @@ workflow RIMA {
     star_metrics     = PREPROCESS_STAR.out.metrics
     ch_versions      = ch_versions.mix(PREPROCESS_STAR.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
+    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})*/
 
-    //
+    /*//
     // SUBWORKFLOW: RSeQC
     //
 
@@ -154,16 +154,18 @@ workflow RIMA {
         ch_down_bam_bai               = RSEQC.out.down_bam_bai
         //ch_hk_bam_bai               = RSEQC.out.hk_bam_bai
         ch_versions                   = ch_versions.mix(RSEQC.out.versions)
-    }
-
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
-
+    }*/
 
     //
     // SUBWORKFLOW: Salmon Quantification
     //
-
+	ch_transcriptome_bam = Channel
+    .fromPath(params.transcript_bam)
+    .map { file ->
+        def filename = file.getName()
+        def meta = [id: filename.split('\\.')[0]]
+        tuple(meta, file)
+    }
     QUANTIFY_SALMON (
         ch_transcriptome_bam,
         ch_dummy_file,
@@ -193,6 +195,14 @@ workflow RIMA {
     //
     // SUBWORKFLOW: arcasHLA Typing
     //
+    ch_sorted_bam = Channel
+    .fromPath(params.sorted_bam)
+    .map { file ->
+    def filename = file.getName()
+    def meta = [id: filename.split('\\.')[0]]
+    tuple(meta, file)
+}
+
     HLA_TYPING (
         params.input,
         ch_sorted_bam,
@@ -206,7 +216,7 @@ workflow RIMA {
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
 
-    PRE_VARIANTCALLING(
+    /*PRE_VARIANTCALLING(
         ch_sorted_bam,
         ch_bam_bai,
         PREPARE_GENOME.out.fasta.map { [ [:], it ] },
@@ -266,7 +276,7 @@ workflow RIMA {
         params.vep_genome_assembly,
         params.vep_species,
         params.vep_cache_version
-    )
+    )*/
 
     //
     // Collate and save software versions

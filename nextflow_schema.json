@@ -80,14 +80,14 @@
                 },
                 "gtf_extra_attributes": {
                     "type": "string",
-                    "default": "gene_name",
+                    "default":"null",
                     "fa_icon": "fas fa-plus-square",
                     "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
                     "help_text": "This behaviour can be modified by specifying `--gtf_extra_attributes` when running the pipeline. Note that you can also specify more than one desired value, separated by a comma e.g. `--gtf_extra_attributes gene_id,...`.\n"
                 },
                 "gtf_group_features": {
                     "type": "string",
-                    "default": "gene_id",
+                    "default": "gene_name",
                     "description": "Define the attribute type used to group features in the GTF file when running Salmon.",
                     "fa_icon": "fas fa-layer-group"
                 },
