@@ -38,6 +38,8 @@ workflow VARIANT_ANNOTATION {
     versions = versions.mix(ENSEMBLVEP_VEP.out.versions)
 
     emit:
+
+    results = ENSEMBLVEP_VEP.out.vcf
     ensemblvep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.collect()  // channel: [ meta, cache ]
 
     versions // channel: [ versions.yml ]

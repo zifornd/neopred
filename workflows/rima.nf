@@ -27,7 +27,7 @@ include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_an
 include { HLA_TYPING              } from '../subworkflows/local/hla_typing'
 include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
 include { VARIANT_ANNOTATION      } from '../subworkflows/local/variant_annotation'
-
+include { EPITOPE_PREDICTION      } from '../subworkflows/local/epitope_prediction'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -196,15 +196,14 @@ workflow RIMA {
     HLA_TYPING (
         params.input,
         ch_sorted_bam,
-        BATCH_REMOVAL_ANALYSIS.out.after_br,
+        BATCH_REMOVAL_ANALYSIS.out.tpm,
         params.batch,
         params.design,
         params.patient_id)
 
     ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
+    /* ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot) */
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
-
 
     PRE_VARIANTCALLING(
         ch_sorted_bam,
@@ -267,6 +266,25 @@ workflow RIMA {
         params.vep_species,
         params.vep_cache_version
     )
+
+    ch_annot_vcf = VARIANT_ANNOTATION.out.results
+    ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
+
+    EPITOPE_PREDICTION(
+        QUANTIFY_SALMON.out.results,
+        params.input,
+        params.design,
+        params.batch,
+        ch_annot_vcf,
+        HLA_TYPING.out.hla_result,
+        params.filter_value,
+        params.callers,
+        params.neoantigen_epitope1_lengths,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+        PREPARE_GENOME.out.gtf
+    )
+    ch_versions         = ch_versions.mix( EPITOPE_PREDICTION.out.versions)
 
     //
     // Collate and save software versions

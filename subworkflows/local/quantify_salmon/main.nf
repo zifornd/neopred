@@ -34,6 +34,8 @@ workflow QUANTIFY_SALMON {
     TXIMPORT ( ch_results.collect{it[1]}, TX2GENE.out.tsv.collect(), 'salmon' )
     ch_versions = ch_versions.mix(TXIMPORT.out.versions)
 
+    
+
     emit:
     results                       = ch_results                      // channel: [ val(meta), results_dir ]
     multiqc                       = ch_multiqc                      // channel: [ val(meta), files_for_multiqc ]

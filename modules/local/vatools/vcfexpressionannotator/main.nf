@@ -22,12 +22,12 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     """
     mkdir tmp
     vcf-expression-annotator \\
-        $vcf $(pwd)/tmp \\
+        $vcf ./tmp \\
         custom gene --id-column Gene_ID --expression-column ${meta.id} \\
         -s ${meta.id} \\
         -o ${prefix}.vcf \\
         $csv
-    rm $(pwd)/tmp
+    rm ./tmp
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
