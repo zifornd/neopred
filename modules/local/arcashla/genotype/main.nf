@@ -24,7 +24,7 @@ process ARCASHLA_GENOTYPE {
     def VERSION = "0.5.0" // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
 
     """
-    if [ ${workflow.profile} = conda ]; then
+    if [[ ${workflow.profile} == *"conda"* ]]; then
     arcasHLA reference --version 3.24.0
     fi
     arcasHLA \\
