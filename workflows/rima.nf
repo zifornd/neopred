@@ -287,22 +287,13 @@ workflow RIMA {
                 .set{ ch_vcf }
 
     pvacseq_geno.combine(ch_vcf, by:0)
-                .map{ meta, hla, vcf -> [ id:meta, hla ,vcf ] }
+                .map{ meta, hla, vcf ->
+                def name = [:]
+                name.id = meta.toString()
+                name.caller = "mutect2"
+                [name, hla, vcf]}
                 .set{ch_hla_vcf}
-    //ch_id_hla_vcf=ch_hla_vcf.map{it -> [ [id:it[0]] ,it[1],it[2]]}
     ch_hla_vcf.view()
-    /* ch_hla_vcf
-        .branch { meta, hla, vcf ->
-            hla_res: hla
-                return hla
-            vcf_res: hla
-                return [meta,vcf]
-        }
-        .set{ch_vcf}
-
-    ch_vcf.vcf_res.view()
-    ch_vcf.hla_res.view() */
-
     EPITOPE_PREDICTION(
         QUANTIFY_SALMON.out.results,
         params.input,

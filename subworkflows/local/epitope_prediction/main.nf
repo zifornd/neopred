@@ -43,15 +43,12 @@ workflow EPITOPE_PREDICTION{
     ch_versions = ch_versions.mix(BATCH_REMOVAL.out.versions.first())
 
     vcf.map{ meta,hla,vcf -> [meta,vcf]}.set{ch_vcf_res}
-    ch_vcf_res.view()
     vcf.map{ meta,hla,vcf -> [meta,hla]}.set{ch_hla_res}
 
-    ch_vcf     = GUNZIP ( ch_vcf_res ).gunzip.view()
+    ch_vcf     = GUNZIP ( ch_vcf_res ).gunzip
     ch_versions = ch_versions.mix(GUNZIP.out.versions.first())
 
-    ch_id_vcf=ch_vcf.map{meta,vcf ->
-                            id = [id:meta]
-                            [id,vcf]}
+    ch_vcf.view()
 
     VATOOLS_REFTRANSCRIPTMISMATCHREPORTER(ch_vcf)
     ch_versions = ch_versions.mix(VATOOLS_REFTRANSCRIPTMISMATCHREPORTER.out.versions.first())

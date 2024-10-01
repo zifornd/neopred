@@ -25,7 +25,6 @@ workflow VARIANT_ANNOTATION {
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
 
     vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
-    vcf_for_vep.view()
     plugin_wt = PVACTOOLS_INSTALLVEPPLUGIN.out.results_wt
     plugin_fs = PVACTOOLS_INSTALLVEPPLUGIN.out.results_fs
     vep_extra_files = plugin_wt.combine(plugin_fs)
