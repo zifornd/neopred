@@ -5,14 +5,14 @@ process VATOOLS_REFTRANSCRIPTMISMATCHREPORTER {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/griffithlab/vatools:5.1.1' :
-        'griffithlab/vatools:5.1.1' }"
+        'docker.io/griffithlab/vatools:5.1.1' }"
 
     input:
-    tuple val(meta), path(vcf)
-    val filter
+    tuple val(meta) ,path(vcf)
 
     output:
     tuple val(meta), path("*.vcf")  , optional:true, emit: filter_vcf
+    path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,8 +22,8 @@ process VATOOLS_REFTRANSCRIPTMISMATCHREPORTER {
     """
     ref-transcript-mismatch-reporter \\
         $vcf \\
-        --filter ${filter} \\
-        -o ${prfix}.vcf
+        --filter $params.filter_val \\
+        -o ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

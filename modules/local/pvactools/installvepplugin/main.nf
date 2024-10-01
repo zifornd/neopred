@@ -20,7 +20,7 @@ process PVACTOOLS_INSTALLVEPPLUGIN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pvacseq: \$(pvacseq --version | sed 's/Python //g')
+        python: \$(python --version | sed 's/Python //g')
     END_VERSIONS
     """
 }

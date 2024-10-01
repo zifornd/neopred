@@ -5,14 +5,15 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/griffithlab/vatools:5.1.1' :
-        'griffithlab/vatools:5.1.1' }"
+        'docker.io/griffithlab/vatools:5.1.1' }"
 
     input:
     tuple val(meta), path(vcf)
-    tuple val(meta), path(csv)
+    path csv
 
     output:
     tuple val(meta), path("*.vcf")  , optional:true, emit: expr_vcf
+    path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,14 +21,13 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     script:
     prefix = task.ext.prefix ?: "${meta.id}.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx"
     """
-    mkdir tmp
+    tr ',' '\\t' < $csv | awk 'BEGIN {OFS="\\t"} \$1 != "Gene_ID" {gsub(/\\.[0-9]+/, "", \$1)} 1' > ${meta.id}.tmp
     vcf-expression-annotator \\
-        $vcf ./tmp \\
+        $vcf ${meta.id}.tmp \\
         custom gene --id-column Gene_ID --expression-column ${meta.id} \\
         -s ${meta.id} \\
-        -o ${prefix}.vcf \\
-        $csv
-    rm ./tmp
+        -o ${prefix}.vcf
+    rm ${meta.id}.tmp
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

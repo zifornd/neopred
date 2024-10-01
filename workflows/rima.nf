@@ -202,7 +202,7 @@ workflow RIMA {
         params.patient_id)
 
     ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
-    /* ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot) */
+    //ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
     PRE_VARIANTCALLING(
@@ -270,14 +270,45 @@ workflow RIMA {
     ch_annot_vcf = VARIANT_ANNOTATION.out.results
     ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
 
+    pvacseq_geno =  HLA_TYPING.out.hla_result.splitCsv(sep: '\t', header: false, skip:1)
+                        .map { row ->
+                        def firstColumn = row[0]
+                        def otherColumns = row[1..-1].collect { value ->
+                            def hla = value.replaceAll('P', '')
+                            return "HLA-${hla}"
+                        }
+                        return [firstColumn, otherColumns]
+                        }
+
+    ch_annot_vcf.map { meta,vcf ->
+                def id = meta.id
+                return [id,vcf]
+                }
+                .set{ ch_vcf }
+
+    pvacseq_geno.combine(ch_vcf, by:0)
+                .map{ meta, hla, vcf -> [ id:meta, hla ,vcf ] }
+                .set{ch_hla_vcf}
+    //ch_id_hla_vcf=ch_hla_vcf.map{it -> [ [id:it[0]] ,it[1],it[2]]}
+    ch_hla_vcf.view()
+    /* ch_hla_vcf
+        .branch { meta, hla, vcf ->
+            hla_res: hla
+                return hla
+            vcf_res: hla
+                return [meta,vcf]
+        }
+        .set{ch_vcf}
+
+    ch_vcf.vcf_res.view()
+    ch_vcf.hla_res.view() */
+
     EPITOPE_PREDICTION(
         QUANTIFY_SALMON.out.results,
         params.input,
         params.design,
         params.batch,
-        ch_annot_vcf,
-        HLA_TYPING.out.hla_result,
-        params.filter_value,
+        ch_hla_vcf,
         params.callers,
         params.neoantigen_epitope1_lengths,
         PREPARE_GENOME.out.fasta.map { [ [:], it ] },

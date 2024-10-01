@@ -4,7 +4,7 @@ include { ARCASHLA_EXTRACT               } from '../../../modules/nf-core/arcash
 include { ARCASHLA_GENOTYPE              } from '../../../modules/local/arcashla/genotype'
 include { ARCASHLA_MERGE                 } from '../../../modules/local/arcashla/merge'
 include { ARCASHLA_CONVERT               } from '../../../modules/local/arcashla/convert'
-include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
+//include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
 
 //Workflow
 
