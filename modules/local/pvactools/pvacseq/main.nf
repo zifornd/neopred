@@ -22,7 +22,7 @@ process PVACTOOLS_PVACSEQ {
 
     script:
     prefix = task.ext.prefix ?: "${meta.id}r"
-    def callers = algorithms.split(',').join(' ') ?: "MHCflurry MHCnuggetsII"
+    def callers = algorithms.split(',').join(' ') ?: "MHCflurry NetMHCcons MHCnuggetsII"
     def alleles = hla.join(',')
     """
     pvacseq run \\

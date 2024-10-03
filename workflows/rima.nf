@@ -257,8 +257,6 @@ workflow RIMA {
     ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
     //var=Channel.fromPath(params.raw_vcf)
 
-    ch_variants.view()
-
     VARIANT_ANNOTATION (
         ch_variants,
         ch_variants_tbi,
@@ -271,6 +269,10 @@ workflow RIMA {
 
     ch_annot_vcf = VARIANT_ANNOTATION.out.results
     ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
+
+    //
+    // Subworkflow: Epitope prediction using pVACseq
+    //
 
     pvacseq_geno =  HLA_TYPING.out.hla_result.splitCsv(sep: '\t', header: false, skip:1)
                         .map { row ->
