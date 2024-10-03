@@ -14,14 +14,14 @@ process PVACTOOLS_PVACSEQ {
     val neoantigen_epitope1_lengths
 
     output:
-    tuple val(meta), path("*.tsv")  , optional:true, emit: results
+    tuple val(meta), path("*.{tsv,R}")  , optional:true, emit: results
     path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    prefix = task.ext.prefix ?: "${meta.id}.filter"
+    prefix = task.ext.prefix ?: "${meta.id}r"
     def callers = algorithms.split(',').join(' ') ?: "MHCflurry MHCnuggetsII"
     def alleles = hla.join(',')
     """

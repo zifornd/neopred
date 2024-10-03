@@ -257,10 +257,12 @@ workflow RIMA {
     ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
     //var=Channel.fromPath(params.raw_vcf)
 
+    ch_variants.view()
+
     VARIANT_ANNOTATION (
-        ensemblvep_info,
         ch_variants,
         ch_variants_tbi,
+        ensemblvep_info,
         ch_fasta,
         params.vep_genome_assembly,
         params.vep_species,
@@ -293,7 +295,7 @@ workflow RIMA {
                 name.caller = "mutect2"
                 [name, hla, vcf]}
                 .set{ch_hla_vcf}
-    ch_hla_vcf.view()
+
     EPITOPE_PREDICTION(
         QUANTIFY_SALMON.out.results,
         params.input,

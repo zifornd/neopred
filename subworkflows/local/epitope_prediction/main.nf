@@ -48,8 +48,6 @@ workflow EPITOPE_PREDICTION{
     ch_vcf     = GUNZIP ( ch_vcf_res ).gunzip
     ch_versions = ch_versions.mix(GUNZIP.out.versions.first())
 
-    ch_vcf.view()
-
     VATOOLS_REFTRANSCRIPTMISMATCHREPORTER(ch_vcf)
     ch_versions = ch_versions.mix(VATOOLS_REFTRANSCRIPTMISMATCHREPORTER.out.versions.first())
 

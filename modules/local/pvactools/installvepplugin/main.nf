@@ -7,8 +7,7 @@ process PVACTOOLS_INSTALLVEPPLUGIN {
         'docker.io/griffithlab/pvactools:4.1.1' }"
 
     output:
-    path("Wildtype.pm")    , emit: results_wt
-    path("Frameshift.pm")  , emit: results_fs
+    path "*.pm"            , emit: results
     path "versions.yml"    , emit: versions
 
     when:
