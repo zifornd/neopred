@@ -12,22 +12,30 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
--   [FastQC](#fastqc) - Raw read QC
--   Alignment.
-    -   [STAR](#star) - Fast spliced aware genome alignment.
--   Alignment post-processing.
-    -   [SAMtools](#samtools) - Sort and index alignments.
--   Quantification.
-    -   [Salmon](#salmon) - Transcriptome quantification.
--   Quality Control
-    -   [RSeQC](#rseqc) - Quality check of read alignments.
-    -   [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline.
--   Batch Effect Removal.
-    -   [Limma](#batch_removal) - R package to correct batch effects using a two-way ANOVA approach .
-    -   [PCA](#pca) - Principal components analysis to validate that a batch effect has been removed.
--   HLA Typing
-    -   [arcasHLA](#arcasHLA) - Predict HLA types for both MHC Class I & Class II from the bulk RNA-seq data.
--   [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+- [FastQC](#fastqc) - Raw read QC
+- Alignment.
+  - [STAR](#star) - Fast spliced aware genome alignment.
+- Alignment post-processing.
+  - [SAMtools](#samtools) - Sort and index alignments.
+- Quantification.
+  - [Salmon](#salmon) - Transcriptome quantification.
+- Quality Control
+  - [RSeQC](#rseqc) - Quality check of read alignments.
+  - [MultiQC](#multiqc) - Aggregate report describing results and QC from the whole pipeline.
+- Batch Effect Removal.
+  - [Limma](#batch_removal) - R package to correct batch effects using a two-way ANOVA approach.
+  - [PCA](#pca) - Principal components analysis to validate that a batch effect has been removed.
+- HLA Typing
+  - [arcasHLA](#arcasHLA) - Predict HLA types for both MHC Class I & Class II from the bulk RNA-seq data.
+- [Variant Calling](#variant-calling)
+  - [picard](#picard)
+  - [GATK](#gatk)
+- [Variant Annotation](#variant-annotation).
+  - [VEP](#vep) - Transcriptome quantification.
+- [pVACseq](#pvacseq)
+  - [VAtools](#picard)
+  - [pVACseq](#pvacseq)
+- [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### FastQC {#fastqc}
 
@@ -35,9 +43,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 <summary>Output files</summary>
 
--   `fastqc/`
-    -   `*_fastqc.html`: FastQC report containing quality metrics.
-    -   `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- `fastqc/`
+  - `*_fastqc.html`: FastQC report containing quality metrics.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 </details>
 
@@ -57,21 +65,21 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 <summary>Output files</summary>
 
--   `star/`
-    -   `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
-    -   `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
--   `star/log/`
-    -   `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
-    -   `*.Log.final.out`: STAR alignment report containing the mapping results summary.
-    -   `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
--   `star/unmapped/`
-    -   `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
+- `star/`
+  - `*.Aligned.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the reference genome will be placed in this directory.
+  - `*.Aligned.toTranscriptome.out.bam`: If `--save_align_intermeds` is specified the original BAM file containing read alignments to the transcriptome will be placed in this directory.
+- `star/log/`
+  - `*.SJ.out.tab`: File containing filtered splice junctions detected after mapping the reads.
+  - `*.Log.final.out`: STAR alignment report containing the mapping results summary.
+  - `*.Log.out` and `*.Log.progress.out`: STAR log files containing detailed information about the run. Typically only useful for debugging purposes.
+- `star/unmapped/`
+  - `*.fastq.gz`: If `--save_unaligned` is specified, FastQ files containing unmapped reads will be placed in this directory.
 
 </details>
 
 [STAR](https://github.com/alexdobin/STAR) is a read aligner designed for splice aware mapping typical of RNA sequencing data. STAR stands for *S*pliced *T*ranscripts *A*lignment to a *R*eference, and has been shown to have high accuracy and outperforms other aligners by more than a factor of 50 in mapping speed, but it is memory intensive. Using `--aligner star_salmon` is the default alignment and quantification option.
 
-The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as *Uniquely mapped* and few *Unmapped* reads.
+The STAR section of the MultiQC report shows a bar plot with alignment rates: good samples should have most reads as _Uniquely mapped_ and few _Unmapped_ reads.
 
 ![MultiQC - STAR alignment scores plot](mqc_star.png)
 
@@ -83,12 +91,12 @@ The STAR section of the MultiQC report shows a bar plot with alignment rates: go
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/`
-    -   `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
-    -   `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
-    -   `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
--   `<ALIGNER>/samtools_stats/`
-    -   SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
+- `<ALIGNER>/`
+  - `<SAMPLE>.sorted.bam`: If `--save_align_intermeds` is specified the original coordinate sorted BAM file containing read alignments will be placed in this directory.
+  - `<SAMPLE>.sorted.bam.bai`: If `--save_align_intermeds` is specified the BAI index file for the original coordinate sorted BAM file will be placed in this directory.
+  - `<SAMPLE>.sorted.bam.csi`: If `--save_align_intermeds --bam_csi_index` is specified the CSI index file for the original coordinate sorted BAM file will be placed in this directory.
+- `<ALIGNER>/samtools_stats/`
+  - SAMtools `<SAMPLE>.sorted.bam.flagstat`, `<SAMPLE>.sorted.bam.idxstats` and `<SAMPLE>.sorted.bam.stats` files generated from the alignment files.
 
 </details>
 
@@ -106,16 +114,34 @@ The original BAM files generated by the selected alignment algorithm are further
 
 <summary>Output files</summary>
 
--   `salmon/`
-    -   `<SAMPLE>/`
-        -   `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
-        -   `cmd_info.json`: Information about the Salmon quantification command, version and options.
-        -   `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
-        -   `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
-        -   `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
-        -   `quant.sf`: Salmon *transcript*-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
--   `*lib_format_counts.json`: Contains information about the library format that was inferred.
--   `*meta_info.json`: Meta information from Salmon quant such as version and options used.
+- `salmon/`
+  - `salmon.merged.gene_counts.tsv`: Matrix of gene-level raw counts across all samples.
+  - `salmon.gene_tpm.tsv`: Matrix of gene-level TPM values across all samples.
+  - `salmon.gene_counts.rds`: RDS object that can be loaded in R that contains a [SummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) container with the TPM (`abundance`), estimated counts (`counts`) and transcript length (`length`) in the assays slot for genes.
+  - `salmon.merged.gene_lengths.tsv`: Matrix of average within-sample transcript lengths for each gene across all samples.
+  - `salmon.merged.gene_counts_scaled.tsv`: Matrix of gene-level library size-scaled estimated counts across all samples.
+  - `salmon.merged.gene_counts_length_scaled.tsv`: Matrix of gene-level length-scaled estimated counts across all samples.
+  - `salmon.merged.transcript_counts.tsv`: Matrix of isoform-level raw counts across all samples.
+  - `salmon.merged.transcript_tpm.tsv`: Matrix of isoform-level TPM values across all samples.
+  - `tx2gene.tsv`: Tab-delimited file containing gene to transcripts ids mappings.
+
+An additional subset of files for Salmon:
+
+</details>
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `salmon/`
+  - `<SAMPLE>/`
+    - `aux_info/`: Auxiliary info e.g. versions and number of mapped reads.
+    - `cmd_info.json`: Information about the Salmon quantification command, version and options.
+    - `lib_format_counts.json`: Number of fragments assigned, unassigned and incompatible.
+    - `libParams/`: Contains the file `flenDist.txt` for the fragment length distribution.
+    - `logs/`: Contains the file `salmon_quant.log` giving a record of Salmon's quantification.
+    - `quant.sf`: Salmon _transcript_-level quantification of the sample, including feature length, effective length, TPM, and number of reads.
+- `*lib_format_counts.json`: Contains information about the library format that was inferred.
+- `*meta_info.json`: Meta information from Salmon quant such as version and options used.
 
 </details>
 
@@ -127,7 +153,7 @@ The original BAM files generated by the selected alignment algorithm are further
 
 ### RSeQC {#rseqc}
 
-[RSeQC]((http://rseqc.sourceforge.net/)) is a package of scripts designed to evaluate the quality of RNA-seq data. This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat.py`, `inner_distance.py`, `infer_experiment.py`, `junction_annotation.py`, `junction_saturation.py`,`read_distribution.py` and `read_duplication.py`.
+[RSeQC](<(http://rseqc.sourceforge.net/)>) is a package of scripts designed to evaluate the quality of RNA-seq data. This pipeline runs several, but not all RSeQC scripts. You can tweak the supported scripts you would like to run by adjusting the `--rseqc_modules` parameter which by default will run all of the following: `bam_stat.py`, `inner_distance.py`, `infer_experiment.py`, `junction_annotation.py`, `junction_saturation.py`,`read_distribution.py` and `read_duplication.py`.
 
 The majority of RSeQC scripts generate output files which can be plotted and summarised in the MultiQC report.
 
@@ -137,8 +163,8 @@ The majority of RSeQC scripts generate output files which can be plotted and sum
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/down_sample/`
-    -   `*_downsampling.bam`: File containing sub-sample of the original coordinate sorted BAM file.
+- `<ALIGNER>/rseqc/down_sample/`
+  - `*_downsampling.bam`: File containing sub-sample of the original coordinate sorted BAM file.
 
 </details>
 
@@ -150,8 +176,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/down_sample/`
-    -   `*_downsample_hk.bam`: File containing alignments of house keeping genes for the downampled BAM file.
+- `<ALIGNER>/rseqc/down_sample/`
+  - `*_downsample_hk.bam`: File containing alignments of house keeping genes for the downampled BAM file.
 
 </details>
 
@@ -163,9 +189,9 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/tin/`
-    -   `*.summary.txt`: File containing TIN results summary.
-    -   `*.tin.xls`: XLS file containing TIN results.
+- `<ALIGNER>/rseqc/tin/`
+  - `*.summary.txt`: File containing TIN results summary.
+  - `*.tin.xls`: XLS file containing TIN results.
 
 </details>
 
@@ -179,8 +205,8 @@ RSeQC documentation: [tin.py](http://rseqc.sourceforge.net/#tin-py)
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/read_distribution/`
-    -   `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5'UTR exon, 3' UTR exon, Intron, Intergenic regions etc.
+- `<ALIGNER>/rseqc/read_distribution/`
+  - `*.read_distribution.txt`: File containing fraction of reads mapping to genome feature e.g. CDS exon, 5'UTR exon, 3' UTR exon, Intron, Intergenic regions etc.
 
 </details>
 
@@ -196,14 +222,14 @@ RSeQC documentation: [read_distribution.py](http://rseqc.sourceforge.net/#read-d
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/junction_saturation/pdf/`
-    -   `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
--   `<ALIGNER>/rseqc/junction_saturation/rscript/`
-    -   `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
+- `<ALIGNER>/rseqc/junction_saturation/pdf/`
+  - `*.junctionSaturation_plot.pdf`: PDF file containing junction saturation plot.
+- `<ALIGNER>/rseqc/junction_saturation/rscript/`
+  - `*.junctionSaturation_plot.r`: R script used to generate pdf plot above.
 
 </details>
 
-This script shows the number of splice sites detected within the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield any more observations. A good sample should approach such a plateau of *Known junctions*, however, very deep sequencing is typically required to saturate all *Novel Junctions* in a sample.
+This script shows the number of splice sites detected within the data at various levels of subsampling. A sample that reaches a plateau before getting to 100% data indicates that all junctions in the library have been detected, and that further sequencing will not yield any more observations. A good sample should approach such a plateau of _Known junctions_, however, very deep sequencing is typically required to saturate all _Novel Junctions_ in a sample.
 
 RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junction-saturation-py)
 
@@ -215,10 +241,10 @@ RSeQC documentation: [junction_saturation.py](http://rseqc.sourceforge.net/#junc
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/gene_body_coverage/pdf`
-    -   `*.geneBodyCoverage.curves.pdf`: PDF file containing gene body coverage curves.
--   `<ALIGNER>/rseqc/gene_body_coverage/rscript`
-    -   `*.geneBodyCoverage.r`: R script used to generate pdf plot above.
+- `<ALIGNER>/rseqc/gene_body_coverage/pdf`
+  - `*.geneBodyCoverage.curves.pdf`: PDF file containing gene body coverage curves.
+- `<ALIGNER>/rseqc/gene_body_coverage/rscript`
+  - `*.geneBodyCoverage.r`: R script used to generate pdf plot above.
 
 </details>
 
@@ -230,8 +256,8 @@ This script calculates the RNA-seq read coverage over the gene body. Only sorted
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/tinsummary`
-    -   `*.tin_score_summary.txt`: File containing tin score summary.
+- `<ALIGNER>/rseqc/tinsummary`
+  - `*.tin_score_summary.txt`: File containing tin score summary.
 
 </details>
 
@@ -243,8 +269,8 @@ This script summarizes the TIN score ranges across the samples.
 
 <summary>Output files</summary>
 
--   `<ALIGNER>/rseqc/read_distributionmatrix`
-    -   `read_distrib.matrix.tab`: A tab file containing distribution matrix across all samples.
+- `<ALIGNER>/rseqc/read_distributionmatrix`
+  - `read_distrib.matrix.tab`: A tab file containing distribution matrix across all samples.
 
 </details>
 
@@ -256,10 +282,10 @@ This script creates RseQC read distribution matrix for all samples together.
 
 <summary>Output files</summary>
 
--   `multiqc/`
-    -   `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
-    -   `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
-    -   `multiqc_plots/`: directory containing static images from the report in various formats.
+- `multiqc/`
+  - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+  - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_plots/`: directory containing static images from the report in various formats.
 
 </details>
 
@@ -275,9 +301,9 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
 
 <summary>Output files</summary>
 
--   `batch_removal/`
-    -   `*_tpm.genesymbol.csv`: A csv file containing gene list across different samples before batch removal.
-    -   `*_tpm.genesymbol.batchremoved.csv`: A csv file containing gene list across different samples after batch removal.
+- `batch_removal/`
+  - `*_tpm.genesymbol.csv`: A csv file containing gene list across different samples before batch removal.
+  - `*_tpm.genesymbol.batchremoved.csv`: A csv file containing gene list across different samples after batch removal.
 
 </details>
 
@@ -289,9 +315,9 @@ Batch effects across samples are easily overlooked but worth considering for imm
 
 <summary>Output files</summary>
 
--   `batch_removal/`
-    -   `*_pca_plot_before.pdf`: PDF file containing PCA plot before batch removal.
-    -   `*_pca_plot_after.pdf`: PDF file containing PCA plot after batch removal.
+- `batch_removal/`
+  - `*_pca_plot_before.pdf`: PDF file containing PCA plot before batch removal.
+  - `*_pca_plot_after.pdf`: PDF file containing PCA plot after batch removal.
 
 </details>
 
@@ -299,7 +325,308 @@ Principal components analysis (PCA) or unsupervised clustering before and after 
 
 ## HLA Typing
 
-### arcas-HLA
+### arcasHLA
+
+#### arcasHLA extract
+
+<details>
+
+<summary>Output files</summary>
+
+- `arcashla/extract`
+  - `<SAMPLE>.extracted.1.fq.gz`:
+  - `<SAMPLE>.extracted.2.fq.gz` :
+  - `<SAMPLE>.log` :
+
+</details>
+
+This module extracts reads mapped to chromosome 6 and any HLA decoys or chromosome 6 alternates.
+
+#### arcasHLA genotype
+
+<details>
+
+<summary>Output files</summary>
+
+- `arcashla/genotype`
+  - `<SAMPLE>.alignment.p`:
+  - `<SAMPLE>.genes.json` :
+  - `<SAMPLE>.genotype.json` :
+  - `<SAMPLE>.genotype.log` :
+
+</details>
+
+This module genotypes HLA alleles from extracted reads (no partial alleles).
+
+#### arcasHLA merge
+
+<details>
+
+<summary>Output files</summary>
+
+- `arcashla/merge`
+  - `genotypes.tsv`:
+
+</details>
+
+This module merge genotyping output for multiple samples into a single json file.
+
+#### arcasHLA convert
+
+<details>
+
+<summary>Output files</summary>
+
+- `arcashla/convert`
+  - `genotypes.p-group.tsv`:
+
+</details>
+
+This script sub-sample sorted BAM files to be used by RseQC to assess alignment quality.
+
+## Variant Calling {#variant-calling}
+
+### picard {#picard}
+
+#### picard createsequencedictionary
+
+<details>
+
+<summary>Output files</summary>
+
+- `picard/createsequencedictionary`
+  - `<GENOME>.genome.dict`:
+
+</details>
+
+#### picard collectmultiplemetrics
+
+<details>
+
+<summary>Output files</summary>
+
+- `picard/picard_metrics`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.insert_size_metrics`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics`
+  - `<SAMPLE>.markdup.sorted.MarkDuplicates.metrics.txt`
+
+</details>
+
+#### picard addorreplacereadgroups
+
+<details>
+
+<summary>Output files</summary>
+
+- `picard/addorreplacereadgroups`
+  - `<SAMPLE>.addorreplacereadgroups.bam`:
+  - `<SAMPLE>.addorreplacereadgroups.bai` :
+
+</details>
+
+#### picard markduplicates
+
+<details>
+
+<summary>Output files</summary>
+
+- `picard/markduplicates`
+  - `<SAMPLE>.markdup.sorted.bam`:
+
+</details>
+
+#### samtools stats
+
+<details>
+
+<summary>Output files</summary>
+
+- `picard/samtools_stats`
+  - `<SAMPLE>.markdup.sorted.bam.flagstat`
+    │ - `<SAMPLE>.readgroup.sorted.bam.flagstat`
+
+</details>
+
+### GATK {#gatk}
+
+#### gatk4 splitncigarreads
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/splitncigarreads`
+  - `<SAMPLE>.bam`:
+
+</details>
+
+#### gatk4 applybqsr
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/applybqsr`
+  - `<SAMPLE>.applybqsr.bam`
+
+</details>
+
+#### gatk4 mutect2
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/mutect2/<SAMPLE>`
+  - `<SAMPLE>.f1r2.tar.gz`:
+  - `<SAMPLE>.vcf.gz` :
+  - `<SAMPLE>.vcf.gz.tbi` :
+
+</details>
+
+#### gatk4 getpileupsummaries
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/getpileupsummaries`
+  - `<SAMPLE>.pileups.table`:
+
+</details>
+
+#### gatk4 learnreadorientationmodel
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/learnreadorientationmodel`
+  - `<SAMPLE>.tar.gz`::
+
+</details>
+
+#### gatk4 calculatecontamination
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/calculatecontamination/<SAMPLE>`
+  - `<SAMPLE>.contamination.table`:
+  - `<SAMPLE>.segmentation.table` :
+
+</details>
+
+#### gatk4 filtermutectcalls
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/filtermutectcalls`
+  - `<SAMPLE>.filtered.vcf.gz`:
+
+</details>
+
+#### gatk4 selectvariants
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/selectvariants`
+  - `<SAMPLE>.selected.vcf.gz`:
+
+</details>
+
+#### gatk4 countvariants
+
+<details>
+
+<summary>Output files</summary>
+
+- `gatk4/countvariants`
+  - `<SAMPLE>_counts`:
+
+</details>
+
+applybqsr
+│   │   ├── SRR8281226.recal.bam
+│   │   └── SRR8281243.recal.bam
+│   ├── calculatecontamination
+│   │   ├── SRR8281226
+│   │   │   ├── SRR8281226.contamination.table
+│   │   │   └── SRR8281226.segmentation.table
+│   │   └── SRR8281243
+│   │   ├── SRR8281243.contamination.table
+│   │   └── SRR8281243.segmentation.table
+│   ├── countvariants
+│   │   ├── SRR8281226_null_counts
+│   │   └── SRR8281243_null_counts
+│   ├── filtermutectcalls
+│   │   ├── SRR8281226.filtered.vcf.gz
+│   │   └── SRR8281243.filtered.vcf.gz
+│   ├── getpileupsummaries
+│   │   ├── SRR8281226.pileups.table
+│   │   └── SRR8281243.pileups.table
+│   ├── learnreadorientationmodel
+│   │   ├── SRR8281226.tar.gz
+│   │   └── SRR8281243.tar.gz
+│   ├── mutect2
+│   │   ├── SRR8281226
+│   │   │   ├── SRR8281226.f1r2.tar.gz
+│   │   │   ├── SRR8281226.vcf.gz
+│   │   │   └── SRR8281226.vcf.gz.tbi
+│   │   └── SRR8281243
+│   │   ├── SRR8281243.f1r2.tar.gz
+│   │   ├── SRR8281243.vcf.gz
+│   │   └── SRR8281243.vcf.gz.tbi
+│   ├── selectvariants
+│   │   ├── SRR8281226.selected.vcf.gz
+│   │   └── SRR8281243.selected.vcf.gz
+│   └── splitncigarreads
+│   ├── SRR8281226.bam
+│   └── SRR8281243.bam
+
+## Variant Annotation {#variant-annotation}
+
+### VEP {#vep}
+
+<details>
+
+<summary>Output files</summary>
+
+- `ensemblvep/vep`
+  - `<SAMPLE>.annotated.vcf.gz` :
+  - `<SAMPLE>.annotated.vcf.gz_summary.html`:
+
+</details>
+
+## Epitope Prediction {#epitope-prediction}
+
+### VAtools {#vatools}
+
+<details>
+
+<summary>Output files</summary>
+
+- `vatools`
+  - `<SAMPLE>.filter.vcf` :
+  - `<SAMPLE>.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf`:
+
+</details>
+
+### pVACseq {#pvacseq}
+
+<details>
+
+<summary>Output files</summary>
+
+</details>
 
 ### Pipeline information {#pipeline-information}
 
@@ -307,11 +634,11 @@ Principal components analysis (PCA) or unsupervised clustering before and after 
 
 <summary>Output files</summary>
 
--   `pipeline_info/`
-    -   Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-    -   Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
-    -   Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
-    -   Parameters used by the pipeline run: `params.json`.
+- `pipeline_info/`
+  - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+  - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
+  - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+  - Parameters used by the pipeline run: `params.json`.
 
 </details>
 
