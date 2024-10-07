@@ -12,7 +12,7 @@ process VATOOLS_VCFEXPRESSIONANNOTATOR {
     path csv
 
     output:
-    tuple val(meta), path("*.vcf")  , optional:true, emit: expr_vcf
+    tuple val(meta), path("*.vcf") , optional:true, emit: expr_vcf
     path "versions.yml"            , emit: versions
 
     when:

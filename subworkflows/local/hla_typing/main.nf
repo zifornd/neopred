@@ -4,7 +4,7 @@ include { ARCASHLA_EXTRACT               } from '../../../modules/nf-core/arcash
 include { ARCASHLA_GENOTYPE              } from '../../../modules/local/arcashla/genotype'
 include { ARCASHLA_MERGE                 } from '../../../modules/local/arcashla/merge'
 include { ARCASHLA_CONVERT               } from '../../../modules/local/arcashla/convert'
-//include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
+include { ARCASHLA_PLOT                  } from '../../../modules/local/arcashla/plot'
 
 //Workflow
 
@@ -49,22 +49,22 @@ workflow HLA_TYPING {
     //         or a specified 1, 2 or 3 fields in resolution
     //
 
-    ARCASHLA_CONVERT (ARCASHLA_MERGE.out.merged_gt)
+    ARCASHLA_CONVERT ( ARCASHLA_MERGE.out.merged_gt )
     ch_versions = ch_versions.mix(ARCASHLA_CONVERT.out.versions)
 
 
     //
     // Module: Generates a png file consisting the frequency of HLA as a plot
     //
-    /* ch_sample   = Channel.value(file(samplesheet))
-    ARCASHLA_PLOT (ARCASHLA_CONVERT.out.gt_group,ch_sample,after_br,batch,design,patient_id)
+    ch_sample   = Channel.value(file(samplesheet))
+    ARCASHLA_PLOT ( ARCASHLA_CONVERT.out.gt_group, ch_sample, after_br, batch, design, patient_id )
     ch_versions = ch_versions.mix(ARCASHLA_PLOT.out.versions)
- */
+
 
     emit:
     hla_log    = ARCASHLA_GENOTYPE.out.gt_log   // channel: [meta, genotype log]
     hla_result = ARCASHLA_CONVERT.out.gt_group
-    /* hla_plot   = ARCASHLA_PLOT.out.hla_plot    */      // channel: [hla_frequency_plot]
+    hla_plot   = ARCASHLA_PLOT.out.hla_plot         // channel: [hla_frequency_plot]
     versions   = ch_versions                        // channel: [ versions.yml ]
 
 }

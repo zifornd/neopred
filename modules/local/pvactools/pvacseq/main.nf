@@ -14,8 +14,8 @@ process PVACTOOLS_PVACSEQ {
     val neoantigen_epitope1_lengths
 
     output:
-    tuple val(meta), path("*.{tsv,R}")  , optional:true, emit: results
-    path "versions.yml"            , emit: versions
+    tuple val(meta), path("*.{tsv,R}")  , optional:true , emit: results
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

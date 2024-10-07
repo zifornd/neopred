@@ -19,7 +19,7 @@ process TX2GENE_PVACSEQ {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/rnaseq/bin/
+    script:
     """
     tx2gene.py \\
         --quant_type $quant_type \\

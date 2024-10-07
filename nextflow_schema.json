@@ -259,17 +259,17 @@
                 "callers": {
                     "type": "string",
                     "default": "MHCflurry,NetMHCcons,MHCnuggetsII",
-                    "description": "Version of VEP caches and FASTA files to download (default latest)"
+                    "description": "The epitope prediction algorithms to use. Multiple prediction algorithms can be specified"
                 },
                 "filter_val": {
                     "type": "string",
                     "default": "soft",
-                    "description": "Version of VEP caches and FASTA files to download (default latest)"
+                    "description": "filter value to vatools ref-transcript-mismatch-reporter {soft, hard}"
                 },
                 "neoantigen_epitope1_lengths": {
                     "type": "string",
                     "default": "8,9,10,11",
-                    "description": "Version of VEP caches and FASTA files to download (default latest)"
+                    "description": "Length of MHC Class I subpeptides (neoepitopes) to predict"
                 }
             }
         },

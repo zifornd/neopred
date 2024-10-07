@@ -11,7 +11,7 @@ process VATOOLS_REFTRANSCRIPTMISMATCHREPORTER {
     tuple val(meta) ,path(vcf)
 
     output:
-    tuple val(meta), path("*.vcf")  , optional:true, emit: filter_vcf
+    tuple val(meta), path("*.vcf") , optional:true , emit: filter_vcf
     path "versions.yml"            , emit: versions
 
     when:

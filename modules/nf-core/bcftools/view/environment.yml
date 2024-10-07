@@ -1,4 +1,4 @@
-sname: bcftools_view
+name: bcftools_view
 channels:
   - conda-forge
   - bioconda
