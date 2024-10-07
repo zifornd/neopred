@@ -26,7 +26,7 @@ process GATK4_COUNTVARIANTS {
     """
     gatk CountVariants \\
         -V $vcf \\
-        -O ${prefix}
+        -O ${prefix}.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

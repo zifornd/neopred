@@ -6,8 +6,6 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-<!-- TODO nf-core: Write this documentation describing your workflow's output -->
-
 ## Pipeline overview
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
@@ -334,9 +332,8 @@ Principal components analysis (PCA) or unsupervised clustering before and after 
 <summary>Output files</summary>
 
 - `arcashla/extract`
-  - `<SAMPLE>.extracted.1.fq.gz`:
-  - `<SAMPLE>.extracted.2.fq.gz` :
-  - `<SAMPLE>.log` :
+  - `<SAMPLE>.extracted.1.fq.gz,<SAMPLE>.extracted.2.fq.gz`: extracted chromosome 6 reads and related HLA sequences, By default, extract outputs paired FASTQ files.
+  - `<SAMPLE>.log` : log file for run summary.
 
 </details>
 
@@ -481,9 +478,9 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/mutect2/<SAMPLE>`
-  - `<SAMPLE>.f1r2.tar.gz`:
-  - `<SAMPLE>.vcf.gz` :
-  - `<SAMPLE>.vcf.gz.tbi` :
+  - `<SAMPLE>.f1r2.tar.gz`: Contains counts of F1 and R2 reads used to learn the read orientation model for filtering artifacts.
+  - `<SAMPLE>.vcf.gz` : A gzipped VCF file with variant calls from Mutect2.
+  - `<SAMPLE>.vcf.gz.tbi` : An index file for the gzipped VCF, enabling efficient access to the variant data.
 
 </details>
 
@@ -494,7 +491,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/getpileupsummaries`
-  - `<SAMPLE>.pileups.table`:
+  - `<SAMPLE>.pileups.table`: table that summarizes counts of reads supporting reference, alternate, and other alleles at given sites.
 
 </details>
 
@@ -505,7 +502,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/learnreadorientationmodel`
-  - `<SAMPLE>.tar.gz`::
+  - `<SAMPLE>.f1r2.tar.gz`: file, which contains the learned artifact priors, These priors are then used by Mutect2 to filter out potential artifacts during variant calling.
 
 </details>
 
@@ -516,8 +513,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/calculatecontamination/<SAMPLE>`
-  - `<SAMPLE>.contamination.table`:
-  - `<SAMPLE>.segmentation.table` :
+  - `<SAMPLE>.contamination.table`: provides an estimate of the contamination fraction in the tumor sample.
+  - `<SAMPLE>.segmentation.table` : this table is used to describe the segments of the genome that have been analyzed for contamination.
 
 </details>
 
@@ -528,7 +525,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/filtermutectcalls`
-  - `<SAMPLE>.filtered.vcf.gz`:
+  - `<SAMPLE>.filtered.vcf.gz`: containing only the filtered variants filtered using contamination and sementation table.
 
 </details>
 
@@ -539,7 +536,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/selectvariants`
-  - `<SAMPLE>.selected.vcf.gz`:
+  - `<SAMPLE>.selected.vcf.gz`: contains a subset of variants selected based on specified criteria, retaining the VCF format with the desired variants.
 
 </details>
 
@@ -550,7 +547,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/countvariants`
-  - `<SAMPLE>_counts`:
+  - `<SAMPLE>_counts.txt`: file have count of variant records in the specified VCF file.
 
 </details>
 
@@ -601,8 +598,8 @@ applybqsr
 <summary>Output files</summary>
 
 - `ensemblvep/vep`
-  - `<SAMPLE>.annotated.vcf.gz` :
-  - `<SAMPLE>.annotated.vcf.gz_summary.html`:
+  - `<SAMPLE>.annotated.vcf.gz` : VCF file provides detailed annotations of genetic variants, including their effects on genes, transcripts, proteins, and regulatory regions
+  - `<SAMPLE>.annotated.vcf.gz_summary.html`: HTML file containing statistics of VEP output.
 
 </details>
 
@@ -615,8 +612,8 @@ applybqsr
 <summary>Output files</summary>
 
 - `vatools`
-  - `<SAMPLE>.filter.vcf` :
-  - `<SAMPLE>.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf`:
+  - `<SAMPLE>.filter.vcf` : A file contain only the variants that match between the reference genome and the Ensembl reference transcript, ensuring accurate consequence annotations.
+  - `<SAMPLE>.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf`: VCF file with added expression data from the specified tool, annotated in the INFO column.
 
 </details>
 
@@ -625,6 +622,16 @@ applybqsr
 <details>
 
 <summary>Output files</summary>
+
+- `pvacseq/MHC_Class_I`
+  - `<SAMPLE>.tsv` : An intermediate file with variant, transcript, coverage, vaf, and expression information parsed from the input files.
+  - `<SAMPLE>.tsv_<chunks>`: The above file but split into smaller chunks for easier processing with IEDB.
+  - `<SAMPLE>.fasta` : A fasta file with mutant and wildtype peptide subsequences for all processable variant-transcript combinations.
+  - `<SAMPLE>.all_epitopes.tsv`: A list of all predicted epitopes and their binding affinity scores, with additional variant information.
+  - `<SAMPLE>.filtered.tsv` : The above file after applying all filters, with (optionally) cleavage site, stability predictions, and reference proteome similarity metrics added.
+  - `<SAMPLE>.all_epitopes.aggregated.tsv`: An aggregated version of the all_epitopes.tsv file that gives information about the best epitope for each mutation in an easy-to-read format.
+  - `ui.R, app.R, server.R, styling.R, anchor_and_helper_functions.R` : pVACview R Shiny application files.
+  - `www` : Directory containing image files for pVACview. Not generated when running with elution algorithms only.
 
 </details>
 
