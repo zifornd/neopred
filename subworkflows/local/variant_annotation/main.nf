@@ -8,9 +8,9 @@ include { ENSEMBLVEP_VEP      } from '../../../modules/nf-core/ensemblvep/vep/ma
 
 workflow VARIANT_ANNOTATION {
     take:
-    ensemblvep_info
     vcf
     vcf_tbi
+    ensemblvep_info
     fasta
     vep_genome
     vep_species
@@ -25,10 +25,8 @@ workflow VARIANT_ANNOTATION {
     ENSEMBLVEP_DOWNLOAD(ensemblvep_info)
 
     vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
-    plugin_wt = PVACTOOLS_INSTALLVEPPLUGIN.out.results_wt
-    plugin_fs = PVACTOOLS_INSTALLVEPPLUGIN.out.results_fs
-    vep_extra_files = plugin_wt.combine(plugin_fs)
-    vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.map{ meta, cache -> cache}
+    vep_extra_files = PVACTOOLS_INSTALLVEPPLUGIN.out.results
+    vep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.map{ meta, cache -> [cache] }.first()
     //vcf_for_vep = vcf.map{vcf -> [ [], vcf, []]}
 
     ENSEMBLVEP_VEP(vcf_for_vep, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files)
@@ -38,6 +36,8 @@ workflow VARIANT_ANNOTATION {
     versions = versions.mix(ENSEMBLVEP_VEP.out.versions)
 
     emit:
+
+    results = ENSEMBLVEP_VEP.out.vcf
     ensemblvep_cache = ENSEMBLVEP_DOWNLOAD.out.cache.collect()  // channel: [ meta, cache ]
 
     versions // channel: [ versions.yml ]

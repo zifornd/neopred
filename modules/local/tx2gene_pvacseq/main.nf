@@ -1,4 +1,4 @@
-process TX2GENE {
+process TX2GENE_PVACSEQ {
     tag "$gtf"
     label "process_low"
 
@@ -25,8 +25,8 @@ process TX2GENE {
         --quant_type $quant_type \\
         --gtf $gtf \\
         --quants quants \\
-        --id $params.gtf_group_features \\
-        --extra $params.gtf_extra_attributes \\
+        --id 'gene_id' \\
+        --extra 'gene_name' \\
         -o tx2gene.tsv
 
     cat <<-END_VERSIONS > versions.yml

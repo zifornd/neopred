@@ -27,7 +27,7 @@ include { BATCH_REMOVAL_ANALYSIS  } from '../subworkflows/local/batch_removal_an
 include { HLA_TYPING              } from '../subworkflows/local/hla_typing'
 include { VARIANT_CALLINGFILTERING } from '../subworkflows/local/gatk_varcall'
 include { VARIANT_ANNOTATION      } from '../subworkflows/local/variant_annotation'
-
+include { EPITOPE_PREDICTION      } from '../subworkflows/local/epitope_prediction'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -196,15 +196,14 @@ workflow RIMA {
     HLA_TYPING (
         params.input,
         ch_sorted_bam,
-        BATCH_REMOVAL_ANALYSIS.out.after_br,
+        BATCH_REMOVAL_ANALYSIS.out.tpm,
         params.batch,
         params.design,
         params.patient_id)
 
     ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
+    //ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
     ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
-
 
     PRE_VARIANTCALLING(
         ch_sorted_bam,
@@ -259,14 +258,59 @@ workflow RIMA {
     //var=Channel.fromPath(params.raw_vcf)
 
     VARIANT_ANNOTATION (
-        ensemblvep_info,
         ch_variants,
         ch_variants_tbi,
+        ensemblvep_info,
         ch_fasta,
         params.vep_genome_assembly,
         params.vep_species,
         params.vep_cache_version
     )
+
+    ch_annot_vcf = VARIANT_ANNOTATION.out.results
+    ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
+
+    //
+    // Subworkflow: Epitope prediction using pVACseq
+    //
+
+    pvacseq_geno =  HLA_TYPING.out.hla_result.splitCsv(sep: '\t', header: false, skip:1)
+                        .map { row ->
+                        def firstColumn = row[0]
+                        def otherColumns = row[1..-1].collect { value ->
+                            def hla = value.replaceAll('P', '')
+                            return "HLA-${hla}"
+                        }
+                        return [firstColumn, otherColumns]
+                        }
+
+    ch_annot_vcf.map { meta,vcf ->
+                def id = meta.id
+                return [id,vcf]
+                }
+                .set{ ch_vcf }
+
+    pvacseq_geno.combine(ch_vcf, by:0)
+                .map{ meta, hla, vcf ->
+                def name = [:]
+                name.id = meta.toString()
+                name.caller = "mutect2"
+                [name, hla, vcf]}
+                .set{ch_hla_vcf}
+
+    EPITOPE_PREDICTION(
+        QUANTIFY_SALMON.out.results,
+        params.input,
+        params.design,
+        params.batch,
+        ch_hla_vcf,
+        params.callers,
+        params.neoantigen_epitope1_lengths,
+        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+        PREPARE_GENOME.out.gtf
+    )
+    ch_versions         = ch_versions.mix( EPITOPE_PREDICTION.out.versions)
 
     //
     // Collate and save software versions
