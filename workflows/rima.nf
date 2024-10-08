@@ -158,13 +158,12 @@ workflow RIMA {
     //
     // SUBWORKFLOW: Salmon Quantification
     //
-	ch_transcriptome_bam = Channel
-    .fromPath(params.transcript_bam)
-    .map { file ->
-        def filename = file.getName()
-        def meta = [id: filename.split('\\.')[0]]
-        tuple(meta, file)
-    }
+    ch_transcriptome_bam = Channel.fromPath(params.transcript_bam)
+                                .map { file ->
+                                    def filename = file.getName()
+                                    def meta = [id: filename.split('\\.')[0]]
+                                    tuple(meta, file)
+                                }
     QUANTIFY_SALMON (
         ch_transcriptome_bam,
         ch_dummy_file,
