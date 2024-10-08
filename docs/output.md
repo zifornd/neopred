@@ -346,10 +346,10 @@ This module extracts reads mapped to chromosome 6 and any HLA decoys or chromoso
 <summary>Output files</summary>
 
 - `arcashla/genotype`
-  - `<SAMPLE>.alignment.p`:
-  - `<SAMPLE>.genes.json` :
-  - `<SAMPLE>.genotype.json` :
-  - `<SAMPLE>.genotype.log` :
+  - `<SAMPLE>.alignment.p`: Contains alignment information for the reads, crucial for HLA typing.
+  - `<SAMPLE>.genes.json` : Stores gene-level information from the analysis, detailing HLA genes.
+  - `<SAMPLE>.genotype.json` : Holds the genotype results, indicating the HLA alleles identified.
+  - `<SAMPLE>.genotype.log` : A log file recording the steps and status of the genotyping process.
 
 </details>
 
@@ -362,7 +362,7 @@ This module genotypes HLA alleles from extracted reads (no partial alleles).
 <summary>Output files</summary>
 
 - `arcashla/merge`
-  - `genotypes.tsv`:
+  - `genotypes.tsv`: : This file contains the combined HLA genotyping results from multiple samples in a tab-separated values format.
 
 </details>
 
@@ -375,7 +375,7 @@ This module merge genotyping output for multiple samples into a single json file
 <summary>Output files</summary>
 
 - `arcashla/convert`
-  - `genotypes.p-group.tsv`:
+  - `genotypes.p-group.tsv`: This file contains HLA genotyping results converted to P-group nomenclature, making it easier to compare and standardize HLA data across different datasets.
 
 </details>
 
@@ -392,9 +392,11 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `picard/createsequencedictionary`
-  - `<GENOME>.genome.dict`:
+  - `<GENOME>.genome.dict`: : A file that contains a sequence dictionary for the reference genome.
 
 </details>
+
+[CreateSequenceDictionary](https://gatk.broadinstitute.org/hc/en-us/articles/360037068312-CreateSequenceDictionary-Picard): Creates a sequence dictionary for a reference sequence in FASTA format.
 
 #### picard collectmultiplemetrics
 
@@ -403,14 +405,16 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `picard/picard_metrics`
-  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics`
-  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics`
-  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.insert_size_metrics`
-  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics`
-  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics`
-  - `<SAMPLE>.markdup.sorted.MarkDuplicates.metrics.txt`
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.alignment_summary_metrics` : Contains alignment summary statistics, detailing how well reads are aligned to the reference genome.
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.base_distribution_by_cycle_metrics` : Provides base distribution information by cycle, showing the frequency of each base (A, T, C, G) at each sequencing cycle.
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.insert_size_metrics` : Contains metrics about the insert sizes of paired-end reads, useful for assessing library preparation quality.
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_by_cycle_metrics` : Shows the quality scores of bases by sequencing cycle, indicating sequencing accuracy across cycles.
+  - `<SAMPLE>.mLb.clN.CollectMultipleMetrics.quality_distribution_metrics` : Provides quality score distributions, showing the overall quality of the sequencing reads.
+  - `<SAMPLE>.markdup.sorted.MarkDuplicates.metrics.txt` : Contains metrics from the MarkDuplicates tool, detailing the number of duplicate reads detected and removed, which helps in evaluating library complexity.
 
 </details>
+
+[CollectMultipleMetrics](https://gatk.broadinstitute.org/hc/en-us/articles/360037594031-CollectMultipleMetrics-Picard): Collects multiple classes of metrics from a SAM/BAM file in a single pass.
 
 #### picard addorreplacereadgroups
 
@@ -419,10 +423,12 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `picard/addorreplacereadgroups`
-  - `<SAMPLE>.addorreplacereadgroups.bam`:
-  - `<SAMPLE>.addorreplacereadgroups.bai` :
+  - `<SAMPLE>.addorreplacereadgroups.bam`: This is the BAM file with updated or added read group information.
+  - `<SAMPLE>.addorreplacereadgroups.bai` : The index file for the BAM.
 
 </details>
+
+[AddOrReplaceReadGroups](https://gatk.broadinstitute.org/hc/en-us/articles/360037226472-AddOrReplaceReadGroups-Picard): Adds or replaces read groups in a BAM file.
 
 #### picard markduplicates
 
@@ -431,9 +437,11 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `picard/markduplicates`
-  - `<SAMPLE>.markdup.sorted.bam`:
+  - `<SAMPLE>.markdup.sorted.bam` : This BAM file contains alignments with duplicate reads marked.
 
 </details>
+
+[MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard): Identifies and tags duplicate reads in a BAM or SAM file.
 
 #### samtools stats
 
@@ -442,10 +450,12 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `picard/samtools_stats`
-  - `<SAMPLE>.markdup.sorted.bam.flagstat`
-    │ - `<SAMPLE>.readgroup.sorted.bam.flagstat`
+  - `<SAMPLE>.markdup.sorted.bam.flagstat` : Contains summary statistics about the marked duplicate BAM file.
+  - `<SAMPLE>.readgroup.sorted.bam.flagstat` : Contains summary statistics about the read group sorted BAM file.
 
 </details>
+
+[samtools stats](http://www.htslib.org/doc/samtools-stats.html): Produces comprehensive statistics from a BAM file.
 
 ### GATK {#gatk}
 
@@ -456,9 +466,11 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/splitncigarreads`
-  - `<SAMPLE>.bam`:
+  - `<SAMPLE>.bam`: This BAM file contains the reads that have been split at introns, which is particularly useful for handling RNA-Seq data in downstream analyses, ensuring accurate variant calling and alignment.
 
 </details>
+
+[SplitNCigarReads](https://gatk.broadinstitute.org/hc/en-us/articles/360036450212-SplitNCigarReads): Splits reads with Ns in their CIGAR strings, typically for RNA-seq data.
 
 #### gatk4 applybqsr
 
@@ -467,9 +479,11 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 <summary>Output files</summary>
 
 - `gatk4/applybqsr`
-  - `<SAMPLE>.applybqsr.bam`
+  - `<SAMPLE>.applybqsr.bam` : This BAM file contains the reads that have undergone Base Quality Score Recalibration (BQSR).
 
 </details>
+
+[ApplyBQSR](https://gatk.broadinstitute.org/hc/en-us/articles/360037055712-ApplyBQSR): Applies base quality score recalibration to a BAM or CRAM file.
 
 #### gatk4 mutect2
 
@@ -484,6 +498,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 </details>
 
+[Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): Calls somatic SNVs and indels via local assembly of haplotypes.
+
 #### gatk4 getpileupsummaries
 
 <details>
@@ -495,6 +511,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 </details>
 
+[GetPileupSummaries](https://gatk.broadinstitute.org/hc/en-us/articles/360037593451-GetPileupSummaries): Summarizes counts of reads supporting reference, alternate, and other alleles for given sites.
+
 #### gatk4 learnreadorientationmodel
 
 <details>
@@ -505,6 +523,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
   - `<SAMPLE>.f1r2.tar.gz`: file, which contains the learned artifact priors, These priors are then used by Mutect2 to filter out potential artifacts during variant calling.
 
 </details>
+
+[LearnReadOrientationModel](https://gatk.broadinstitute.org/hc/en-us/articles/360051305331-LearnReadOrientationModel): Learns the prior probability of read orientation artifacts from F1R2 counts.
 
 #### gatk4 calculatecontamination
 
@@ -518,6 +538,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 </details>
 
+[CalculateContamination](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): Estimates contamination in a sample using pileup summaries.
+
 #### gatk4 filtermutectcalls
 
 <details>
@@ -528,6 +550,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
   - `<SAMPLE>.filtered.vcf.gz`: containing only the filtered variants filtered using contamination and sementation table.
 
 </details>
+
+[FilterMutectCalls](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): Filters somatic variant calls made by Mutect2.
 
 #### gatk4 selectvariants
 
@@ -540,6 +564,8 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 </details>
 
+[SelectVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): Selects a subset of variants from a VCF file.
+
 #### gatk4 countvariants
 
 <details>
@@ -551,43 +577,7 @@ This script sub-sample sorted BAM files to be used by RseQC to assess alignment 
 
 </details>
 
-applybqsr
-│   │   ├── SRR8281226.recal.bam
-│   │   └── SRR8281243.recal.bam
-│   ├── calculatecontamination
-│   │   ├── SRR8281226
-│   │   │   ├── SRR8281226.contamination.table
-│   │   │   └── SRR8281226.segmentation.table
-│   │   └── SRR8281243
-│   │   ├── SRR8281243.contamination.table
-│   │   └── SRR8281243.segmentation.table
-│   ├── countvariants
-│   │   ├── SRR8281226_null_counts
-│   │   └── SRR8281243_null_counts
-│   ├── filtermutectcalls
-│   │   ├── SRR8281226.filtered.vcf.gz
-│   │   └── SRR8281243.filtered.vcf.gz
-│   ├── getpileupsummaries
-│   │   ├── SRR8281226.pileups.table
-│   │   └── SRR8281243.pileups.table
-│   ├── learnreadorientationmodel
-│   │   ├── SRR8281226.tar.gz
-│   │   └── SRR8281243.tar.gz
-│   ├── mutect2
-│   │   ├── SRR8281226
-│   │   │   ├── SRR8281226.f1r2.tar.gz
-│   │   │   ├── SRR8281226.vcf.gz
-│   │   │   └── SRR8281226.vcf.gz.tbi
-│   │   └── SRR8281243
-│   │   ├── SRR8281243.f1r2.tar.gz
-│   │   ├── SRR8281243.vcf.gz
-│   │   └── SRR8281243.vcf.gz.tbi
-│   ├── selectvariants
-│   │   ├── SRR8281226.selected.vcf.gz
-│   │   └── SRR8281243.selected.vcf.gz
-│   └── splitncigarreads
-│   ├── SRR8281226.bam
-│   └── SRR8281243.bam
+[CountVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037593851-Mutect2): Counts the number of variants in a VCF file.
 
 ## Variant Annotation {#variant-annotation}
 
@@ -603,6 +593,8 @@ applybqsr
 
 </details>
 
+VEP: Variant Effect Predictor (VEP) annotates variants with information about their effects on genes and proteins.
+
 ## Epitope Prediction {#epitope-prediction}
 
 ### VAtools {#vatools}
@@ -616,6 +608,8 @@ applybqsr
   - `<SAMPLE>.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf`: VCF file with added expression data from the specified tool, annotated in the INFO column.
 
 </details>
+
+[VCF Annotation Tools](https://github.com/griffithlab/VAtools) is a python package that includes several tools to annotate VCF files with data from other tools.
 
 ### pVACseq {#pvacseq}
 
@@ -634,6 +628,8 @@ applybqsr
   - `www` : Directory containing image files for pVACview. Not generated when running with elution algorithms only.
 
 </details>
+
+[pVAC-Seq](https://github.com/griffithlab/pVAC-Seq) a flexible, streamlined computational workflow for identification of personalized Variant Antigens by Cancer Sequencing (pVAC-Seq) that integrates tumor mutation and expression data (DNA- and RNA-Seq).
 
 ### Pipeline information {#pipeline-information}
 
