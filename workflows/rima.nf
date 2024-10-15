@@ -270,6 +270,7 @@ workflow RIMA {
     ch_annot_vcf = VARIANT_ANNOTATION.out.results
     ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
 
+/*
     //
     // Subworkflow: Epitope prediction using pVACseq
     //
@@ -312,6 +313,7 @@ workflow RIMA {
     )
     ch_versions         = ch_versions.mix( EPITOPE_PREDICTION.out.versions)
 
+*/
     //
     // Collate and save software versions
     //
