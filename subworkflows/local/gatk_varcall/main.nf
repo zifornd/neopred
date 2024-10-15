@@ -24,8 +24,6 @@ workflow VARIANT_CALLINGFILTERING {
     germline_resource_tbi   // channel: /path/to/genome.vcf.gz.tbi
     pon                     // channel: /path/to/genome.vcf.gz
     pon_tbi                 // channel: /path/to/genome.vcf.gz.tbi
-    dbsnp                   // channel: /path/to/reference.vcf.gz
-    dbsnp_tbi               // channel: /path/to/reference.vcf.gz.tbi
     pileup_vcf
     pileup_vcftbi
 

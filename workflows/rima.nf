@@ -244,8 +244,6 @@ workflow RIMA {
         params.germline_resource_tbi,
         params.pon,
         params.pon_tbi,
-        params.dbsnp,
-        params.dbsnp_tbi,
         params.pileup_vcf,
         params.pileup_vcftbi
     )

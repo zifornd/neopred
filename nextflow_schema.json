@@ -71,12 +71,110 @@
                     "exists": true,
                     "description": "Bed file containing location for only the house-keeping genes"
                 },
+                "gene_bed": {
+                    "type": "string",
+                    "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
+                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "hidden": true,
                     "help_text": "Do not load `igenomes.config` when running the pipeline. You may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`."
+                },
+                "gtf": {
+                    "type": "string",
+                    "description": "Path to GTF annotation file."
+                },
+                "dbsnp": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp file."
+                },
+                "dbsnp_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to dbsnp index."
+                },
+                "known_indels": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to known indels vcf."
+                },
+                "known_indels_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to known indels index."
+                },
+                "germline_resource": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to germline resource vcf."
+                },
+                "germline_resource_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to germline resource file index."
+                },
+                "pileup_vcf": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to pileup vcf."
+                },
+                "pileup_vcftbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to pileup index."
+                },
+                "pon": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to pon vcf."
+                },
+                "pon_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to pon index."
+                }
+            },
+            "required": ["fasta"]
+        },
+        "alignment_options": {
+            "title": "Alignment options",
+            "type": "object",
+            "fa_icon": "fas fa-map-signs",
+            "description": "Options to adjust parameters and filtering criteria for read alignments.",
+            "properties": {
+                "seq_center": {
+                    "type": "string",
+                    "description": "Sequencing center information to be added to read group of BAM files."
+                },
+                "star_ignore_sjdbgtf": {
+                    "type": "boolean",
+                    "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
+                },
+                "save_unaligned": {
+                    "type": "boolean",
+                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory."
+                },
+                "save_align_intermeds": {
+                    "type": "boolean",
+                    "description": "Save the intermediate BAM files from the alignment step."
+                },
+                "batch": {
+                    "type": "string",
+                    "default": "batch",
+                    "description": "Column that describes the batch effect of various samples"
+                },
+                "design": {
+                    "type": "string",
+                    "default": "design",
+                    "description": "Condition to compare samples (column from metasheet)."
+                },
+                "patient_id": {
+                    "type": "string",
+                    "default": "sample_group",
+                    "description": "Column that identifies various patient samples"
                 },
                 "gtf_extra_attributes": {
                     "type": "string",
@@ -96,66 +194,10 @@
                     "description": "Extra arguments to pass to Salmon quant command in addition to defaults defined by the pipeline.",
                     "fa_icon": "fas fa-plus"
                 }
-            },
-            "required": ["fasta"]
-        },
-        "alignment_options": {
-            "title": "Alignment options",
-            "type": "object",
-            "fa_icon": "fas fa-map-signs",
-            "description": "Options to adjust parameters and filtering criteria for read alignments.",
-            "properties": {
-                "seq_center": {
-                    "type": "string",
-                    "description": "Sequencing center information to be added to read group of BAM files."
-                },
-                "bam_csi_index": {
-                    "type": "boolean",
-                    "description": "Create a CSI index for BAM files instead of the traditional BAI index. This will be required for genomes with larger chromosome sizes."
-                },
-                "star_ignore_sjdbgtf": {
-                    "type": "boolean",
-                    "description": "When using pre-built STAR indices do not re-extract and use splice junctions from the GTF file."
-                },
-                "save_merged_fastq": {
-                    "type": "boolean",
-                    "description": "Save FastQ files after merging re-sequenced libraries in the results directory."
-                },
-                "save_unaligned": {
-                    "type": "boolean",
-                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory."
-                },
-                "save_align_intermeds": {
-                    "type": "boolean",
-                    "description": "Save the intermediate BAM files from the alignment step."
-                },
-                "gene_bed": {
-                    "type": "string",
-                    "description": "Path to BED file containing gene intervals. This will be created from the GTF file if not specified."
-                },
-                "gtf": {
-                    "type": "string",
-                    "description": "Path to GTF annotation file."
-                },
-                "batch": {
-                    "type": "string",
-                    "default": "batch",
-                    "description": "Column that describes the batch effect of various samples"
-                },
-                "design": {
-                    "type": "string",
-                    "default": "design",
-                    "description": "Condition to compare samples (column from metasheet)."
-                },
-                "patient_id": {
-                    "type": "string",
-                    "default": "sample_group",
-                    "description": "Column that identifies various patient samples"
-                }
             }
         },
         "variant_options": {
-            "title": "Variant options",
+            "title": "Variant Identification Picard and GATK4 options",
             "type": "object",
             "fa_icon": "fas fa-map-signs",
             "description": "Options to Variant calling modules.",
@@ -179,7 +221,7 @@
                     "default": "illumina",
                     "description": "Read-Group platform (e.g. illumina, solid)"
                 },
-                "F1R2_metrics": {
+                "f1r2_metrics": {
                     "type": "boolean",
                     "default": true,
                     "description": "If specified, collect F1R2 counts and output files into this tar.gz file"
@@ -189,56 +231,18 @@
                     "default": 6.3,
                     "description": "Log 10 odds threshold to emit variant to VCF."
                 },
-                "dbsnp": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to dbsnp file.",
-                    "hidden": true,
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
-                },
-                "dbsnp_tbi": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to dbsnp index.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs.",
-                    "hidden": true
-                },
-                "known_indels": {
-                    "type": "string",
-                    "description": "Path to known indels vcf."
-                },
-                "known_indels_tbi": {
-                    "type": "string",
-                    "description": "Path to known indels index."
-                },
-                "germline_resource": {
-                    "type": "string",
-                    "description": "Path to germline resource vcf."
-                },
-                "germline_resource_tbi": {
-                    "type": "string",
-                    "description": "Path to germline resource file index."
-                },
-                "pileup_vcf": {
-                    "type": "string",
-                    "description": "Path to pileup vcf."
-                },
-                "pileup_vcftbi": {
-                    "type": "string",
-                    "description": "Path to pileup index."
-                },
-                "pon": {
-                    "type": "string",
-                    "description": "Path to pon vcf."
-                },
-                "pon_tbi": {
-                    "type": "string",
-                    "description": "Path to pon index."
-                },
                 "f_bcftools": {
                     "type": "string",
                     "description": "Path to dbsnp index."
-                },
+                }
+            }
+        },
+        "variant_annotation_options": {
+            "title": "Variant Annotation options",
+            "type": "object",
+            "fa_icon": "fas fa-map-signs",
+            "description": "Options to Variant Annotaion VEP modules.",
+            "properties": {
                 "vep_cache": {
                     "type": "string",
                     "description": "Configures where cache files are installed"
@@ -257,7 +261,15 @@
                     "type": "integer",
                     "default": 112,
                     "description": "Version of VEP caches and FASTA files to download (default latest)"
-                },
+                }
+            }
+        },
+        "pvacseq_options": {
+            "title": "pVACseq options",
+            "type": "object",
+            "fa_icon": "fas fa-map-signs",
+            "description": "Options to Epitope prediction modules.",
+            "properties": {
                 "callers": {
                     "type": "string",
                     "default": "MHCflurry,NetMHCcons,MHCnuggetsII",
@@ -489,6 +501,12 @@
         },
         {
             "$ref": "#/definitions/variant_options"
+        },
+        {
+            "$ref": "#/definitions/variant_annotation_options"
+        },
+        {
+            "$ref": "#/definitions/pvacseq_options"
         },
         {
             "$ref": "#/definitions/institutional_config_options"
