@@ -290,50 +290,81 @@ workflow RIMA {
             ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
         }
     }
-/*
+    if ((!params.variant_calling) && (!params.variant_annotation) && (!params.arcasHLA)) {
+
+        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
+        println "SUGGESTION: IF YOU NEED TO RUN EPITOPE PREDICTION MODULE, PLEASE TURN ON ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES"
+
+    }
+
+
+    if ((params.variant_calling) && (params.variant_annotation) && (!params.arcasHLA)) {
+
+        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE TO BE TURNED ON \n"
+        println "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE MODULE TOO"
+
+    }
+
+    if ((params.variant_calling) && (!params.variant_annotation) && (params.arcasHLA)) {
+
+        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES VARIANT ANNOTATION MODULE TO BE TURNED ON \n"
+        println "SUGGESTION: PLEASE TURN ON VARIANT ANNOTATION MODULE TOO"
+
+    }
+
+    if ((params.variant_calling) && (!params.variant_annotation) && (!params.arcasHLA)) {
+
+        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
+        println "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE AND VARIANT ANNOTATION MODULES"
+
+    }
+
+
+    if ((params.variant_calling) && (params.variant_annotation) && (params.arcasHLA)) {
+
     //
     // Subworkflow: Epitope prediction using pVACseq
     //
 
-    pvacseq_geno =  HLA_TYPING.out.hla_result.splitCsv(sep: '\t', header: false, skip:1)
-                        .map { row ->
-                        def firstColumn = row[0]
-                        def otherColumns = row[1..-1].collect { value ->
-                            def hla = value.replaceAll('P', '')
-                            return "HLA-${hla}"
-                        }
-                        return [firstColumn, otherColumns]
-                        }
+        pvacseq_geno =  HLA_TYPING.out.hla_result.splitCsv(sep: '\t', header: false, skip:1)
+                            .map { row ->
+                            def firstColumn = row[0]
+                            def otherColumns = row[1..-1].collect { value ->
+                                def hla = value.replaceAll('P', '')
+                                return "HLA-${hla}"
+                            }
+                            return [firstColumn, otherColumns]
+                            }
 
-    ch_annot_vcf.map { meta,vcf ->
-                def id = meta.id
-                return [id,vcf]
-                }
-                .set{ ch_vcf }
+        ch_annot_vcf.map { meta,vcf ->
+                    def id = meta.id
+                    return [id,vcf]
+                    }
+                    .set{ ch_vcf }
 
-    pvacseq_geno.combine(ch_vcf, by:0)
-                .map{ meta, hla, vcf ->
-                def name = [:]
-                name.id = meta.toString()
-                name.caller = "mutect2"
-                [name, hla, vcf]}
-                .set{ch_hla_vcf}
+        pvacseq_geno.combine(ch_vcf, by:0)
+                    .map{ meta, hla, vcf ->
+                    def name = [:]
+                    name.id = meta.toString()
+                    name.caller = "mutect2"
+                    [name, hla, vcf]}
+                    .set{ch_hla_vcf}
 
-    EPITOPE_PREDICTION(
-        QUANTIFY_SALMON.out.results,
-        params.input,
-        params.design,
-        params.batch,
-        ch_hla_vcf,
-        params.callers,
-        params.neoantigen_epitope1_lengths,
-        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
-        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
-        PREPARE_GENOME.out.gtf
-    )
-    ch_versions         = ch_versions.mix( EPITOPE_PREDICTION.out.versions)
+        EPITOPE_PREDICTION(
+            QUANTIFY_SALMON.out.results,
+            params.input,
+            params.design,
+            params.batch,
+            ch_hla_vcf,
+            params.callers,
+            params.neoantigen_epitope1_lengths,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+            PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+            PREPARE_GENOME.out.gtf
+        )
+        ch_versions         = ch_versions.mix( EPITOPE_PREDICTION.out.versions)
+    }
 
-*/
     //
     // Collate and save software versions
     //
