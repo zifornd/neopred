@@ -1,17 +1,17 @@
-Oct-16 11:19:16.268 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-rima/ --outdir ./output_dir -profile test,conda -resume
-Oct-16 11:19:16.371 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 24.04.4
-Oct-16 11:19:16.403 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/saddam/.nextflow/plugins; core-plugins: nf-amazon@2.5.3,nf-azure@1.6.1,nf-cloudcache@0.4.1,nf-codecommit@0.2.1,nf-console@1.1.3,nf-ga4gh@1.3.0,nf-google@1.13.2-patch1,nf-tower@1.9.1,nf-wave@1.4.2-patch1
-Oct-16 11:19:16.420 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
-Oct-16 11:19:16.422 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
-Oct-16 11:19:16.428 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
-Oct-16 11:19:16.446 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
-Oct-16 11:19:16.467 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/saddam/.nextflow/scm
-Oct-16 11:19:16.477 [main] DEBUG nextflow.scm.AssetManager - Listing projects in folder: /home/saddam/.nextflow/assets
-Oct-16 11:19:16.514 [main] DEBUG nextflow.scm.RepositoryFactory - Found Git repository result: [RepositoryFactory]
-Oct-16 11:19:16.529 [main] INFO  nextflow.cli.CmdRun - Pulling nextflow-io/nf-rima ...
-Oct-16 11:19:16.534 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/nf-rima/contents/nextflow.config
-Oct-16 11:19:17.121 [main] DEBUG nextflow.scm.RepositoryProvider - Response status: 404 -- {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-repository-content","status":"404"}
-Oct-16 11:19:17.126 [main] WARN  nextflow.scm.AssetManager - Cannot read project manifest -- Cause: Remote resource not found: https://api.github.com/repos/nextflow-io/nf-rima/contents/nextflow.config
+Oct-15 21:07:28.628 [main] DEBUG nextflow.cli.Launcher - $> nextflow run nf-rima/ --outdir ./output_dir -profile test,conda -resume
+Oct-15 21:07:28.727 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 24.04.4
+Oct-15 21:07:28.760 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/saddam/.nextflow/plugins; core-plugins: nf-amazon@2.5.3,nf-azure@1.6.1,nf-cloudcache@0.4.1,nf-codecommit@0.2.1,nf-console@1.1.3,nf-ga4gh@1.3.0,nf-google@1.13.2-patch1,nf-tower@1.9.1,nf-wave@1.4.2-patch1
+Oct-15 21:07:28.776 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Oct-15 21:07:28.778 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Oct-15 21:07:28.782 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Oct-15 21:07:28.799 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Oct-15 21:07:28.818 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/saddam/.nextflow/scm
+Oct-15 21:07:28.827 [main] DEBUG nextflow.scm.AssetManager - Listing projects in folder: /home/saddam/.nextflow/assets
+Oct-15 21:07:28.862 [main] DEBUG nextflow.scm.RepositoryFactory - Found Git repository result: [RepositoryFactory]
+Oct-15 21:07:28.876 [main] INFO  nextflow.cli.CmdRun - Pulling nextflow-io/nf-rima ...
+Oct-15 21:07:28.881 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/nf-rima/contents/nextflow.config
+Oct-15 21:07:29.419 [main] DEBUG nextflow.scm.RepositoryProvider - Response status: 404 -- {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-repository-content","status":"404"}
+Oct-15 21:07:29.424 [main] WARN  nextflow.scm.AssetManager - Cannot read project manifest -- Cause: Remote resource not found: https://api.github.com/repos/nextflow-io/nf-rima/contents/nextflow.config
 nextflow.exception.AbortOperationException: Remote resource not found: https://api.github.com/repos/nextflow-io/nf-rima/contents/nextflow.config
 	at nextflow.scm.RepositoryProvider.checkResponse(RepositoryProvider.groovy:240)
 	at nextflow.scm.RepositoryProvider.invoke(RepositoryProvider.groovy:181)
@@ -85,9 +85,9 @@ nextflow.exception.AbortOperationException: Remote resource not found: https://a
 	at nextflow.cli.CmdRun.run(CmdRun.groovy:321)
 	at nextflow.cli.Launcher.run(Launcher.groovy:503)
 	at nextflow.cli.Launcher.main(Launcher.groovy:657)
-Oct-16 11:19:17.136 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/nf-rima/contents/main.nf
-Oct-16 11:19:17.379 [main] DEBUG nextflow.scm.RepositoryProvider - Response status: 404 -- {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-repository-content","status":"404"}
-Oct-16 11:19:17.389 [main] DEBUG nextflow.cli.Launcher - Operation aborted
+Oct-15 21:07:29.449 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/nextflow-io/nf-rima/contents/main.nf
+Oct-15 21:07:29.694 [main] DEBUG nextflow.scm.RepositoryProvider - Response status: 404 -- {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-repository-content","status":"404"}
+Oct-15 21:07:29.709 [main] DEBUG nextflow.cli.Launcher - Operation aborted
 nextflow.exception.AbortOperationException: Remote resource not found: https://api.github.com/repos/nextflow-io/nf-rima/contents/main.nf
 	at nextflow.scm.RepositoryProvider.checkResponse(RepositoryProvider.groovy:240)
 	at nextflow.scm.RepositoryProvider.invoke(RepositoryProvider.groovy:181)

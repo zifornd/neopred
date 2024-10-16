@@ -190,86 +190,94 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
 
-    //
-    // SUBWORKFLOW: arcasHLA Typing
-    //
-    HLA_TYPING (
-        params.input,
-        ch_sorted_bam,
-        BATCH_REMOVAL_ANALYSIS.out.tpm,
-        params.batch,
-        params.design,
-        params.patient_id)
+    if (params.arcasHLA) {
+        //
+        // SUBWORKFLOW: arcasHLA Typing
+        //
+        HLA_TYPING (
+            params.input,
+            ch_sorted_bam,
+            BATCH_REMOVAL_ANALYSIS.out.tpm,
+            params.batch,
+            params.design,
+            params.patient_id)
+    
+        ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
+        //ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
+        ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
 
-    ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
-    //ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
-    ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
+    }
 
-    PRE_VARIANTCALLING(
-        ch_sorted_bam,
-        ch_bam_bai,
-        PREPARE_GENOME.out.fasta.map { [ [:], it ] },
-        PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
-        params.dbsnp,
-        params.dbsnp_tbi
-    )
+    if (params.variant_calling) {
 
-    ch_bqsr_bam = PRE_VARIANTCALLING.out.bqsr_bam
-    ch_bqsr_bai = PRE_VARIANTCALLING.out.bqsr_bai
-    ch_dict     = PRE_VARIANTCALLING.out.dict
-    ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
+        PRE_VARIANTCALLING(
+            ch_sorted_bam,
+            ch_bam_bai,
+            PREPARE_GENOME.out.fasta.map { [ [:], it ] },
+            PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] },
+            params.dbsnp,
+            params.dbsnp_tbi
+        )
 
-    //
-    // Subworkflow: Variant Identification and Filtering using GATK
-    //
+        ch_bqsr_bam = PRE_VARIANTCALLING.out.bqsr_bam
+        ch_bqsr_bai = PRE_VARIANTCALLING.out.bqsr_bai
+        ch_dict     = PRE_VARIANTCALLING.out.dict
+        ch_versions = ch_versions.mix(PRE_VARIANTCALLING.out.versions)
 
-    ch_fasta = PREPARE_GENOME.out.fasta.map { [ [:], it ] }
-    ch_fai   = PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
+        //
+        // Subworkflow: Variant Identification and Filtering using GATK
+        //
 
-    VARIANT_CALLINGFILTERING (
-        ch_bqsr_bam,
-        ch_bqsr_bai,
-        ch_fasta,
-        ch_fai,
-        ch_dict,
-        params.germline_resource,
-        params.germline_resource_tbi,
-        params.pon,
-        params.pon_tbi,
-        params.dbsnp,
-        params.dbsnp_tbi,
-        params.pileup_vcf,
-        params.pileup_vcftbi
-    )
+        ch_fasta = PREPARE_GENOME.out.fasta.map { [ [:], it ] }
+        ch_fai   = PREPARE_GENOME.out.fasta_fai.map { [ [:], it ] }
 
-    ch_variants         =  VARIANT_CALLINGFILTERING.out.selected_vcf
-    //ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
-    ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.selected_tbi
-    //ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
-    ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)
+        VARIANT_CALLINGFILTERING (
+            ch_bqsr_bam,
+            ch_bqsr_bai,
+            ch_fasta,
+            ch_fai,
+            ch_dict,
+            params.germline_resource,
+            params.germline_resource_tbi,
+            params.pon,
+            params.pon_tbi,
+            params.dbsnp,
+            params.dbsnp_tbi,
+            params.pileup_vcf,
+            params.pileup_vcftbi
+        )
 
-    //
-    // Subworkflow: Variant Annotation using VEP
-    //
+        ch_variants         =  VARIANT_CALLINGFILTERING.out.selected_vcf
+        //ch_f1r2             =  VARIANT_CALLINGFILTERING.out.f1r2
+        ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.selected_tbi
+        //ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
+        ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)
 
-    // Download cache if needed
-    // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
-    //var=Channel.fromPath(params.raw_vcf)
 
-    VARIANT_ANNOTATION (
-        ch_variants,
-        ch_variants_tbi,
-        ensemblvep_info,
-        ch_fasta,
-        params.vep_genome_assembly,
-        params.vep_species,
-        params.vep_cache_version
-    )
+        if ((params.variant_calling) && (params.variant_annotation)) {
+            //
+            // Subworkflow: Variant Annotation using VEP
+            //
 
-    ch_annot_vcf = VARIANT_ANNOTATION.out.results
-    ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
+            // Download cache if needed
+            // Assuming that if the cache is provided, the user has already downloaded it
+            ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome_assembly}" ], params.vep_genome_assembly, params.vep_species, params.vep_cache_version ])
+            //var=Channel.fromPath(params.raw_vcf)
 
+            VARIANT_ANNOTATION (
+                ch_variants,
+                ch_variants_tbi,
+                ensemblvep_info,
+                ch_fasta,
+                params.vep_genome_assembly,
+                params.vep_species,
+                params.vep_cache_version
+            )
+
+            ch_annot_vcf = VARIANT_ANNOTATION.out.results
+            ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
+        }
+    }
 /*
     //
     // Subworkflow: Epitope prediction using pVACseq
