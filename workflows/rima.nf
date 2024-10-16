@@ -190,6 +190,18 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
 
+    if ((!params.variant_calling) && (params.variant_annotation)) {
+
+        println "WARNING: ONLY VARIANT ANNOTATION STEP CANNOT TURNED ON WITHOUT TURNING ON THE VARIANT CALLING PROCESS \n"
+        println "SUGGESTION: PLEASE TUNR ON VARIANT CALLING MODULE TOO"
+    }
+
+    if ((!params.variant_calling) && (params.variant_filtering)) {
+
+        println "WARNING: ONLY VARIANT FILTERING STEP CANNOT TURNED ON WITHOUT TURNING ON THE VARIANT CALLING PROCESS \n"
+        println "SUGGESTION: PLEASE TUNR ON VARIANT CALLING MODULE TOO"
+    }
+
     if (params.arcasHLA) {
         //
         // SUBWORKFLOW: arcasHLA Typing
