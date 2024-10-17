@@ -213,7 +213,7 @@ workflow RIMA {
             params.batch,
             params.design,
             params.patient_id)
-    
+
         ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_log.collect{it[1]})
         //ch_multiqc_files = ch_multiqc_files.mix(HLA_TYPING.out.hla_plot)
         ch_versions = ch_versions.mix(HLA_TYPING.out.versions)
@@ -290,6 +290,8 @@ workflow RIMA {
             ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
         }
     }
+
+
     if ((!params.variant_calling) && (!params.variant_annotation) && (!params.arcasHLA)) {
 
         println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
@@ -335,6 +337,7 @@ workflow RIMA {
                             }
                             return [firstColumn, otherColumns]
                             }
+
 
         ch_annot_vcf.map { meta,vcf ->
                     def id = meta.id

@@ -217,6 +217,4 @@ workflow VARIANT_CALLINGFILTERING {
         selected_vcf                =   ch_selected_vcf
         selected_tbi                =   ch_selected_tbi
         versions                    =   ch_versions
-
-    
 }
