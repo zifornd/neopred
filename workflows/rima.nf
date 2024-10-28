@@ -72,6 +72,31 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]})
     ch_versions = ch_versions.mix(FASTQC.out.versions.first())
 
+    if ((!params.variant_calling) && (params.variant_filtering) && (!params.variant_annotation)) {
+
+        log.error "VARIANT FILTERING STEP REQUIRES VARIANT CALLING WORKFLOW AND VARIANT FILTERING ALONE CANNOT BE TRUNED ON \n" +
+            "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT FILTERING PROCESS AND VARIANT ANNOTATION WORKFLOW \n"
+
+        //exit 1
+
+        }
+
+
+    if ((!params.variant_calling) && (params.variant_filtering) && (params.variant_annotation)) {
+
+        log.error "VARIANT FILTERING STEP AND VARIANT ANNOTATION REQUIRES RUNNING VARIANT CALLING WORKFLOW \n" +
+            "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT FILTERING PROCESS AND VARIANT ANNOTATION WORKFLOW \n"
+
+        }
+
+    if ((!params.variant_calling) && (!params.variant_filtering) && (params.variant_annotation)) {
+
+        log.error "VARIANT ANNOTATION REQUIRES VARIANT CALLING WORKFLOW TO BE TURNED ON \n" +
+            "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT ANNOTATION WORKFLOW \n"
+
+        }
+
+
     //
     // SUBWORKFLOW: Prepare Genome
     //
@@ -190,18 +215,6 @@ workflow RIMA {
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.before_br_pca)
     ch_multiqc_files = ch_multiqc_files.mix(BATCH_REMOVAL_ANALYSIS.out.after_br_pca)
 
-    if ((!params.variant_calling) && (params.variant_annotation)) {
-
-        println "WARNING: ONLY VARIANT ANNOTATION STEP CANNOT TURNED ON WITHOUT TURNING ON THE VARIANT CALLING PROCESS \n"
-        println "SUGGESTION: PLEASE TUNR ON VARIANT CALLING MODULE TOO"
-    }
-
-    if ((!params.variant_calling) && (params.variant_filtering)) {
-
-        println "WARNING: ONLY VARIANT FILTERING STEP CANNOT TURNED ON WITHOUT TURNING ON THE VARIANT CALLING PROCESS \n"
-        println "SUGGESTION: PLEASE TUNR ON VARIANT CALLING MODULE TOO"
-    }
-
     if (params.arcasHLA) {
         //
         // SUBWORKFLOW: arcasHLA Typing
@@ -264,9 +277,8 @@ workflow RIMA {
         ch_variants_tbi     =  VARIANT_CALLINGFILTERING.out.selected_tbi
         //ch_variants_stats   =  VARIANT_CALLINGFILTERING.out.variants_stats
         ch_versions         = ch_versions.mix( VARIANT_CALLINGFILTERING.out.versions)
-
-
-        if ((params.variant_calling) && (params.variant_annotation)) {
+}
+    if ((params.variant_calling) && (params.variant_annotation)) {
             //
             // Subworkflow: Variant Annotation using VEP
             //
@@ -289,35 +301,33 @@ workflow RIMA {
             ch_annot_vcf = VARIANT_ANNOTATION.out.results
             ch_versions         = ch_versions.mix( VARIANT_ANNOTATION.out.versions)
         }
-    }
-
 
     if ((!params.variant_calling) && (!params.variant_annotation) && (!params.arcasHLA)) {
 
-        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
-        println "SUGGESTION: IF YOU NEED TO RUN EPITOPE PREDICTION MODULE, PLEASE TURN ON ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES"
+        log.warn "EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
+        log.info "IF YOU NEED TO RUN EPITOPE PREDICTION MODULE, PLEASE TURN ON ARCASHLA MODULE, VARIANT CALLING AND VARIANT ANNOTATION MODULES \n"
 
     }
 
 
     if ((params.variant_calling) && (params.variant_annotation) && (!params.arcasHLA)) {
 
-        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE TO BE TURNED ON \n"
-        println "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE MODULE TOO"
+        log.warn "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE TO BE TURNED ON \n"
+        log.info "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE MODULE TOO \n"
 
     }
 
     if ((params.variant_calling) && (!params.variant_annotation) && (params.arcasHLA)) {
 
-        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES VARIANT ANNOTATION MODULE TO BE TURNED ON \n"
-        println "SUGGESTION: PLEASE TURN ON VARIANT ANNOTATION MODULE TOO"
+        log.warn "WARNING: EPITOPE PREDICTION PROCESS REQUIRES VARIANT ANNOTATION MODULE TO BE TURNED ON \n"
+        log.info "SUGGESTION: PLEASE TURN ON VARIANT ANNOTATION MODULE TOO"
 
     }
 
     if ((params.variant_calling) && (!params.variant_annotation) && (!params.arcasHLA)) {
 
-        println "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
-        println "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE AND VARIANT ANNOTATION MODULES"
+        log.warn "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE AND VARIANT ANNOTATION MODULES TO BE TURNED ON \n"
+        log.info "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE FOR RUNNING EPITOPE PREDICTION WORKFLOW \n"
 
     }
 
