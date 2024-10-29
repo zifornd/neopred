@@ -1,0 +1,33 @@
+Changes in module 'nf-core/bcftools/view'
+--- modules/nf-core/bcftools/view/main.nf
++++ modules/nf-core/bcftools/view/main.nf
+@@ -25,6 +25,7 @@
+     script:
+     def args = task.ext.args ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
++    def name = params.variant_filtering ?: "_raw_mutect"
+     def regions_file  = regions ? "--regions-file ${regions}" : ""
+     def targets_file = targets ? "--targets-file ${targets}" : ""
+     def samples_file =  samples ? "--samples-file ${samples}" : ""
+@@ -35,7 +36,7 @@
+                     "vcf"
+     """
+     bcftools view \\
+-        --output ${prefix}.${extension} \\
++        --output ${prefix}${name}.${extension} \\
+         ${regions_file} \\
+         ${targets_file} \\
+         ${samples_file} \\
+
+--- modules/nf-core/bcftools/view/environment.yml
++++ modules/nf-core/bcftools/view/environment.yml
+@@ -1,5 +1,7 @@
++name: bcftools_view
+ channels:
+   - conda-forge
+   - bioconda
++  - defaults
+ dependencies:
+   - bioconda::bcftools=1.20
+
+************************************************************

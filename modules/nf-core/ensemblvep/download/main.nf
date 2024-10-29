@@ -26,6 +26,7 @@ process ENSEMBLVEP_DOWNLOAD {
         --SPECIES $species \\
         --ASSEMBLY $assembly \\
         --CACHE_VERSION $cache_version \\
+        --NO_UPDATE \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
