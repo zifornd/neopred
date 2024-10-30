@@ -74,28 +74,26 @@ workflow RIMA {
 
     if ((!params.variant_calling) && (params.variant_filtering) && (!params.variant_annotation)) {
 
-        log.error "VARIANT FILTERING STEP REQUIRES VARIANT CALLING WORKFLOW AND VARIANT FILTERING ALONE CANNOT BE TRUNED ON \n" +
+        error "ERROR: VARIANT FILTERING STEP REQUIRES VARIANT CALLING WORKFLOW AND VARIANT FILTERING ALONE CANNOT BE TRUNED ON \n" +
             "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT FILTERING PROCESS AND VARIANT ANNOTATION WORKFLOW \n"
 
         //exit 1
 
         }
 
-
     if ((!params.variant_calling) && (params.variant_filtering) && (params.variant_annotation)) {
 
-        log.error "VARIANT FILTERING STEP AND VARIANT ANNOTATION REQUIRES RUNNING VARIANT CALLING WORKFLOW \n" +
+        error "ERROR: VARIANT FILTERING STEP AND VARIANT ANNOTATION REQUIRES RUNNING VARIANT CALLING WORKFLOW \n" +
             "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT FILTERING PROCESS AND VARIANT ANNOTATION WORKFLOW \n"
 
         }
 
     if ((!params.variant_calling) && (!params.variant_filtering) && (params.variant_annotation)) {
 
-        log.error "VARIANT ANNOTATION REQUIRES VARIANT CALLING WORKFLOW TO BE TURNED ON \n" +
+        error "ERROR: VARIANT ANNOTATION REQUIRES VARIANT CALLING WORKFLOW TO BE TURNED ON \n" +
             "HINT: RUN VARIANT CALLING WORKFLOW FOLLOWED BY VARIANT ANNOTATION WORKFLOW \n"
 
         }
-
 
     //
     // SUBWORKFLOW: Prepare Genome
@@ -309,7 +307,6 @@ workflow RIMA {
 
     }
 
-
     if ((params.variant_calling) && (params.variant_annotation) && (!params.arcasHLA)) {
 
         log.warn "WARNING: EPITOPE PREDICTION PROCESS REQUIRES ARCASHLA MODULE TO BE TURNED ON \n"
@@ -330,7 +327,6 @@ workflow RIMA {
         log.info "SUGGESTION: PLEASE TURN ON ARCASHLA MODULE FOR RUNNING EPITOPE PREDICTION WORKFLOW \n"
 
     }
-
 
     if ((params.variant_calling) && (params.variant_annotation) && (params.arcasHLA)) {
 
