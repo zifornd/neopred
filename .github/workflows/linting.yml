@@ -107,10 +107,6 @@ jobs:
             lint_results.md
             PR_number.txt
 
-  merge:
-    runs-on: ubuntu-latest
-    needs: nf-core
-    steps:
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
