@@ -35,7 +35,6 @@ include { EPITOPE_PREDICTION      } from '../subworkflows/local/epitope_predicti
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 //params.fasta = getGenomeAttribute('fasta')
@@ -178,10 +177,6 @@ workflow RIMA {
         //ch_hk_bam_bai               = RSEQC.out.hk_bam_bai
         ch_versions                   = ch_versions.mix(RSEQC.out.versions)
     }
-
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
-
 
     //
     // SUBWORKFLOW: Salmon Quantification
