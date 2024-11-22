@@ -25,6 +25,7 @@ process BCFTOOLS_VIEW {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def name = params.variant_filtering ?: "_raw_mutect"
     def regions_file  = regions ? "--regions-file ${regions}" : ""
     def targets_file = targets ? "--targets-file ${targets}" : ""
     def samples_file =  samples ? "--samples-file ${samples}" : ""
@@ -35,7 +36,7 @@ process BCFTOOLS_VIEW {
                     "vcf"
     """
     bcftools view \\
-        --output ${prefix}.${extension} \\
+        --output ${prefix}${name}.${extension} \\
         ${regions_file} \\
         ${targets_file} \\
         ${samples_file} \\

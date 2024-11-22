@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf/rima/master/nextflow_schema.json",
     "title": "nf/rima pipeline parameters",
     "description": "Nextflow version of the RNA-seq immune analysis pipeline",
@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "type": "string",
@@ -40,6 +43,38 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
+                }
+            }
+        },
+        "workflow_selection_options": {
+            "title": "workflow_selection_options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Selecting workflows option for RIMA pipeline",
+            "properties": {
+                "arcasHLA": {
+                    "type": "boolean",
+                    "description": "Inference of HLA genotypes from RNA-seq",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run HLA worflow in the RIMA pipeline. HLA allele genotypes of samples is used as input for the downstream Epitope prediction workflow"
+                },
+                "variant_calling": {
+                    "type": "boolean",
+                    "description": "Somatic variant calling workflow based on GATK best practices workflow",
+                    "fa_icon": "fas fa_ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run somatic variant calling workflow in the RIMA pipeline. For more details, please refer [GATK Best Practices Workflow](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows)."
+                },
+                "variant_filtering": {
+                    "type": "boolean",
+                    "description": "Filter the somatic variants from the VCF file based on GATK best practices workflow",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run variant filtering steps after variant calling workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
+                },
+                "variant_annotation": {
+                    "type": "boolean",
+                    "description": "Annotating the variants on your VCF file with the Ensembl Variant Effect Predictor (VEP)",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run variant annotation workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
                 }
             }
         },
@@ -137,7 +172,9 @@
                     "description": "Path to pon index."
                 }
             },
-            "required": ["fasta"]
+            "required": [
+                "fasta"
+            ]
         },
         "alignment_options": {
             "title": "Alignment options",
@@ -395,7 +432,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -492,6 +536,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/workflow_selection_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
