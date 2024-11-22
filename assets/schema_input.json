@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf/rima/master/assets/schema_input.json",
-    "title": "nf/rima pipeline - params.input schema",
+    "$id": "https://raw.githubusercontent.com/zifornd/neopred/master/assets/schema_input.json",
+    "title": "zifornd/neopred pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {

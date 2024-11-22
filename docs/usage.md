@@ -9,7 +9,7 @@
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `docker` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. See below for more information about profiles.
@@ -25,23 +25,23 @@ work                             # Directory containing the nextflow working fil
 If the user intends to run the pipeline using `conda` profile, the command to initiate the pipeline run is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `conda` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. The pipeline outputs will be created in the working directory and the output files generated will be as same as the run using the `-profile docker` option.
 
-Similarly, apart from `docker` and `conda`, nf-rima pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
+Similarly, apart from `docker` and `conda`, neopred pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
 
 To run pipeline using small test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test,conda --outdir <OUTDIR>
 ```
 
 To run pipeline using full complete test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test_full,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test_full,conda --outdir <OUTDIR>
 ```
 
 Instead of the `conda` profile, to run the pipeline using docker profile for the small test dataset or full completed test dataset, the user will be required to replace `conda` with `docker` in the above command.
@@ -88,7 +88,7 @@ The user may use a reference genome configured in the pipeline using iGenomes. T
 
 ## FastQC
 
-The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and nf-rima pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and neopred pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 ## Alignment
 
