@@ -19,8 +19,8 @@ workflow PRE_VARIANTCALLING{
     bam_bai           // channel: [ val(meta), [ bamfiles ] ]
     fasta             // channel: /path/to/genome.fa
     fasta_fai         // channel: /path/to/genome.fai
-    known_indels      // channel: /path/to/reference.vcf.gz
-    known_indels_tbi  // channel: /path/to/reference.vcf.gz.tbi
+    dbsnp      // channel: /path/to/reference.vcf.gz
+    dbsnp_tbi  // channel: /path/to/reference.vcf.gz.tbi
 
     main:
 
@@ -56,7 +56,7 @@ workflow PRE_VARIANTCALLING{
         .join(GATK4_SPLITNCIGARREADS.out.bai, by: [0])
         .map{ meta, bam, bai -> [ meta, bam, bai, [] ] }
 
-    GATK4_BASERECALIBRATOR(ch_bam_bai_int_split, fasta.map{ meta, it -> it }, fasta_fai.map{ meta, it -> it }, ch_dict.map{ meta, it -> it }, known_indels, known_indels_tbi)
+    GATK4_BASERECALIBRATOR(ch_bam_bai_int_split, fasta.map{ meta, it -> it }, fasta_fai.map{ meta, it -> it }, ch_dict.map{ meta, it -> it }, dbsnp, dbsnp_tbi)
     ch_recal_table = GATK4_BASERECALIBRATOR.out.table
     ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR.out.versions.first())
 

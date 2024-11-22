@@ -26,8 +26,18 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rima
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.fasta = getGenomeAttribute('fasta')
-params.gtf   = getGenomeAttribute('gtf')
+params.fasta                    = getGenomeAttribute('fasta')
+params.gtf                      = getGenomeAttribute('gtf')
+params.dbsnp                    = getGenomeAttribute('dbsnp')
+params.dbsnp_tbi                = getGenomeAttribute('dbsnp_tbi')
+params.known_indels             = getGenomeAttribute('known_indels')
+params.known_indels_tbi         = getGenomeAttribute('known_indels_tbi')
+params.germline_resource        = getGenomeAttribute('germline_resource')
+params.germline_resource_tbi    = getGenomeAttribute('germline_resource_tbi')
+params.pileup_vcf               = getGenomeAttribute('pileup_vcf')
+params.pileup_vcftbi            = getGenomeAttribute('pileup_vcftbi')
+params.pon                      = getGenomeAttribute('pon')
+params.pon_tbi                  = getGenomeAttribute('pon_tbi')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

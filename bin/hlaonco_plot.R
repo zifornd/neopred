@@ -207,6 +207,9 @@ col_fun = structure(names = c("A1","A2","B1", "B2", "C1", "C2", "DQA11", "DQA12"
                     brewer.pal(n=12, name = "Paired"))
 col_fun[c(11,12)] <- c("#808080", "#C0C0C0")
 
+
+#print(paste("HLA CAST GE_ORDER AND ID_ORDER VALUE \n"), hla.cast[ge.order, id.order])
+
 ht_list <- oncoPrint(hla.cast[ge.order, id.order], get_type = function(x) strsplit(x, ";")[[1]],
                     alter_fun = alter_fun, col = col_fun, row_order = ge.order, column_order = id.order, width = unit(nrow(hla)*0.5, "cm"),
                     row_names_gp = gpar(fontsize = 10,fontface = "bold"), pct_gp = gpar(fontsize = 10,fontface = "bold"),
