@@ -1,0 +1,13 @@
+Changes in module 'nf-core/gatk4/applybqsr'
+--- modules/nf-core/gatk4/applybqsr/main.nf
++++ modules/nf-core/gatk4/applybqsr/main.nf
+@@ -15,6 +15,7 @@
+ 
+     output:
+     tuple val(meta), path("*.bam") , emit: bam,  optional: true
++    tuple val(meta), path("*.bai") , emit: bai,  optional: true
+     tuple val(meta), path("*.cram"), emit: cram, optional: true
+     path "versions.yml"            , emit: versions
+ 
+
+************************************************************

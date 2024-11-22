@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/nf/rima/master/nextflow_schema.json",
     "title": "nf/rima pipeline parameters",
     "description": "Nextflow version of the RNA-seq immune analysis pipeline",
@@ -46,6 +46,38 @@
                 }
             }
         },
+        "workflow_selection_options": {
+            "title": "workflow_selection_options",
+            "type": "object",
+            "fa_icon": "fas fa-dna",
+            "description": "Selecting workflows option for RIMA pipeline",
+            "properties": {
+                "arcasHLA": {
+                    "type": "boolean",
+                    "description": "Inference of HLA genotypes from RNA-seq",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run HLA worflow in the RIMA pipeline. HLA allele genotypes of samples is used as input for the downstream Epitope prediction workflow"
+                },
+                "variant_calling": {
+                    "type": "boolean",
+                    "description": "Somatic variant calling workflow based on GATK best practices workflow",
+                    "fa_icon": "fas fa_ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run somatic variant calling workflow in the RIMA pipeline. For more details, please refer [GATK Best Practices Workflow](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows)."
+                },
+                "variant_filtering": {
+                    "type": "boolean",
+                    "description": "Filter the somatic variants from the VCF file based on GATK best practices workflow",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run variant filtering steps after variant calling workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
+                },
+                "variant_annotation": {
+                    "type": "boolean",
+                    "description": "Annotating the variants on your VCF file with the Ensembl Variant Effect Predictor (VEP)",
+                    "fa_icon": "fas fa-ban",
+                    "help_text": "Set this parameter to true, if you want to activate and run variant annotation workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
+                }
+            }
+        },
         "reference_genome_options": {
             "title": "Reference genome options",
             "type": "object",
@@ -83,14 +115,12 @@
                 },
                 "gtf_extra_attributes": {
                     "type": "string",
-                    "default": "gene_name",
                     "fa_icon": "fas fa-plus-square",
                     "description": "By default, the pipeline uses the `gene_name` field to obtain additional gene identifiers from the input GTF file when running Salmon.",
                     "help_text": "This behaviour can be modified by specifying `--gtf_extra_attributes` when running the pipeline. Note that you can also specify more than one desired value, separated by a comma e.g. `--gtf_extra_attributes gene_id,...`.\n"
                 },
                 "gtf_group_features": {
                     "type": "string",
-                    "default": "gene_id",
                     "description": "Define the attribute type used to group features in the GTF file when running Salmon.",
                     "fa_icon": "fas fa-layer-group"
                 },
@@ -181,8 +211,8 @@
                 },
                 "picard_platform": {
                     "type": "string",
-                    "default": "ILLUMINA",
-                    "description": "Read-Group platform (e.g. ILLUMINA, SOLID)"
+                    "default": "illumina",
+                    "description": "Read-Group platform (e.g. illumina, solid)"
                 },
                 "F1R2_metrics": {
                     "type": "boolean",
@@ -242,8 +272,7 @@
                 },
                 "f_bcftools": {
                     "type": "string",
-                    "description": "Path to dbsnp index.",
-                    "default": "PASS"
+                    "description": "Path to dbsnp index."
                 },
                 "vep_cache": {
                     "type": "string",
@@ -263,6 +292,21 @@
                     "type": "integer",
                     "default": 112,
                     "description": "Version of VEP caches and FASTA files to download (default latest)"
+                },
+                "callers": {
+                    "type": "string",
+                    "default": "MHCflurry,NetMHCcons,MHCnuggetsII",
+                    "description": "The epitope prediction algorithms to use. Multiple prediction algorithms can be specified"
+                },
+                "filter_val": {
+                    "type": "string",
+                    "default": "soft",
+                    "description": "filter value to vatools ref-transcript-mismatch-reporter {soft, hard}"
+                },
+                "neoantigen_epitope1_lengths": {
+                    "type": "string",
+                    "default": "8,9,10,11",
+                    "description": "Length of MHC Class I subpeptides (neoepitopes) to predict"
                 }
             }
         },
@@ -478,6 +522,9 @@
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/workflow_selection_options"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
