@@ -1,4 +1,4 @@
-# nf/rima: Documentation
+# neopred: Documentation
 
 The nf/rima documentation is split into the following pages:
 

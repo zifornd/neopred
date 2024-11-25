@@ -1,4 +1,4 @@
-# nf/rima: Output
+# neopred: Output
 
 ## Introduction
 
@@ -319,7 +319,7 @@ Batch effects across samples are easily overlooked but worth considering for imm
 
 </details>
 
-Principal components analysis (PCA) or unsupervised clustering before and after batch effect removal is an excellent way to validate that a batch effect has been removed. To evaluate if your samples have a batch effect, RIMA will generate PCA plots of gene expression data before and after batch effect removal by `limma`.
+Principal components analysis (PCA) or unsupervised clustering before and after batch effect removal is an excellent way to validate that a batch effect has been removed. To evaluate if your samples have a batch effect, neopred will generate PCA plots of gene expression data before and after batch effect removal by `limma`.
 
 ## HLA Typing
 
