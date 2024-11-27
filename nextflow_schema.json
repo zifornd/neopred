@@ -50,31 +50,31 @@
             "title": "workflow_selection_options",
             "type": "object",
             "fa_icon": "fas fa-dna",
-            "description": "Selecting workflows option for RIMA pipeline",
+            "description": "Selecting workflows option for neopred pipeline",
             "properties": {
                 "arcasHLA": {
                     "type": "boolean",
                     "description": "Inference of HLA genotypes from RNA-seq",
                     "fa_icon": "fas fa-ban",
-                    "help_text": "Set this parameter to true, if you want to activate and run HLA worflow in the RIMA pipeline. HLA allele genotypes of samples is used as input for the downstream Epitope prediction workflow"
+                    "help_text": "Set this parameter to true, if you want to activate and run HLA worflow in the neopred pipeline. HLA allele genotypes of samples is used as input for the downstream Epitope prediction workflow"
                 },
                 "variant_calling": {
                     "type": "boolean",
                     "description": "Somatic variant calling workflow based on GATK best practices workflow",
                     "fa_icon": "fas fa_ban",
-                    "help_text": "Set this parameter to true, if you want to activate and run somatic variant calling workflow in the RIMA pipeline. For more details, please refer [GATK Best Practices Workflow](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows)."
+                    "help_text": "Set this parameter to true, if you want to activate and run somatic variant calling workflow in the neopred pipeline. For more details, please refer [GATK Best Practices Workflow](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows)."
                 },
                 "variant_filtering": {
                     "type": "boolean",
                     "description": "Filter the somatic variants from the VCF file based on GATK best practices workflow",
                     "fa_icon": "fas fa-ban",
-                    "help_text": "Set this parameter to true, if you want to activate and run variant filtering steps after variant calling workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
+                    "help_text": "Set this parameter to true, if you want to activate and run variant filtering steps after variant calling workflow in the neopred pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
                 },
                 "variant_annotation": {
                     "type": "boolean",
                     "description": "Annotating the variants on your VCF file with the Ensembl Variant Effect Predictor (VEP)",
                     "fa_icon": "fas fa-ban",
-                    "help_text": "Set this parameter to true, if you want to activate and run variant annotation workflow in the RIMA pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
+                    "help_text": "Set this parameter to true, if you want to activate and run variant annotation workflow in the neopred pipeline. For more details please refer to the [VEP](https://github.com/Ensembl/ensembl-vep) tool."
                 }
             }
         },

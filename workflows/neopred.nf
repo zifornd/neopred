@@ -16,8 +16,8 @@ include { paramsSummaryMap        } from 'plugin/nf-validation'
 
 include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
-include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_neopred_pipeline'
+include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_neopred_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
@@ -48,7 +48,7 @@ if (params.fasta && params.gtf) {
     }
 }
 
-workflow RIMA {
+workflow NEOPRED {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
