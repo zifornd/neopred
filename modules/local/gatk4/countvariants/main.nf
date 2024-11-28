@@ -21,12 +21,12 @@ process GATK4_COUNTVARIANTS {
     script:
     def args = task.ext.args ?: ''
     // Sample metaid
-    def prefix = task.ext.prefix ?: "${meta.id}_${meta.seq_type}"
+    def prefix = task.ext.prefix ?: "${meta.id}_counts"
 
     """
     gatk CountVariants \\
         -V $vcf \\
-        -O ${prefix}_counts
+        -O ${prefix}.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

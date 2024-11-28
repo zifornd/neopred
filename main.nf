@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf/rima
+    zifornd/neopred
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/zifornd/nf-rima
+    Github : https://github.com/zifornd/neopred
 ----------------------------------------------------------------------------------------
 */
 
@@ -15,19 +15,29 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { RIMA                    } from './workflows/rima'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_rima_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_rima_pipeline'
+include { NEOPRED                    } from './workflows/neopred'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_neopred_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_neopred_pipeline'
 
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_rima_pipeline'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_neopred_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.fasta = getGenomeAttribute('fasta')
-params.gtf   = getGenomeAttribute('gtf')
+params.fasta                    = getGenomeAttribute('fasta')
+params.gtf                      = getGenomeAttribute('gtf')
+params.dbsnp                    = getGenomeAttribute('dbsnp')
+params.dbsnp_tbi                = getGenomeAttribute('dbsnp_tbi')
+params.known_indels             = getGenomeAttribute('known_indels')
+params.known_indels_tbi         = getGenomeAttribute('known_indels_tbi')
+params.germline_resource        = getGenomeAttribute('germline_resource')
+params.germline_resource_tbi    = getGenomeAttribute('germline_resource_tbi')
+params.pileup_vcf               = getGenomeAttribute('pileup_vcf')
+params.pileup_vcftbi            = getGenomeAttribute('pileup_vcftbi')
+params.pon                      = getGenomeAttribute('pon')
+params.pon_tbi                  = getGenomeAttribute('pon_tbi')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +48,7 @@ params.gtf   = getGenomeAttribute('gtf')
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow NF_RIMA {
+workflow NF_NEOPRED {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -48,12 +58,12 @@ workflow NF_RIMA {
     //
     // WORKFLOW: Run pipeline
     //
-    RIMA (
+    NEOPRED (
         samplesheet
     )
 
     emit:
-    multiqc_report = RIMA.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report = NEOPRED.out.multiqc_report // channel: /path/to/multiqc_report.html
 
 }
 /*
@@ -82,7 +92,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NF_RIMA (
+    NF_NEOPRED (
         PIPELINE_INITIALISATION.out.samplesheet
     )
 
@@ -96,7 +106,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NF_RIMA.out.multiqc_report
+        NF_NEOPRED.out.multiqc_report
     )
 }
 

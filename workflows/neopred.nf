@@ -16,8 +16,8 @@ include { paramsSummaryMap        } from 'plugin/nf-validation'
 
 include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_rima_pipeline'
-include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_rima_pipeline'
+include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_neopred_pipeline'
+include { getGenomeAttribute      } from '../subworkflows/local/utils_nfcore_neopred_pipeline'
 include { PREPARE_GENOME          } from '../subworkflows/local/prepare_genome'
 include { PREPROCESS_STAR         } from '../subworkflows/local/preprocess_star'
 include { RSEQC                   } from '../subworkflows/local/rseqc'
@@ -35,7 +35,6 @@ include { EPITOPE_PREDICTION      } from '../subworkflows/local/epitope_predicti
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// TODO nf-core: Remove this line if you don't need a FASTA file
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 //params.fasta = getGenomeAttribute('fasta')
@@ -49,7 +48,7 @@ if (params.fasta && params.gtf) {
     }
 }
 
-workflow RIMA {
+workflow NEOPRED {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
@@ -179,10 +178,6 @@ workflow RIMA {
         ch_versions                   = ch_versions.mix(RSEQC.out.versions)
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.log_final.collect{it[1]})
-    ch_multiqc_files = ch_multiqc_files.mix(PREPROCESS_STAR.out.stats.collect{it[1]})
-
-
     //
     // SUBWORKFLOW: Salmon Quantification
     //
@@ -264,8 +259,6 @@ workflow RIMA {
             params.germline_resource_tbi,
             params.pon,
             params.pon_tbi,
-            params.dbsnp,
-            params.dbsnp_tbi,
             params.pileup_vcf,
             params.pileup_vcftbi
         )
