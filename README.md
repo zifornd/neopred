@@ -18,7 +18,7 @@ Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%
 
 ## Introduction
 
-**neopred** is a bioinformatics pipeline that performs integrative
+**zifornd/neopred** is a bioinformatics pipeline that performs integrative
 computational analysis of tumor immunity using bulk RNA-sequencing
 (RNA-seq) data.
 
@@ -97,7 +97,7 @@ documentation](https://nf-co.re/raredisease/output).
 
 ## Credits
 
-neopred was originally written by zifo.
+zifornd/neopred was originally written by zifo.
 
 We thank the following people for their extensive assistance in the
 development of this pipeline:

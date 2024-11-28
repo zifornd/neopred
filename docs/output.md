@@ -1,4 +1,4 @@
-# neopred: Output
+# zifornd/neopred: Output
 
 ## Introduction
 
