@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the nf/rima pipeline
+// Subworkflow with functionality specific to the zifornd/neopred pipeline
 //
 
 /*

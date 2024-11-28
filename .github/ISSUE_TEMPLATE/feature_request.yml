@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the zifornd/nf-rima pipeline
+description: Suggest an idea for the zifornd/neopred pipeline
 labels: enhancement
 body:
   - type: textarea

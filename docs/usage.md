@@ -1,9 +1,9 @@
-# nf-core/nf/rima: Usage
+# nf-core/neopred: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/nf/rima/usage](https://nf-co.re/nf/rima/usage)
-# nf-core/nf/rima: Usage
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/neopred/usage](https://nf-co.re/neopred/usage)
+# nf-core/neopred: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/nf/rima/usage](https://nf-co.re/nf/rima/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/zifornd/neopred/usage](https://nf-co.re/zifornd/neopred/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
@@ -12,7 +12,7 @@
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `docker` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. See below for more information about profiles.
@@ -28,23 +28,23 @@ work                             # Directory containing the nextflow working fil
 If the user intends to run the pipeline using `conda` profile, the command to initiate the pipeline run is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `conda` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. The pipeline outputs will be created in the working directory and the output files generated will be as same as the run using the `-profile docker` option.
 
-Similarly, apart from `docker` and `conda`, nf-rima pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
+Similarly, apart from `docker` and `conda`, neopred pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
 
 To run pipeline using small test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test,conda --outdir <OUTDIR>
 ```
 
 To run pipeline using full complete test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test_full,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test_full,conda --outdir <OUTDIR>
 ```
 
 Instead of the `conda` profile, to run the pipeline using docker profile for the small test dataset or full completed test dataset, the user will be required to replace `conda` with `docker` in the above command.
@@ -91,7 +91,7 @@ The user may use a reference genome configured in the pipeline using iGenomes. T
 
 ## FastQC
 
-The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and nf-rima pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and neopred pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 ## Alignment
 
@@ -140,14 +140,14 @@ This epitope prediction workflow depends on all the above three workflows i.e. B
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/nf/rima
+nextflow pull nf-core/neopred
 ```
 
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/nf/rima releases page](https://github.com/nf-core/nf/rima/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-core/neopred releases page](https://github.com/nf-core/neopred/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
@@ -217,11 +217,11 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
 ```console
-[62/149eb0] NOTE: Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
-Error executing process > 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
+[62/149eb0] NOTE: Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
+Error executing process > 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
 Caused by:
-    Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
+    Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
 
 Command executed:
     STAR \
@@ -261,13 +261,13 @@ The custom config below can then be provided to the pipeline via the [`-c`](#-c)
 
 ```nextflow
 process {
-    withName: 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN' {
+    withName: 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN' {
         memory = 100.GB
     }
 }
 ```
 
-> **NB:** We specify the full process name i.e. `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+> **NB:** We specify the full process name i.e. `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
@@ -335,9 +335,9 @@ We recommend adding the following line to your environment to limit this (typica
 
 ````bash
 NXF_OPTS='-Xms1g -Xmx4g'
-```# nf-core/nf/rima: Usage
+```# nf-core/neopred: Usage
 
-## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/nf/rima/usage](https://nf-co.re/nf/rima/usage)
+## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/neopred/usage](https://nf-co.re/neopred/usage)
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
@@ -346,7 +346,7 @@ NXF_OPTS='-Xms1g -Xmx4g'
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile docker --outdir <OUTDIR>
 ````
 
 This will launch the pipeline with the `docker` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. See below for more information about profiles.
@@ -363,23 +363,23 @@ work                             # Directory containing the nextflow working fil
 If the user intends to run the pipeline using `conda` profile, the command to initiate the pipeline run is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `conda` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. The pipeline outputs will be created in the working directory and the output files generated will be as same as the run using the `-profile docker` option.
 
-Similarly, apart from `docker` and `conda`, nf-rima pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
+Similarly, apart from `docker` and `conda`, neopred pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
 
 To run pipeline using small test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test,conda --outdir <OUTDIR>
 ```
 
 To run pipeline using full complete test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test_full,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test_full,conda --outdir <OUTDIR>
 ```
 
 Instead of the `conda` profile, to run the pipeline using docker profile for the small test dataset or full completed test dataset, the user will be required to replace `conda` with `docker` in the above command.
@@ -399,23 +399,23 @@ work                             # Directory containing the nextflow working fil
 If the user intends to run the pipeline using `conda` profile, the command to initiate the pipeline run is as follows:
 
 ```bash
-nextflow run nf-rima/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
+nextflow run neopred/ --input samplesheet.csv -profile conda --outdir <OUTDIR>
 ```
 
 This will launch the pipeline with the `conda` configuration profile and save the outputs within respective folder inside `<OUTDIR>` folder. The pipeline outputs will be created in the working directory and the output files generated will be as same as the run using the `-profile docker` option.
 
-Similarly, apart from `docker` and `conda`, nf-rima pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
+Similarly, apart from `docker` and `conda`, neopred pipeline is configured to run using different profiles namely, `mamba`, `singularity`, `podman`, `shifter`, `charliecloud`, `wave`, `apptainer`, `gitpod`, `test` and `test_full`. The user can run the pipeline utilizing different configured profiles by replacing `conda` in the above command with any of the above mentioned profile name.
 
 To run pipeline using small test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test,conda --outdir <OUTDIR>
 ```
 
 To run pipeline using full complete test dataset provided in the pipeline repo with conda, use the command below:
 
 ```bash
-nextflow run nf-rima/ -profile test_full,conda --outdir <OUTDIR>
+nextflow run neopred/ -profile test_full,conda --outdir <OUTDIR>
 ```
 
 Instead of the `conda` profile, to run the pipeline using docker profile for the small test dataset or full completed test dataset, the user will be required to replace `conda` with `docker` in the above command.
@@ -462,7 +462,7 @@ The user may use a reference genome configured in the pipeline using iGenomes. T
 
 ## FastQC
 
-The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and nf-rima pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and neopred pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 ## Alignment
 
@@ -538,7 +538,7 @@ The user may use a reference genome configured in the pipeline using iGenomes. T
 
 ## FastQC
 
-The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and nf-rima pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+The tool [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a general QC standard for any sequencing workflow and neopred pipeline runs this at the beginning of the pipeline to generate general quality metrics of the sequenced reads. For example, FASTQC provides numerous quality control scores such as quality score distribution across reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For more details on parameters, please refer to [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 ## Alignment
 
@@ -587,16 +587,16 @@ This epitope prediction workflow depends on all the above three workflows i.e. B
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
-nextflow pull nf-core/nf/rima
-nextflow pull nf-core/nf/rima
+nextflow pull nf-core/neopred
+nextflow pull nf-core/neopred
 ```
 
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/nf/rima releases page](https://github.com/nf-core/nf/rima/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
-First, go to the [nf-core/nf/rima releases page](https://github.com/nf-core/nf/rima/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-core/neopred releases page](https://github.com/nf-core/neopred/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-core/neopred releases page](https://github.com/nf-core/neopred/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
@@ -666,11 +666,11 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
 ```console
-[62/149eb0] NOTE: Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
-Error executing process > 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
+[62/149eb0] NOTE: Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
+Error executing process > 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
 Caused by:
-    Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
+    Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
 
 Command executed:
     STAR \
@@ -710,13 +710,13 @@ The custom config below can then be provided to the pipeline via the [`-c`](#-c)
 
 ```nextflow
 process {
-    withName: 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN' {
+    withName: 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN' {
         memory = 100.GB
     }
 }
 ```
 
-> **NB:** We specify the full process name i.e. `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+> **NB:** We specify the full process name i.e. `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
@@ -762,11 +762,11 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
 ```console
-[62/149eb0] NOTE: Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
-Error executing process > 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
+[62/149eb0] NOTE: Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
+Error executing process > 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
 Caused by:
-    Process `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
+    Process `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137)
 
 Command executed:
     STAR \
@@ -806,13 +806,13 @@ The custom config below can then be provided to the pipeline via the [`-c`](#-c)
 
 ```nextflow
 process {
-    withName: 'NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN' {
+    withName: 'NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN' {
         memory = 100.GB
     }
 }
 ```
 
-> **NB:** We specify the full process name i.e. `NFCORE_nf/rima:nf/rima:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+> **NB:** We specify the full process name i.e. `NFCORE_neopred:neopred:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
