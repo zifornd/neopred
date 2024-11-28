@@ -22,6 +22,8 @@ Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%
 computational analysis of tumor immunity using bulk RNA-sequencing
 (RNA-seq) data.
 
+![zifornd/neopred metro map](docs/images/neopred_metro_map.png)
+
 1.  Read QC
     ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
 2.  Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
