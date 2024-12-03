@@ -1,9 +1,3 @@
----
-editor_options:
-  markdown:
-    wrap: 72
----
-
 [![GitHub Actions CI
 Status](https://github.com/zifornd/neopred/actions/workflows/ci.yml/badge.svg)](https://github.com/zifornd/neopred/actions/workflows/ci.yml)
 [![GitHub Actions Linting
@@ -27,6 +21,8 @@ Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%
 **zifornd/neopred** is a bioinformatics pipeline that performs integrative
 computational analysis of tumor immunity using bulk RNA-sequencing
 (RNA-seq) data.
+
+![zifornd/neopred metro map](docs/images/neopred_metro_map.png)
 
 1.  Read QC
     ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
