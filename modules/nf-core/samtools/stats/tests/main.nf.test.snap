@@ -8,7 +8,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,c9d39b38c22de2057fc2f89949090975"
+                        "test.stats:md5,fb60ece613067c3159502beb474a7924"
                     ]
                 ],
                 "1": [
@@ -20,7 +20,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,c9d39b38c22de2057fc2f89949090975"
+                        "test.stats:md5,fb60ece613067c3159502beb474a7924"
                     ]
                 ],
                 "versions": [
@@ -29,10 +29,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-07-22T14:20:24.885816"
+        "timestamp": "2024-12-03T06:57:56.986746"
     },
     "bam - stub": {
         "content": [
@@ -113,7 +113,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,d522a1fa016b259d6a55620ae53dcd63"
+                        "test.stats:md5,04f88688e229ecbdd4f97b6d601eb317"
                     ]
                 ],
                 "1": [
@@ -125,7 +125,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test.stats:md5,d522a1fa016b259d6a55620ae53dcd63"
+                        "test.stats:md5,04f88688e229ecbdd4f97b6d601eb317"
                     ]
                 ],
                 "versions": [
@@ -134,9 +134,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-07-22T14:19:06.645466"
+        "timestamp": "2024-12-03T06:57:36.948895"
     }
 }
