@@ -35,10 +35,9 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
@@ -70,10 +69,9 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
@@ -105,10 +103,9 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = 'A'
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = 'A'
                 """
             }
         }
@@ -140,10 +137,9 @@ nextflow_process {
                     [ file(params.modules_testdata_base_path + "genomics/sarscov2/illumina/fastq/test_1.fastq.gz", checkIfExists: true) ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = 'A'
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = 'A'
                 """
             }
         }
@@ -178,10 +174,9 @@ nextflow_process {
                     ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
@@ -216,10 +211,9 @@ nextflow_process {
                     ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
@@ -256,10 +250,9 @@ nextflow_process {
                     ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
@@ -296,10 +289,9 @@ nextflow_process {
                     ]
                 ])
                 input[1] = SALMON_INDEX.out.index
-                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/genome.gtf", checkIfExists: true)])
-                input[3] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
-                input[4] = false
-                input[5] = ''
+                input[2] = Channel.of([file(params.modules_testdata_base_path + "genomics/sarscov2/genome/transcriptome.fasta", checkIfExists: true)])
+                input[3] = false
+                input[4] = ''
                 """
             }
         }
