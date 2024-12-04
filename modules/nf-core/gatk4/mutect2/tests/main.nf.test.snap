@@ -18,10 +18,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-21T10:14:45.599103891"
+        "timestamp": "2024-12-04T10:32:20.731949"
     },
     "generate_pon": {
         "content": [
@@ -40,17 +40,17 @@
                 ]
             ],
             [
-                
+                "test.f1r2.tar.gz"
             ],
             [
                 "versions.yml:md5,d94731c50c20569fe9896235a843f382"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-20T15:57:18.264453766"
+        "timestamp": "2024-12-04T11:35:40.339877"
     },
     "mitochondria": {
         "content": [
@@ -69,17 +69,17 @@
                 ]
             ],
             [
-                
+                "test.f1r2.tar.gz"
             ],
             [
                 "versions.yml:md5,d94731c50c20569fe9896235a843f382"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-20T16:05:47.668766905"
+        "timestamp": "2024-12-04T11:36:03.563647"
     },
     "cram_input": {
         "content": [
@@ -98,17 +98,17 @@
                 ]
             ],
             [
-                
+                "test.f1r2.tar.gz"
             ],
             [
                 "versions.yml:md5,d94731c50c20569fe9896235a843f382"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-20T15:52:27.894730554"
+        "timestamp": "2024-12-04T11:32:18.438734"
     },
     "tumor_single": {
         "content": [
@@ -127,17 +127,17 @@
                 ]
             ],
             [
-                
+                "test.f1r2.tar.gz"
             ],
             [
                 "versions.yml:md5,d94731c50c20569fe9896235a843f382"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-20T15:43:28.935723443"
+        "timestamp": "2024-12-04T11:28:47.131521"
     },
     "tumor_normal_pair": {
         "content": [
@@ -154,21 +154,21 @@
                         "normal_id": "normal",
                         "tumor_id": "tumour"
                     },
-                    "test.vcf.gz.stats:md5,17d2091015d04cbd4a26b7a67dc659e6"
+                    "test.vcf.gz.stats:md5,61d0713dd958229f58c986ee33a7d86d"
                 ]
             ],
             [
-                
+                "test.f1r2.tar.gz"
             ],
             [
                 "versions.yml:md5,d94731c50c20569fe9896235a843f382"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-20T15:31:31.913366311"
+        "timestamp": "2024-12-04T11:19:50.305067"
     },
     "tumor_normal_pair_f1r2": {
         "content": [
@@ -185,7 +185,7 @@
                         "normal_id": "normal",
                         "tumor_id": "tumour"
                     },
-                    "test.vcf.gz.stats:md5,17d2091015d04cbd4a26b7a67dc659e6"
+                    "test.vcf.gz.stats:md5,61d0713dd958229f58c986ee33a7d86d"
                 ]
             ],
             [
@@ -196,9 +196,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-03-21T09:45:52.321385704"
+        "timestamp": "2024-12-04T10:20:59.26158"
     }
 }
