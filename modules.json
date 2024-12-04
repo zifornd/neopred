@@ -29,10 +29,11 @@
                     },
                     "bedtools/intersect": {
                         "branch": "master",
-                        "git_sha": "90aef30f432332bdf0ce9f4b9004aa5d5c4960bb",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": [
                             "modules"
-                        ]
+                        ],
+                        "patch": "modules/nf-core/bedtools/intersect/bedtools-intersect.diff"
                     },
                     "ensemblvep/download": {
                         "branch": "master",
