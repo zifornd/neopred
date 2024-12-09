@@ -29,10 +29,8 @@ nextflow_process {
 
         then {
             assertAll (
-            //{assert path("$outdir/results").exists()},
             {assert process.success},
 	        {assert process.out.alignment_p},
-            { assert process.out.alignment_p},
 	        {assert process.out.gt_log},
 	        {assert process.out.gt_json},
 	        {assert process.out.genes_json},
