@@ -1,0 +1,47 @@
+{
+    "rseqc genebodycoverage with bam files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.geneBodyCoverage.r:md5,c848e1a588b26ab7a75965b6accad448"
+                    ]
+                ],
+                "1": [
+                    "test.geneBodyCoverage.txt:md5,11ecc8f0c9644450685fe48ead48ffe4"
+                ],
+                "2": [
+                    "test.geneBodyCoverage.curves.pdf:md5,e809c6cbfee3e0875dede920b9c62bce"
+                ],
+                "3": [
+                    "versions.yml:md5,67be82cbc17b1b31081fee521a2a8ff1"
+                ],
+                "gbc_txt": [
+                    "test.geneBodyCoverage.txt:md5,11ecc8f0c9644450685fe48ead48ffe4"
+                ],
+                "pdf_curves": [
+                    "test.geneBodyCoverage.curves.pdf:md5,e809c6cbfee3e0875dede920b9c62bce"
+                ],
+                "rscript": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.geneBodyCoverage.r:md5,c848e1a588b26ab7a75965b6accad448"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,67be82cbc17b1b31081fee521a2a8ff1"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2024-12-11T06:01:21.959497"
+    }
+}
