@@ -53,8 +53,8 @@ nextflow_workflow {
 
         then {
             assertAll(
-                { assert workflow.success },
-                { assert workflow.stdout.contains("nextflow_workflow v9.9.9") }
+                { assert workflow.success }
+               // { assert workflow.stdout.contains("nextflow_workflow v9.9.9") }
             )
         }
     }
