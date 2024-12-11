@@ -14,7 +14,7 @@ nextflow_process {
             process {
                 """
                 // define inputs of the process here. Example:
-                input[0] = file("${projectDir}/tests/results/test_1.genotype.json", checkIfExists: true)
+                input[0] = file("${projectDir}/tests/test_result/test_1.genotype.json", checkIfExists: true)
                 """
             }
         }

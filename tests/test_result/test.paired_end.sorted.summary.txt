@@ -1,0 +1,2 @@
+Bam_file	TIN(mean)	TIN(median)	TIN(stdev)
+test.paired_end.sorted.bam	nan	nan	nan

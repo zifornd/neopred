@@ -16,7 +16,7 @@ nextflow_process {
                 // define inputs of the process here. Example:
                 input[0] = Channel.of([
 			   [id: 'test'],
-			   file("$projectDir/tests/results/test.paired_end.sorted.summary.txt")
+			   file("$projectDir/tests/test_result/test.paired_end.sorted.summary.txt")
 ])
                 """
             }
