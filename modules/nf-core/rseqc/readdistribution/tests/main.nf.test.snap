@@ -3,16 +3,28 @@
         "content": [
             {
                 "0": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                    ]
                 ],
                 "1": [
-                    
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
                 ],
                 "txt": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,56893fdc0809d968629a363551a1655f"
+                    ]
                 ],
                 "versions": [
-                    
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
                 ]
             }
         ],
@@ -20,22 +32,34 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.1"
         },
-        "timestamp": "2024-12-03T08:39:46.447246"
+        "timestamp": "2024-12-18T15:21:12.371624"
     },
     "sarscov2 paired-end [bam] - stub": {
         "content": [
             {
                 "0": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "1": [
-                    
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
                 ],
                 "txt": [
-                    
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.read_distribution.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "versions": [
-                    
+                    "versions.yml:md5,fc68a268ab32a0d72a66f270d6c7925e"
                 ]
             }
         ],
@@ -43,6 +67,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.1"
         },
-        "timestamp": "2024-12-03T08:39:58.861106"
+        "timestamp": "2024-12-18T15:24:31.551709"
     }
 }
