@@ -1,0 +1,10 @@
+{
+    "salmon_version": "1.10.1",
+    "threads": "6",
+    "libType": "IU",
+    "targets": "genome.transcripts.fa",
+    "alignments": "SRR8281226.Aligned.toTranscriptome.out.bam",
+    "minAssignedFrags": "1",
+    "output": "SRR8281226",
+    "auxDir": "aux_info"
+}
