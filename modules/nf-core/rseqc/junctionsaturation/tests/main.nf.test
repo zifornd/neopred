@@ -25,10 +25,6 @@ nextflow_process {
         }
 
         then {
-		println process.out 
-		println process.out.pdf 
-		println process.out.rscript
-		println process.out.versions
 
             assertAll(
 
