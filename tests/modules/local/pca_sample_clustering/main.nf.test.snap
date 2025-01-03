@@ -1,0 +1,31 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "design_batch_pca_plot_after.pdf:md5,f48128bbf1b33ad1f6fd91fc5e55cd74"
+                ],
+                "1": [
+                    "design_batch_pca_plot_before.pdf:md5,82dba73b9e7b9626ec32836415bc24b3"
+                ],
+                "2": [
+                    "versions.yml:md5,90fc01efb982d9f83c172e62d50fed09"
+                ],
+                "after_pca": [
+                    "design_batch_pca_plot_after.pdf:md5,f48128bbf1b33ad1f6fd91fc5e55cd74"
+                ],
+                "before_pca": [
+                    "design_batch_pca_plot_before.pdf:md5,82dba73b9e7b9626ec32836415bc24b3"
+                ],
+                "versions": [
+                    "versions.yml:md5,90fc01efb982d9f83c172e62d50fed09"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2025-01-03T05:56:41.124893"
+    }
+}
