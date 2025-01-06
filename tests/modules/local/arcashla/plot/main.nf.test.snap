@@ -1,0 +1,25 @@
+{
+    "Should run without failures": {
+        "content": [
+            {
+                "0": [
+                    "hla_frequency_plot.pdf:md5,a65fa5b6742fd0da5fe0561e6e030582"
+                ],
+                "1": [
+                    "versions.yml:md5,5c27e18ea51c19d4d196472fcb5ee468"
+                ],
+                "hla_plot": [
+                    "hla_frequency_plot.pdf:md5,a65fa5b6742fd0da5fe0561e6e030582"
+                ],
+                "versions": [
+                    "versions.yml:md5,5c27e18ea51c19d4d196472fcb5ee468"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2025-01-06T09:27:21.442076"
+    }
+}

@@ -36,7 +36,9 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out)//.match()
+	    assert process.out.hla_plot
+	    assert process.out.versions
+            assert snapshot(process.out).match()
         }
 
     }
