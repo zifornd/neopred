@@ -1,0 +1,31 @@
+{
+    "Should run PVACTOOLS_INSTALLVEPPLUGIN without failures": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "Frameshift.pm:md5,7a8bd8e48f2b39a83232bac5400cf10f",
+                        "Wildtype.pm:md5,685ad5086e3f96ec92127dec78e4aecb"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5c78951211e41c97da0a18dd8feb20b5"
+                ],
+                "results": [
+                    [
+                        "Frameshift.pm:md5,7a8bd8e48f2b39a83232bac5400cf10f",
+                        "Wildtype.pm:md5,685ad5086e3f96ec92127dec78e4aecb"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5c78951211e41c97da0a18dd8feb20b5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.1"
+        },
+        "timestamp": "2025-01-06T07:13:12.43427"
+    }
+}
