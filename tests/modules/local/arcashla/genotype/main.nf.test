@@ -35,7 +35,8 @@ nextflow_process {
 	        {assert process.out.gt_json},
 	        {assert process.out.genes_json},
 	        {assert process.out.versions},
-            {assert snapshot(process.out)}
+                {assert snapshot(process.out).match()}
+
             )
         }
     }

@@ -23,8 +23,8 @@ nextflow_process {
                     [ file("$projectDir/tests/test_result/gunzip/SRR8281226.annotated.vcf", checkIfExists: true) ]
                 ])
 
-	        input[2] = "MHCflurry"
-	        input[3] = "9"
+	        input[2] = params.algorithms
+	        input[3] = params.neoantigen_epitope1_lengths
 
                 """
             }

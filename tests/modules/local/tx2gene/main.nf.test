@@ -13,7 +13,7 @@ nextflow_process {
 
 		 input[0] = Channel.fromPath("$projectDir/tests/test_result/tx2gene/quants/SRR8281226")
 		 //input[0] = Channel.of([['SRR8281243'], file("$projectDir/tests/test_result/tx2gene/quants/")])
-                 input[1] = "salmon"
+                 input[1] = params.quant_type
                  input[2] = file("$projectDir/tests/test_result/tx2gene/gencode.v45.primary_assembly_chr6.annotation.gtf")
 
 
