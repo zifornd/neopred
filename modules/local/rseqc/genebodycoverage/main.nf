@@ -43,9 +43,10 @@ process RSEQC_GENEBODYCOVERAGE {
     touch test.geneBodyCoverage.r
     touch test..geneBodyCoverage.txt
     touch test.geneBodyCoverage.curves.pdf
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        rseqc: \$(geneBody_coverage.py --version | sed -e "s/read_distribution.py //g")
+        rseqc: \$(geneBody_coverage.py --version | sed -e "s/geneBody_coverage.py //g")
     END_VERSIONS
     """
 }
