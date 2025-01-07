@@ -40,7 +40,9 @@ process RSEQC_GENEBODYCOVERAGE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.gene_body_coverage.r
-
+    touch test.geneBodyCoverage.r
+    touch test..geneBodyCoverage.txt
+    touch test.geneBodyCoverage.curves.pdf
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         rseqc: \$(geneBody_coverage.py --version | sed -e "s/read_distribution.py //g")

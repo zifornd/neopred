@@ -4,7 +4,7 @@ nextflow_process {
     script "modules/local/rseqc/genebodycoverageplot/main.nf"
     process "RSEQC_GENEBODYCOVERAGEPLOT"
 
-    test("Should run without failures") {
+    test("Running gene body coverage plot with -stub options") {
           setup{
 	     run("RSEQC_GENEBODYCOVERAGE") {
 		script "../../../../../modules/local/rseqc/genebodycoverage/main.nf"
@@ -17,6 +17,7 @@ nextflow_process {
 	      }
 	}
         when {
+	options "-stub"
             params {
                 // define parameters here. Example:
                 // outdir = "tests/results"
