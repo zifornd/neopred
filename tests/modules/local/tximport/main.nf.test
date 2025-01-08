@@ -14,7 +14,7 @@ nextflow_process {
             process {
                 """
                 // define inputs of the process here. Example:
-                input[0] = Channel.fromPath("$projectDir/tests/test_result/tx2gene/quants/SRR8281226")
+                input[0] = Channel.fromPath("$projectDir/tests/test_result/tx2gene/quants/test")
                 input[1] = Channel.fromPath("$projectDir/tests/test_result/tx2gene.tsv")
                 input[2] = params.quant_type
 

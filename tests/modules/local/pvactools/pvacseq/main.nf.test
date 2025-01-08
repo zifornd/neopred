@@ -15,12 +15,12 @@ nextflow_process {
                 """
                 // define inputs of the process here. Example:
 		input[0] = Channel.of([
-                    [ id:'SRR8281226' ], 
-                    [ file("$projectDir/tests/test_result/vcfexpressionannotator/SRR8281226.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf", checkIfExists: true) ]
+                    [ id:'test' ], 
+                    [ file("$projectDir/tests/test_result/vcfexpressionannotator/test.mutect2.somatic.base.snp.Somatic.hc.filter.vep.gx.vcf", checkIfExists: true) ]
                 ])
 		input[1] = Channel.of([
-                    [ id:'SRR8281226' ], 
-                    [ file("$projectDir/tests/test_result/gunzip/SRR8281226.annotated.vcf", checkIfExists: true) ]
+                    [ id:'test' ], 
+                    [ file("$projectDir/tests/test_result/gunzip/test.annotated.vcf", checkIfExists: true) ]
                 ])
 
 	        input[2] = params.algorithms
