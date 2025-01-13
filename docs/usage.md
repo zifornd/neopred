@@ -87,6 +87,28 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 The user may use a reference genome configured in the pipeline using iGenomes. To do that, the user may use `--genome <Reference-build>`. For example, the <Reference-build> could be either GRCh38 or GRCh37. if the user do not want to use `--genome` option, the user **must** provide to the pipeline a FASTA and a GTF filepath, without which the pipeline may will fail to run. The fasta and gtf filepath can be passed to the pipeline through config files such as nextflow.config or test_full.config file. Also the user can pass the filepath via commandline using pipeline parameters `--fasta </path/to/reference.fa.gz>` and `--gtf </path/to/reference.gtf.gz>`. For example, the user could save these reference file locally and provide the local file path to the pipeline parameters. The indices file required for STAR alignment is also created by the pipeline itself using the user provided reference fasta file. It should be noted, however, that the sequence files and indices of many common species are available for download from [AWS iGenomes](https://nf-co.re/usage/reference_genomes).
 
+## nf-test
+**nf-test**
+
+> **Note:** If you are new to nf-test, please refer to the setup page for instructions on how to [set it up](https://www.nf-test.com/installation/). Make sure to test your setup with the `--profile docker` option before running the workflow on actual data.
+
+For more details about nf-test, refer to the [documentation](https://www.nf-test.com/docs/getting-started/).
+
+**Commands for nf-test:**
+
+- To run the test scripts for the nf-core modules, use the following command:
+  ```
+  nf-test test modules/nf-core --profile docker
+  ```
+
+- To run the test scripts for the local modules, use the following command:
+  ```
+  nf-test test tests/modules/local --profile docker
+  ```
+
+---
+
+
 # Preprocessing of FastQ reads
 
 ## FastQC
